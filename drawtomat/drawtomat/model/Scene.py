@@ -1,6 +1,6 @@
 from typing import IO
 
-from drawtomat.model import Entity
+from drawtomat.model.Entity import Entity
 
 
 class Scene:
@@ -14,7 +14,7 @@ class Scene:
     """
     entities: list[Entity]
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialises an empty scene.
         """
