@@ -1,5 +1,5 @@
 from ufal.udpipe import Model, Pipeline, ProcessingError
-from drawtomat.model.Scene import Scene
+from drawtomat.model.scene import Scene
 
 
 class UDPipeProcessor:
@@ -32,3 +32,6 @@ class UDPipeProcessor:
         processed = pipeline.process(text, error)
 
         # TODO: implement
+        scene = Scene()
+
+        return scene

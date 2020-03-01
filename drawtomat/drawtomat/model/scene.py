@@ -1,6 +1,6 @@
 from typing import IO
 
-from drawtomat.model.Entity import Entity
+from drawtomat.model.entity import Entity
 
 
 class Scene:
@@ -9,10 +9,10 @@ class Scene:
 
     Attributes
     ----------
-    entities : list[Entity]
+    entities : list
         The list of entities in the scene.
     """
-    entities: list[Entity]
+    entities: list
 
     def __init__(self) -> None:
         """
@@ -20,7 +20,7 @@ class Scene:
         """
         self.entities = []
 
-    def add_entity(self, entity: Entity) -> None:
+    def add_entity(self, entity: 'Entity') -> None:
         """
         Adds a new entity to the scene
 

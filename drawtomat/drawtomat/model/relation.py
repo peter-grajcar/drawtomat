@@ -1,5 +1,3 @@
-from drawtomat.language.Adposition import Adposition
-from drawtomat.model.Entity import Entity
 
 
 class Relation:
@@ -15,9 +13,9 @@ class Relation:
      rel : Adposition
         The type of the relation.
     """
-    src: Entity
-    dst: Entity
-    rel: Adposition
+    src: 'Entity'
+    dst: 'Entity'
+    rel: 'Adposition'
 
     def __init__(self, src, dst, rel) -> None:
         """

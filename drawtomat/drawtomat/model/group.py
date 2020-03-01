@@ -1,4 +1,4 @@
-from drawtomat.model.Entity import Entity
+from drawtomat.model.entity import Entity
 
 
 class Group(Entity):
@@ -7,15 +7,15 @@ class Group(Entity):
 
     Parameters
     ----------
-    group : list[Entity]
+    group : list
         The list of entities contained in the group.
     """
-    group: list[Entity]
+    group: list
 
     def __init__(self) -> None:
         self.group = []
 
-    def add_entity(self, entity: Entity) -> None:
+    def add_entity(self, entity: 'Entity') -> None:
         """
         Adds a new entity to the group.
 
@@ -29,5 +29,3 @@ class Group(Entity):
         None
         """
         self.group.append(entity)
-
-

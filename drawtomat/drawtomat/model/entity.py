@@ -1,7 +1,6 @@
 from abc import ABC
 
-from drawtomat.language.Adposition import Adposition
-from drawtomat.model.Relation import Relation
+from drawtomat.model.relation import Relation
 
 
 class Entity(ABC):
@@ -9,9 +8,9 @@ class Entity(ABC):
     An abstract class representing an entity in a scene. An entity can relate to other entity via Relation.
     """
 
-    relations: list[Relation]
+    relations: list
 
-    def make_relation(self, entity: 'Entity', adposition: Adposition) -> None:
+    def make_relation(self, entity: 'Entity', adp: 'Adposition') -> None:
         """
         Creates a new Relation from the entity.
 
@@ -19,12 +18,12 @@ class Entity(ABC):
         ----------
         entity : Entity
             The destination entity.
-        adposition : Adposition
+        adp : Adposition
             The adposition describing the relation.
 
         Returns
         -------
         None
         """
-        rel = Relation(self, entity, adposition)
+        rel = Relation(self, entity, adp)
         self.relations.append(rel)

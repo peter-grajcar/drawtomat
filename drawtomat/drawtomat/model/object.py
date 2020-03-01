@@ -1,4 +1,4 @@
-from drawtomat.model.Entity import Entity
+from drawtomat.model.entity import Entity
 
 
 class Object(Entity):
@@ -22,4 +22,6 @@ class Object(Entity):
             The word describing the object
         """
         self.word = word
+
+
 
