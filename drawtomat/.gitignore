@@ -1,3 +1,5 @@
 .idea
 venv
 *.udpipe
+output
+docs/build

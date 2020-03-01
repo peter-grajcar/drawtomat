@@ -1,3 +1,4 @@
+import conllu
 from ufal.udpipe import Model, Pipeline, ProcessingError
 from drawtomat.model.scene import Scene
 
@@ -9,6 +10,14 @@ class UDPipeProcessor:
     model: Model
 
     def __init__(self, model_filename: str) -> None:
+        """
+        Initialises a new UDPipe processor from model file.
+
+        Parameters
+        ----------
+        model_filename
+            UDPipe model.
+        """
         self.model = Model.load(model_filename)
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
@@ -30,6 +39,10 @@ class UDPipeProcessor:
         pipeline = Pipeline(self.model, "tokenize", Pipeline.DEFAULT, Pipeline.DEFAULT, "conllu")
         error = ProcessingError()
         processed = pipeline.process(text, error)
+        parsed = conllu.parse(processed)
+
+        print(processed)
+        print(parsed)
 
         # TODO: implement
         scene = Scene()
