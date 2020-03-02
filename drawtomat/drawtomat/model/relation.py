@@ -13,11 +13,8 @@ class Relation:
      rel : Adposition
         The type of the relation.
     """
-    src: 'Entity'
-    dst: 'Entity'
-    rel: 'Adposition'
 
-    def __init__(self, src, dst, rel) -> None:
+    def __init__(self, src: 'Entity', dst: 'Entity', rel: 'Adposition') -> None:
         """
         Initialises a new relation given docs and destination entity, and an adposition describing
         the relation.

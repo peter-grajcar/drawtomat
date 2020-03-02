@@ -10,9 +10,12 @@ class Group(Entity):
     group : list
         The list of entities contained in the group.
     """
-    group: list
 
-    def __init__(self) -> None:
+    def __init__(self, scene: 'Scene') -> None:
+        """
+        Initialises an empty group.
+        """
+        super(Group, self).__init__(scene)
         self.group = []
 
     def add_entity(self, entity: 'Entity') -> None:

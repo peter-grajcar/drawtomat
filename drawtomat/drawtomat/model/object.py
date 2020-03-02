@@ -10,9 +10,8 @@ class Object(Entity):
     word : str
         The word describing the object.
     """
-    word: str
 
-    def __init__(self, word: str) -> None:
+    def __init__(self, scene: 'Scene', word: str) -> None:
         """
         Initialises a new object with given word.
 
@@ -21,6 +20,7 @@ class Object(Entity):
         word : str
             The word describing the object
         """
+        super(Object, self).__init__(scene)
         self.word = word
 
 
