@@ -2,3 +2,6 @@ ndjson
 nltk
 ufal.udpipe
 conllu
+
+sphinx
+numpydoc
