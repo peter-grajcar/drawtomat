@@ -11,11 +11,18 @@ class Group(Entity):
         The list of entities contained in the group.
     """
 
-    def __init__(self, scene: 'Scene') -> None:
+    def __init__(self) -> None:
         """
         Initialises an empty group.
         """
-        super(Group, self).__init__(scene)
+        super(Group, self).__init__()
+        self.group = []
+
+    def __init__(self, container) -> None:
+        """
+        Initialises an empty group inside a container.
+        """
+        super(Group, self).__init__(container)
         self.group = []
 
     def add_entity(self, entity: 'Entity') -> None:
@@ -32,3 +39,18 @@ class Group(Entity):
         None
         """
         self.group.append(entity)
+
+    def add_entities(self, *entities) -> None:
+        """
+
+
+        Parameters
+        ----------
+        entities
+
+        Returns
+        -------
+        None
+        """
+        for entity in entities:
+            self.entities.append(entity)
