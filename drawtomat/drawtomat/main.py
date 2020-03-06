@@ -1,7 +1,6 @@
+import argparse
 from drawtomat.language.adposition import Adposition
 from drawtomat.language.udpipe_processor import UDPipeProcessor
-import argparse
-
 from drawtomat.model.group import Group
 from drawtomat.model.object import Object
 from drawtomat.model.scene import Scene
@@ -30,5 +29,5 @@ if __name__ == "__main__":
     obj4.make_relation(obj3, Adposition.UNDER)
     """
 
-    with open(args.output, "w") as f:
-        scene.export_dot(f)
+    graph = scene.export_dot(args.output)
+    graph.view()

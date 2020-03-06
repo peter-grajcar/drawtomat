@@ -2,6 +2,7 @@ ndjson
 nltk
 ufal.udpipe
 conllu
+graphviz
 
 sphinx
 numpydoc
