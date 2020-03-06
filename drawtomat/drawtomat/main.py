@@ -15,11 +15,11 @@ if __name__ == "__main__":
     if not args.text:
         args.text = input()
 
-    # processor = UDPipeProcessor("../resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
-    # scene = processor.process(args.text)
+    processor = UDPipeProcessor("../resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
+    scene = processor.process(args.text)
 
+    """
     scene = Scene()
-
     grp1 = Group(scene)
     obj1 = Object(grp1, "pencil")
     obj2 = Object(grp1, "book")
@@ -28,6 +28,7 @@ if __name__ == "__main__":
 
     grp1.make_relation(obj3, Adposition.ON)
     obj4.make_relation(obj3, Adposition.UNDER)
+    """
 
     with open(args.output, "w") as f:
         scene.export_dot(f)

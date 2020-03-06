@@ -13,12 +13,10 @@ class Entity(ABC):
         The list of relations.
     """
 
-    def __init__(self, container):
+    def __init__(self, container=None):
         self.relations = []
-
-    def __init__(self, container):
-        self.relations = []
-        container.add_entity(self)
+        if container:
+            container.add_entity(self)
 
     def make_relation(self, entity: 'Entity', adp: 'Adposition') -> None:
         """
