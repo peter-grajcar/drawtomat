@@ -2,6 +2,7 @@ import conllu
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
 from drawtomat.language.adposition import Adposition
+from drawtomat.model.group import Group
 from drawtomat.model.object import Object
 from drawtomat.model.relation import Relation
 from drawtomat.model.scene import Scene
@@ -54,25 +55,41 @@ class UDPipeProcessor:
 
         last_obj = None
         adp = None
+        group = False
 
         for sentence in parsed:
             for token in sentence:
                 if token["upostag"] == "NOUN":
+                    unknown = False
                     if token["lemma"] in dataset.words:
                         print(f"object \"{token['lemma']}\"")
-
-                        obj = Object(token['lemma'], container=scene)
-
-                        if last_obj and adp:
-                            last_obj.make_relation(obj, adp)
-                            adp = None
-
-                        last_obj = obj
                     else:
                         print(f"unknown word: \"{token['form']}\"")
-                        last_obj = None
+                        unknown = True
+
+                    obj = Object(token["lemma"] + ("?" if unknown else ""), container=scene)
+
+                    if last_obj and adp:
+                        last_obj.make_relation(obj, adp)
+                        adp = None
+                    if last_obj and group:
+                        g = Group(container=scene)
+                        scene.entities.remove(last_obj)
+                        scene.entities.remove(obj)
+                        g.add_entities(last_obj, obj)
+                        group = False
+
+                        last_obj = g
+                        continue
+
+                    last_obj = obj
+
                 elif token["upostag"] == "ADP":
-                    adp = Adposition.for_name(token['lemma'])
+                    adp = Adposition.for_name(token["lemma"])
                     print(f"relation {adp.name}") if adp else print(f"unsupported relation \"{token['form']}\"")
+                elif token["lemma"] == "and":
+                    group = True
+
+        print(scene.entities)
 
         return scene

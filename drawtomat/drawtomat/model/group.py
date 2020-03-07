@@ -49,7 +49,7 @@ class Group(Entity):
         None
         """
         for entity in entities:
-            self.entities.append(entity)
+            self.group.append(entity)
 
     def __repr__(self) -> str:
         return f"GroupEntity({len(self.group)})"

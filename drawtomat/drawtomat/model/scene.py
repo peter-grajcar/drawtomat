@@ -72,42 +72,43 @@ class Scene:
         id_counter = 0
         entity_ids = dict()
 
+        graph = Digraph("model", filename=filename)
+        graph.graph_attr["rankdir"] = "LR"
+        graph.graph_attr["compound"] = "true"
+        graph.node_attr["shape"] = "record"
+
         def register(entity: 'Entity'):
             nonlocal id_counter
             if not entity_ids.get(entity):
                 entity_ids[entity] = id_counter
                 id_counter += 1
 
-        def object_dot_repr(graph: 'Digraph', obj: 'Object'):
-            graph.node(f"entity_{entity_ids[obj]}", label=obj.word)
+        def object_dot_repr(g: 'Digraph', obj: 'Object'):
+            g.node(f"entity_{entity_ids[obj]}", label=obj.word)
 
-        def group_dot_repr(graph: 'Digraph', group: 'Group'):
-            with graph.subgraph(name="cluster_" + str(entity_ids[group])) as sub:
+        def group_dot_repr(g: 'Digraph', group: 'Group'):
+            with g.subgraph(name="cluster_" + str(entity_ids[group])) as sub:
                 for e in group.group:
                     entity_dot_repr(sub, e)
-            graph.node("entity_" + str(entity_ids[group]), style="invis", shape="point", width=0, height=0, margin=0, label="")
+                sub.node("entity_" + str(entity_ids[group]), style="invis", shape="point", label="")
 
-        def entity_dot_repr(graph: 'Digraph', entity: 'Entity'):
+        def entity_dot_repr(g: 'Digraph', entity: 'Entity'):
             register(entity)
 
             if type(entity) is Group:
-                group_dot_repr(graph, entity)
+                group_dot_repr(g, entity)
             if type(entity) is Object:
-                object_dot_repr(graph, entity)
+                object_dot_repr(g, entity)
 
             for rel in entity.relations:
                 register(rel.dst)
-                attrs = ""
-                # if type(rel.src) == Group:
-                #    attrs += f"ltail=cluster_{entity_ids[rel.src]}, "
-                # if type(rel.dst) == Group:
-                #    attrs += f"rtail=cluster_{entity_ids[rel.dst]}, "
-                graph.edge(f"entity_{entity_ids[rel.src]}", f"entity_{entity_ids[rel.dst]}", label=rel.rel.name)
+                attrs = {}
+                if type(rel.src) == Group:
+                    attrs["ltail"] = f"cluster_{entity_ids[rel.src]}"
+                if type(rel.dst) == Group:
+                    attrs["rtail"] = f"cluster_{entity_ids[rel.dst]}"
+                graph.edge(f"entity_{entity_ids[rel.src]}", f"entity_{entity_ids[rel.dst]}", label=rel.rel.name, **attrs)
 
-        graph = Digraph("model", filename=filename)
-        graph.graph_attr["rankdir"] = "LR"
-        graph.graph_attr["compound"] = "true"
-        graph.node_attr["shape"] = "record"
         for entity in self.entities:
             entity_dot_repr(graph, entity)
 
