@@ -88,6 +88,7 @@ class Scene:
 
         def group_dot_repr(g: 'Digraph', group: 'Group'):
             with g.subgraph(name="cluster_" + str(entity_ids[group])) as sub:
+                sub.graph_attr["label"] = "group"
                 for e in group.group:
                     entity_dot_repr(sub, e)
                 sub.node("entity_" + str(entity_ids[group]), style="invis", shape="point", label="")

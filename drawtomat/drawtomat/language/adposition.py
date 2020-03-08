@@ -5,6 +5,7 @@ class Adposition(Enum):
     """
     An enumeration of supported adpostions.
     """
+    UNKNOWN = 0
     ON = 1
     UNDER = 2
 
@@ -15,5 +16,5 @@ class Adposition(Enum):
         for adp in Adposition:
             if name.upper() == adp.name:
                 return adp
-        return None
+        return Adposition.UNKNOWN
 

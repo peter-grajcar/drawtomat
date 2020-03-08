@@ -26,3 +26,7 @@ A teapot is on a table. A cup is next to the teapot.
 A bunch of leaves are lying under a tree.
 There is a red train on a bridge.
 A calendar is above a house plant next to a clock. There is a red line across the calendar.
+There is a cup on a table. A cat is under the table.
+A pencil is on a book which is on a table.
+A dog and a cat are sitting on a couch.
+A dog is standing next to a cat which is under a tree.
