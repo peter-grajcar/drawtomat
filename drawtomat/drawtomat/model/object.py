@@ -11,15 +11,15 @@ class Object(Entity):
         The word describing the object.
     """
 
-    def __init__(self, word: str, container=None) -> None:
+    def __init__(self, scene: 'Scene', word: str, container=None) -> None:
         """
         Initialises a new object with given word inside a container.
 
         """
         if container:
-            super(Object, self).__init__(container)
+            super(Object, self).__init__(scene, container=container)
         else:
-            super(Object, self).__init__()
+            super(Object, self).__init__(scene)
         self.word = word
 
     def __repr__(self) -> str:

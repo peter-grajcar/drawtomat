@@ -63,13 +63,13 @@ class UDPipeProcessor:
                         print(f"unknown word: \"{token['form']}\"")
                         unknown = True
 
-                    obj = Object(token["lemma"] + ("?" if unknown else ""), container=scene)
+                    obj = Object(scene, word=(token["lemma"] + ("?" if unknown else "")), container=scene)
 
                     if last_entity and adp:
                         last_entity.make_relation(obj, adp)
                         adp = None
                     if last_entity and group:
-                        g = Group(container=scene)
+                        g = Group(scene, container=scene)
                         scene.entities.remove(last_entity)
                         scene.entities.remove(obj)
                         g.add_entities(last_entity, obj)
@@ -104,16 +104,17 @@ class UDPipeProcessor:
         """
         scene = Scene()
 
-        entity_stack = []
-        entity_stack_size = 0
-        entity_stack_ptrs = {}
-
         for sentence in parsed:
             root = sentence.to_tree()
+
+            entity_stack = list()
+            entity_stack_size = 0
+            entity_stack_ptrs = dict()
 
             visited = set()
             primary_stack = [root]
             primary_stack_size = 1
+            entity_position = dict()
 
             while primary_stack_size:
                 node = primary_stack[-1]
@@ -137,29 +138,36 @@ class UDPipeProcessor:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
                     if token["upostag"] == "NOUN":
                         print(f"\tObject({token['lemma']})")
-                        obj = Object(word=token["lemma"])
+                        obj = Object(scene, word=token["lemma"])
                         entity_stack.append(obj)
                         entity_stack_size += 1
+                        entity_position[obj] = token["id"]
                     if token["upostag"] == "ADP":
+                        print(f"\tRelation({token['lemma']})")
                         adp = Adposition.for_name(token["lemma"])
-                        entity_stack[-2].make_relation(entity_stack[-1], adp)
+
+                        src = entity_stack[-2]
+                        dst = entity_stack[-1]
+                        if entity_position[src] > entity_position[dst]:
+                            src, dst = dst, src
+
+                        src.make_relation(dst, adp)
                 else:
                     ptr = entity_stack_ptrs[token["id"]]
                     frame = entity_stack[ptr:]
-                    print(f"\tFrame: {frame}")
                     frame_size = entity_stack_size - ptr
-                    if node is root:
-                        scene.add_entities(*frame)
-                        continue
-                    if frame_size < 2:
-                        continue
+                    print(f"\tFrame: {frame}")
 
-                    group = Group()
-                    group.add_entities(*frame)
+                    if frame_size > 1:
+                        g = Group(scene, entities=frame)
+                        entity_position[g] = max([entity_position[e] for e in frame])
 
-                    del entity_stack[ptr:]
-                    entity_stack.append(group)
-                    entity_stack_size -= frame_size - 1
+                        del entity_stack[ptr:]
+                        entity_stack.append(g)
+                        entity_stack_size -= frame_size - 1
+
+            scene.add_entities(*entity_stack)
+            print("done")
 
         return scene
 

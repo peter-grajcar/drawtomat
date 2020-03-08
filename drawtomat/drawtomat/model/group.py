@@ -11,21 +11,11 @@ class Group(Entity):
         The list of entities contained in the group.
     """
 
-    def __init__(self, container=None, entities=[]) -> None:
-        """
-        Initialises an empty group inside a container.
-
-        Parameters
-        ----------
-        container
-
-        entities : list[Entity]
-            list of entities which will be added to the group
-        """
+    def __init__(self, scene: 'Scene', container=None, entities=[]) -> None:
         if container:
-            super(Group, self).__init__(container)
+            super(Group, self).__init__(scene, container=container)
         else:
-            super(Group, self).__init__()
+            super(Group, self).__init__(scene)
 
         self.group = entities
 

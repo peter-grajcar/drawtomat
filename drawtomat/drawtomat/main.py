@@ -17,17 +17,7 @@ if __name__ == "__main__":
     processor = UDPipeProcessor("../resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
     scene = processor.process(args.text)
 
-    """
-    scene = Scene()
-    grp1 = Group(scene)
-    obj1 = Object(grp1, "pencil")
-    obj2 = Object(grp1, "book")
-    obj3 = Object(scene, "table")
-    obj4 = Object(scene, "cat")
-
-    grp1.make_relation(obj3, Adposition.ON)
-    obj4.make_relation(obj3, Adposition.UNDER)
-    """
-
     graph = scene.export_dot(args.output)
+    graph.graph_attr["label"] = f"\"{args.text}\""
+    graph.graph_attr["labelloc"] = "t"
     graph.view()

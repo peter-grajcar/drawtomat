@@ -14,15 +14,31 @@ class Scene:
     Attributes
     ----------
     entities : list
-        The list of entities in the scene.
+        The list of entities in the scene (direct descendants of the scene).
     """
-    entities: list
 
-    def __init__(self) -> None:
+    def __init__(self, entities=[]) -> None:
         """
         Initialises an empty scene.
         """
-        self.entities = []
+        self.entities = entities
+        self.entity_register = set()
+
+    def register(self, entity: 'Entity') -> None:
+        """
+        Registers an entity. Register of entities contains all entities present in the scene (not only
+        direct descendants as opposed of the 'entities' list).
+
+        Parameters
+        ----------
+        entity
+            The entity to register
+
+        Returns
+        -------
+        None
+        """
+        self.entity_register.add(entity)
 
     def add_entity(self, entity: 'Entity') -> None:
         """
@@ -41,11 +57,12 @@ class Scene:
 
     def add_entities(self, *entities) -> None:
         """
-
+        Adds all entities passed as an argument.
 
         Parameters
         ----------
         entities
+            A list of entities to add.
 
         Returns
         -------
@@ -79,7 +96,7 @@ class Scene:
 
         def register(entity: 'Entity'):
             nonlocal id_counter
-            if not entity_ids.get(entity):
+            if not entity in entity_ids:
                 entity_ids[entity] = id_counter
                 id_counter += 1
 

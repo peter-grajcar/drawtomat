@@ -1,3 +1,4 @@
+import uuid
 from abc import ABC
 
 from drawtomat.model.relation import Relation
@@ -13,10 +14,13 @@ class Entity(ABC):
         The list of relations.
     """
 
-    def __init__(self, container=None):
+    def __init__(self, scene: 'Scene', container=None):
         self.relations = []
+        self.id = uuid.uuid1()
         if container:
             container.add_entity(self)
+
+        scene.register(self)
 
     def make_relation(self, entity: 'Entity', adp: 'Adposition') -> None:
         """
@@ -35,3 +39,7 @@ class Entity(ABC):
         """
         rel = Relation(self, entity, adp)
         self.relations.append(rel)
+
+    def __hash__(self) -> int:
+        return self.id.__hash__()
+

@@ -6,7 +6,7 @@ Three dolphins are swimming behind a sailboat.
 An airplane is flying between two clouds above mountains.
 A tractor is in front of a barn. There are four cows in the barn.
 There is a cat sitting on a couch.
-A postcard and an envelope are laying under a mailbox.
+A postcard and an envelope are lying under a mailbox.
 A table is in a house. A television is placed on the table. There is a castle in the television.
 There is an apple under a tree.
 A bird is sitting on a fence.
@@ -30,3 +30,5 @@ There is a cup on a table. A cat is under the table.
 A pencil is on a book which is on a table.
 A dog and a cat are sitting on a couch.
 A dog is standing next to a cat which is under a tree.
+A car is parked behind a bench and a tree.
+A bench and a tree are behind a car.
