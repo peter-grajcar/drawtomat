@@ -16,6 +16,7 @@ class Entity(ABC):
 
     def __init__(self, scene: 'Scene', container=None):
         self.relations = []
+        self.container = container
         self.id = uuid.uuid1()
         if container:
             container.add_entity(self)

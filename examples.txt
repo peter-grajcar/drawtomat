@@ -32,3 +32,5 @@ A dog and a cat are sitting on a couch.
 A dog is standing next to a cat which is under a tree.
 A car is parked behind a bench and a tree.
 A bench and a tree are behind a car.
+Ringo would like to be under the sea, in an octopus' garden in the shade.
+A black cat and a white cat are under a tree. The white cat is standing on a box.

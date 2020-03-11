@@ -1,5 +1,3 @@
-from typing import IO
-
 from graphviz import Digraph
 
 from drawtomat.model.entity import Entity
@@ -13,15 +11,14 @@ class Scene:
 
     Attributes
     ----------
-    entities : list
+    entities : set
         The list of entities in the scene (direct descendants of the scene).
     """
 
-    def __init__(self, entities=[]) -> None:
-        """
-        Initialises an empty scene.
-        """
-        self.entities = entities
+    def __init__(self, entities=None) -> None:
+        self.entities = set()
+        if entities is not None:
+            self.add_entities(*entities)
         self.entity_register = set()
 
     def register(self, entity: 'Entity') -> None:
@@ -53,7 +50,8 @@ class Scene:
         -------
         None
         """
-        self.entities.append(entity)
+        self.entities.add(entity)
+        entity.container = self
 
     def add_entities(self, *entities) -> None:
         """
@@ -69,7 +67,8 @@ class Scene:
         None
         """
         for entity in entities:
-            self.entities.append(entity)
+            self.entities.add(entity)
+            entity.container = self
 
     def export_dot(self, filename: str) -> Digraph:
         """
@@ -93,6 +92,7 @@ class Scene:
         graph.graph_attr["rankdir"] = "LR"
         graph.graph_attr["compound"] = "true"
         graph.node_attr["shape"] = "record"
+        graph.edge_attr["fontsize"] = "8"
 
         def register(entity: 'Entity'):
             nonlocal id_counter

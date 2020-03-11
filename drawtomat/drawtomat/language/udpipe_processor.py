@@ -1,12 +1,9 @@
-from queue import Queue
-
 import conllu
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
 from drawtomat.language.adposition import Adposition
 from drawtomat.model.group import Group
 from drawtomat.model.object import Object
-from drawtomat.model.relation import Relation
 from drawtomat.model.scene import Scene
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
@@ -112,36 +109,53 @@ class UDPipeProcessor:
             entity_stack_ptrs = dict()
 
             visited = set()
-            primary_stack = [root]
-            primary_stack_size = 1
+            node_stack = [root]
+            node_stack_size = 1
             entity_position = dict()
 
-            while primary_stack_size:
-                node = primary_stack[-1]
+            while node_stack_size:
+                node = node_stack[-1]
                 closing = False
                 if node.token["id"] in visited:
                     # closing the node
-                    primary_stack.pop()
-                    primary_stack_size -= 1
+                    node_stack.pop()
+                    node_stack_size -= 1
                     closing = True
                 else:
                     # opening the node
                     visited.add(node.token["id"])
                     for child in node.children[::-1]:
-                        primary_stack.append(child)
-                        primary_stack_size += 1
+                        node_stack.append(child)
+                        node_stack_size += 1
 
                 token = node.token
                 print("closing: " if closing else "opening: ", token["form"])
 
                 if not closing:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
-                    if token["upostag"] == "NOUN":
+
+                    if token["upostag"] == "NOUN" or token["upostag"] == "PROPN":
                         print(f"\tObject({token['lemma']})")
-                        obj = Object(scene, word=token["lemma"])
+                        obj = None
+
+                        # If a noun is preceded by 'the' try to find an existing object
+                        # in scene's entity register.
+                        # TODO: refactor this into separate method
+                        for child in node.children:
+                            if child.token["lemma"] == "the":
+                                for e in scene.entity_register:
+                                    if type(e) == Object and e.word == token["lemma"]:
+                                        obj = e
+
+                        if not obj:
+                            obj = Object(scene, word=token["lemma"])
+
                         entity_stack.append(obj)
                         entity_stack_size += 1
                         entity_position[obj] = token["id"]
+
+                    # Creates relation between two objects at the top of
+                    # the stack
                     if token["upostag"] == "ADP":
                         print(f"\tRelation({token['lemma']})")
                         adp = Adposition.for_name(token["lemma"])
@@ -152,21 +166,36 @@ class UDPipeProcessor:
                             src, dst = dst, src
 
                         src.make_relation(dst, adp)
+
                 else:
                     ptr = entity_stack_ptrs[token["id"]]
                     frame = entity_stack[ptr:]
                     frame_size = entity_stack_size - ptr
-                    print(f"\tFrame: {frame}")
+                    print(f"\tFrame:\t{frame}")
 
-                    if frame_size > 1:
-                        g = Group(scene, entities=frame)
+                    frame_set = set()
+                    frame_set_size = 0
+                    for e in frame:
+                        if e.container is None:
+                            frame_set.add(e)
+                            frame_set_size += 1
+
+                    print(f"\t\t{frame_set}")
+
+                    # if there are at least two entities in the entity stack frame
+                    # merge them into one group.
+                    if frame_set_size > 1:
+                        g = Group(scene, entities=frame_set)
                         entity_position[g] = max([entity_position[e] for e in frame])
 
                         del entity_stack[ptr:]
                         entity_stack.append(g)
                         entity_stack_size -= frame_size - 1
 
-            scene.add_entities(*entity_stack)
+            # Put all entities which does not belong to any group to the scene
+            for e in entity_stack:
+                if e.container is None:
+                    scene.add_entity(e)
             print("done")
 
         return scene
