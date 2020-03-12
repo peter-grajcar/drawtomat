@@ -1,4 +1,4 @@
-drawtomat.language package
+drawtomat.graphics package
 ==========================
 
 Submodules
@@ -6,13 +6,13 @@ Submodules
 
 .. toctree::
 
-   drawtomat.language.adposition
-   drawtomat.language.udpipe_processor
+   drawtomat.graphics.quickdraw_composer
+   drawtomat.graphics.quickdraw_renderer
 
 Module contents
 ---------------
 
-.. automodule:: drawtomat.language
+.. automodule:: drawtomat.graphics
    :members:
    :undoc-members:
    :show-inheritance:

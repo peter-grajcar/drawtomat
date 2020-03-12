@@ -10,6 +10,8 @@ Welcome to Drawtomat's documentation!
    :maxdepth: 10
    :caption: Contents:
 
+   modules
+
 
 
 Indices and tables

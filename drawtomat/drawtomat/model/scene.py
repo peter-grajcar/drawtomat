@@ -12,7 +12,9 @@ class Scene:
     Attributes
     ----------
     entities : set
-        The list of entities in the scene (direct descendants of the scene).
+        Set of entities in the scene (direct descendants of the scene).
+    entity_register: set
+        Set of all entities present in the scene (not only direct descendants).
     """
 
     def __init__(self, entities=None) -> None:
@@ -82,7 +84,7 @@ class Scene:
         Returns
         -------
         Digraph
-
+            A graph representation of the scene.
         """
 
         id_counter = 0

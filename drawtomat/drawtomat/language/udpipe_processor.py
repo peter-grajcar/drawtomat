@@ -11,18 +11,14 @@ from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 class UDPipeProcessor:
     """
     A description processor based on UDPipe.
+
+    Attributes
+    ----------
+    model : Model
+        UDPipe model.
     """
-    model: Model
 
     def __init__(self, model_filename: str) -> None:
-        """
-        Initialises a new UDPipe processor from model file.
-
-        Parameters
-        ----------
-        model_filename
-            UDPipe model.
-        """
         self.model = Model.load(model_filename)
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")

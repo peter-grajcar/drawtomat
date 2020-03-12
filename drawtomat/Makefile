@@ -1,4 +1,5 @@
 apidocs:
+	sphinx-apidoc -o docs/source drawtomat -f -e
 	$(MAKE) -C docs html
 
 udpipe:

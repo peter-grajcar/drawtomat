@@ -1,9 +1,6 @@
 import argparse
-from drawtomat.language.adposition import Adposition
+
 from drawtomat.language.udpipe_processor import UDPipeProcessor
-from drawtomat.model.group import Group
-from drawtomat.model.object import Object
-from drawtomat.model.scene import Scene
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

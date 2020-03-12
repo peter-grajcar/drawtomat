@@ -1,6 +1,9 @@
 
 
 class QuickDrawDataset:
+    """
+    Tris class provides data from the Google's "Quick, Draw!" dataset.
+    """
     _words = None
 
     @staticmethod

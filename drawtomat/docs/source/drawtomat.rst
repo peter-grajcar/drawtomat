@@ -6,20 +6,17 @@ Subpackages
 
 .. toctree::
 
+   drawtomat.graphics
    drawtomat.language
    drawtomat.model
+   drawtomat.quickdraw
 
 Submodules
 ----------
 
-drawtomat.main module
----------------------
+.. toctree::
 
-.. automodule:: drawtomat.main
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   drawtomat.main
 
 Module contents
 ---------------
