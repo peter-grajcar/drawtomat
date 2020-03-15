@@ -23,6 +23,6 @@ class QuickDrawRenderer:
 
         Returns
         -------
-
+        None
         """
 
