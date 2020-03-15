@@ -5,7 +5,6 @@ from drawtomat.language.adposition import Adposition
 from drawtomat.model.group import Group
 from drawtomat.model.object import Object
 from drawtomat.model.scene import Scene
-from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
 class UDPipeProcessor:
@@ -24,66 +23,9 @@ class UDPipeProcessor:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
 
     @staticmethod
-    def _approach_a(parsed: 'list[TokenList]') -> Scene:
+    def _traverse_tree(parsed: 'list[TokenList]') -> Scene:
         """
-        A naive approach of processing the description. Each noun is classified as an object.
-        Two objects connected with 'and' are grouped into a group. An adposition between two
-        entities is used to create a relation between the two entities.
-
-        Parameters
-        ----------
-        parsed
-            A list of sentences.
-
-        Returns
-        -------
-        Scene
-            Constructed scene.
-        """
-        scene = Scene()
-
-        last_entity = None
-        adp = None
-        group = False
-
-        for sentence in parsed:
-            for token in sentence:
-                if token["upostag"] == "NOUN":
-                    unknown = False
-                    if token["lemma"] in QuickDrawDataset.words():
-                        print(f"object \"{token['lemma']}\"")
-                    else:
-                        print(f"unknown word: \"{token['form']}\"")
-                        unknown = True
-
-                    obj = Object(scene, word=(token["lemma"] + ("?" if unknown else "")), container=scene)
-
-                    if last_entity and adp:
-                        last_entity.make_relation(obj, adp)
-                        adp = None
-                    if last_entity and group:
-                        g = Group(scene, container=scene)
-                        scene.group.remove(last_entity)
-                        scene.group.remove(obj)
-                        g.add_entities(last_entity, obj)
-                        group = False
-
-                        last_entity = g
-                        continue
-
-                    last_entity = obj
-
-                elif token["upostag"] == "ADP":
-                    adp = Adposition.for_name(token["lemma"])
-                    print(f"relation {adp.name}") if adp else print(f"unsupported relation \"{token['form']}\"")
-                elif token["lemma"] == "and":
-                    group = True
-
-        return scene
-
-    @staticmethod
-    def _approach_b(parsed: 'list[TokenList]') -> Scene:
-        """
+        Processes the description via tree traversal (DFS).
 
         Parameters
         ----------
@@ -130,6 +72,8 @@ class UDPipeProcessor:
                 if not closing:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
 
+                    # TODO: refactor this to a separate method.
+                    # TODO: take into account compound nouns.
                     if token["upostag"] == "NOUN" or token["upostag"] == "PROPN":
                         print(f"\tObject({token['lemma']})")
                         obj = None
@@ -152,6 +96,7 @@ class UDPipeProcessor:
 
                     # Creates relation between two objects at the top of
                     # the stack
+                    # TODO: refactor this to a separate method.
                     if token["upostag"] == "ADP":
                         print(f"\tRelation({token['lemma']})")
                         adp = Adposition.for_name(token["lemma"])
@@ -219,6 +164,6 @@ class UDPipeProcessor:
         # print(parsed)
 
         # scene = self._approach_a(parsed)
-        scene = self._approach_b(parsed)
+        scene = self._traverse_tree(parsed)
 
         return scene
