@@ -11,17 +11,18 @@ class Scene:
 
     Attributes
     ----------
-    entities : list
-        List of entities in the scene (direct descendants of the scene).
+    group : Group
+        Root group of the scene.
     entity_register: set
         Set of all entities present in the scene (not only direct descendants).
     """
 
     def __init__(self, entities=None) -> None:
-        self.entities = list()
+        self.entity_register = set()
+
+        self.group = Group(scene=self)
         if entities is not None:
             self.add_entities(*entities)
-        self.entity_register = set()
 
     def register(self, entity: 'Entity') -> None:
         """
@@ -52,8 +53,7 @@ class Scene:
         -------
         None
         """
-        self.entities.append(entity)
-        entity.container = self
+        self.group.add_entity(entity)
 
     def add_entities(self, *entities) -> None:
         """
@@ -69,8 +69,7 @@ class Scene:
         None
         """
         for entity in entities:
-            self.entities.append(entity)
-            entity.container = self
+            self.group.add_entity(entity)
 
     def export_dot(self, filename: str) -> Digraph:
         """
@@ -129,7 +128,7 @@ class Scene:
                     attrs["rtail"] = f"cluster_{entity_ids[rel.dst]}"
                 graph.edge(f"entity_{entity_ids[rel.src]}", f"entity_{entity_ids[rel.dst]}", label=rel.rel.name, **attrs)
 
-        for entity in self.entities:
+        for entity in self.group.entities:
             entity_dot_repr(graph, entity)
 
         graph.save()

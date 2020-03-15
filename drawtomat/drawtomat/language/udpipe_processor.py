@@ -63,8 +63,8 @@ class UDPipeProcessor:
                         adp = None
                     if last_entity and group:
                         g = Group(scene, container=scene)
-                        scene.entities.remove(last_entity)
-                        scene.entities.remove(obj)
+                        scene.group.remove(last_entity)
+                        scene.group.remove(obj)
                         g.add_entities(last_entity, obj)
                         group = False
 
