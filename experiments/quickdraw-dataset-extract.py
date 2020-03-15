@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -10,6 +11,8 @@ if __name__ == "__main__":
     parser.add_argument("--count", default=100, type=int)
     args = parser.parse_args()
 
-    with open(f"{args.path}/{args.file}.ndjson") as f:
+    print(args.name, file=sys.stderr)
+
+    with open(f"{args.path}/{args.name}.ndjson") as f:
         for i in range(args.count):
             print(f.readline(), end="")
