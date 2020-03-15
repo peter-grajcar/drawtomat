@@ -7,7 +7,7 @@ class Group(Entity):
 
     Parameters
     ----------
-    group : set
+    group : list
         The list of entities contained in the group.
     """
 
@@ -17,7 +17,7 @@ class Group(Entity):
         else:
             super(Group, self).__init__(scene)
 
-        self.group = set()
+        self.entities = list()
         if entities is not None:
             self.add_entities(*entities)
         self.container = container
@@ -35,7 +35,7 @@ class Group(Entity):
         -------
         None
         """
-        self.group.add(entity)
+        self.entities.append(entity)
         entity.container = self
 
     def add_entities(self, *entities) -> None:
@@ -51,8 +51,8 @@ class Group(Entity):
         None
         """
         for entity in entities:
-            self.group.add(entity)
+            self.entities.append(entity)
             entity.container = self
 
     def __repr__(self) -> str:
-        return f"GroupEntity({len(self.group)})"
+        return f"GroupEntity({len(self.entities)})"

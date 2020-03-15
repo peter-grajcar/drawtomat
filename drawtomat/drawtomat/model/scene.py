@@ -11,14 +11,14 @@ class Scene:
 
     Attributes
     ----------
-    entities : set
-        Set of entities in the scene (direct descendants of the scene).
+    entities : list
+        List of entities in the scene (direct descendants of the scene).
     entity_register: set
         Set of all entities present in the scene (not only direct descendants).
     """
 
     def __init__(self, entities=None) -> None:
-        self.entities = set()
+        self.entities = list()
         if entities is not None:
             self.add_entities(*entities)
         self.entity_register = set()
@@ -52,7 +52,7 @@ class Scene:
         -------
         None
         """
-        self.entities.add(entity)
+        self.entities.append(entity)
         entity.container = self
 
     def add_entities(self, *entities) -> None:
@@ -69,7 +69,7 @@ class Scene:
         None
         """
         for entity in entities:
-            self.entities.add(entity)
+            self.entities.append(entity)
             entity.container = self
 
     def export_dot(self, filename: str) -> Digraph:
@@ -108,7 +108,7 @@ class Scene:
         def group_dot_repr(g: 'Digraph', group: 'Group'):
             with g.subgraph(name="cluster_" + str(entity_ids[group])) as sub:
                 sub.graph_attr["label"] = "group"
-                for e in group.group:
+                for e in group.entities:
                     entity_dot_repr(sub, e)
                 sub.node("entity_" + str(entity_ids[group]), style="invis", shape="point", label="")
 

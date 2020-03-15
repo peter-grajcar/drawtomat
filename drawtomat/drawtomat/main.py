@@ -1,5 +1,6 @@
 import argparse
 
+from drawtomat.graphics.quickdraw_composer import QuickDrawComposer
 from drawtomat.language.udpipe_processor import UDPipeProcessor
 
 if __name__ == "__main__":
@@ -18,3 +19,6 @@ if __name__ == "__main__":
     graph.graph_attr["label"] = f"\"{args.text}\""
     graph.graph_attr["labelloc"] = "t"
     graph.view()
+
+    composer = QuickDrawComposer()
+    composer.compose(scene)
