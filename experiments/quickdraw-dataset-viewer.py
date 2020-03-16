@@ -81,7 +81,7 @@ def next_picture(*args):
 
 def save_picture():
     with open(f"quickdraw-dataset/saved/{word.get()}.ndjson", "a") as f:
-        print(data[data_index], file=f)
+        print(ndjson.dumps([data[data_index]]), file=f)
     print(f"Saved {word.get()}")
 
 

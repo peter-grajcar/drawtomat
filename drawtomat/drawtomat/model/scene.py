@@ -119,7 +119,7 @@ class Scene:
             if type(entity) is Object:
                 object_dot_repr(g, entity)
 
-            for rel in entity.relations:
+            for rel in entity.relations_out:
                 register(rel.dst)
                 attrs = {}
                 if type(rel.src) == Group:

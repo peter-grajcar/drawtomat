@@ -15,7 +15,8 @@ class Entity(ABC):
     """
 
     def __init__(self, scene: 'Scene', container=None):
-        self.relations = []
+        self.relations_out = list()
+        self.relations_in = list()
         self.container = container
         self.id = uuid.uuid1()
         if container:
@@ -39,7 +40,8 @@ class Entity(ABC):
         None
         """
         rel = Relation(self, entity, adp)
-        self.relations.append(rel)
+        self.relations_out.append(rel)
+        entity.relations_in.append(rel)
 
     def __hash__(self) -> int:
         return self.id.__hash__()

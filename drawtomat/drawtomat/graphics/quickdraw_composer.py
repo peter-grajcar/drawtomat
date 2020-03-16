@@ -1,5 +1,4 @@
 import random
-from pprint import pprint
 
 from drawtomat.model.group import Group
 from drawtomat.model.object import Object
@@ -83,6 +82,16 @@ class _ObjectWrapper:
         self.width = width / q
         self.height = height / q
 
+    def centre_of_gravity(self):
+        """
+        Computes the centre of gravity, i.e. averages the points of all strokes.
+
+        Returns
+        -------
+            The centre of gravity of the object.
+        """
+        return 0, 0
+
     def __repr__(self) -> str:
         return self.entity.__repr__() + f"[w={self.width:.0f}, h={self.height:.0f}]"
 
@@ -96,12 +105,7 @@ class QuickDrawComposer:
         self.dataset = QuickDrawDataset.words()
 
     def _topological_order(self, entity_register):
-        no_incoming_edges = set(entity_register)
-        for vertex in entity_register:
-            if vertex.container:
-                no_incoming_edges.discard(vertex.container)
-            for rel in vertex.relations:
-                no_incoming_edges.discard(rel.dst)
+        no_incoming_edges = [e for e in entity_register if not e.relations_in]
 
         visited = set()
         stack = []
@@ -112,17 +116,17 @@ class QuickDrawComposer:
             v = q.pop()
             if v not in visited:
                 visited.add(v)
-                q.extend([rel.dst for rel in v.relations])
+                q.extend([rel.dst for rel in v.relations_out])
                 if v.container:
                     q.append(v.container)
 
-                while stack and v not in [rel.dst for rel in stack[-1].relations] + [stack[-1].container]:
+                while stack and v not in [rel.dst for rel in stack[-1].relations_out] + [stack[-1].container]:
                     order.append(stack.pop())
                 stack.append(v)
 
         return stack + order[::-1]
 
-    def compose(self, scene: 'Scene') -> list:
+    def compose(self, scene: 'Scene') -> dict:
         """
         Composes object from the scene into a list of strokes.
 
@@ -157,7 +161,10 @@ class QuickDrawComposer:
                 wrapper = _ObjectWrapper(entity, adjust_size=default_size)
                 drawings[entity] = wrapper
 
-        pprint(drawings)
+            print("\t", wrapper)
 
         # Step 2:   Pop the entities from the ordered list and resolve the position of
         #           the entities.
+
+        while topological_order:
+            wrapper = topological_order.pop()
