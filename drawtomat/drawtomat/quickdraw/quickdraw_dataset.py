@@ -27,7 +27,7 @@ class QuickDrawDataset:
         return QuickDrawDataset._words
 
     @staticmethod
-    def images():
+    def images(word: str = None):
         """
         Returns a dictionary of data for each word.
 
@@ -38,23 +38,10 @@ class QuickDrawDataset:
         """
         if not QuickDrawDataset._images:
             QuickDrawDataset._images = dict()
-            for word in QuickDrawDataset.words():
-                with open(f"../resources/quickdraw/dataset/{word}.ndjson") as f:
-                    QuickDrawDataset._images[word] = ndjson.loads(f.readlines())
+            for w in QuickDrawDataset.words():
+                with open(f"../resources/quickdraw/dataset/{w}.ndjson") as f:
+                    QuickDrawDataset._images[w] = ndjson.load(f)
+        if word:
+            return QuickDrawDataset.images()[word]
         return QuickDrawDataset._images
 
-    @staticmethod
-    def images(word: str) -> dict:
-        """
-        Returns data for a single word.
-
-        Parameters
-        ----------
-        word : str
-
-        Returns
-        -------
-        dict
-
-        """
-        return QuickDrawDataset.images()[word]

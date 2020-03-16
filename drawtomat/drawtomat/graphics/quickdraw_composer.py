@@ -1,5 +1,8 @@
 import random
+from pprint import pprint
 
+from drawtomat.model.group import Group
+from drawtomat.model.object import Object
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
@@ -22,6 +25,9 @@ class _GroupWrapper:
         self.width = 0
         self.height = 0
 
+    def __repr__(self) -> str:
+        return self.entity.__repr__() + f"[w={self.width:.0f}, h={self.height:.0f}]"
+
 
 class _ObjectWrapper:
     """
@@ -33,11 +39,11 @@ class _ObjectWrapper:
         A reference to the original object from the model.
     """
 
-    def __init__(self, obj: 'Object') -> None:
+    def __init__(self, obj: 'Object', adjust_size: int = 0) -> None:
         self.entity = obj
-        self._load_drawing()
+        self._load_drawing(adjust_size=adjust_size)
 
-    def _load_drawing(self, adjust_size=0) -> list:
+    def _load_drawing(self, adjust_size: int = 0) -> list:
         """
         Loads a drawing from the Quick, Draw! dataset, crops the drawing and returns the strokes.
         Sets the boundary attributes of the wrapper (width, height) and adjusted strokes (in Quick, Draw! format).
@@ -52,10 +58,10 @@ class _ObjectWrapper:
         data = QuickDrawDataset.images(word)
         drawing = random.choice(data)["drawing"]
 
-        min_x = min(stroke[1] for stroke in drawing)
-        max_x = max(stroke[1] for stroke in drawing)
-        min_y = min(stroke[2] for stroke in drawing)
-        max_y = max(stroke[2] for stroke in drawing)
+        min_x = min([min(stroke[0]) for stroke in drawing])
+        max_x = max([max(stroke[0]) for stroke in drawing])
+        min_y = min([min(stroke[1]) for stroke in drawing])
+        max_y = max([max(stroke[1]) for stroke in drawing])
 
         width = max_x - min_x
         height = max_y - min_y
@@ -68,14 +74,17 @@ class _ObjectWrapper:
 
         self.strokes = [
             [
-                stroke[0],                             # time
-                [(x - min_x) / q for x in stroke[1]],  # x-axis
-                [(y - min_y) / q for y in stroke[2]]   # y-axis
+                [(x - min_x) / q for x in stroke[0]],  # x-axis
+                [(y - min_y) / q for y in stroke[1]],  # y-axis
+                stroke[2],                             # time
             ]
             for stroke in drawing
         ]
         self.width = width / q
         self.height = height / q
+
+    def __repr__(self) -> str:
+        return self.entity.__repr__() + f"[w={self.width:.0f}, h={self.height:.0f}]"
 
 
 class QuickDrawComposer:
@@ -128,16 +137,27 @@ class QuickDrawComposer:
             The list of strokes in format specified in (TODO: add reference to the format specification)
         """
         topological_order = self._topological_order(scene.entity_register)
-        drawn = set()
 
+        print("="*80)
         print("Topological order: ", topological_order)
 
         # Step 1:   Go through the ordered list of entities and compute the dimensions
         #           of entities.
 
+        drawings = dict()
         default_size = 100
         for entity in topological_order:
-            pass
+            if type(entity) == Group:
+                wrapper = _GroupWrapper(entity)
+                for child in entity.entities:
+                    wrapper.width += drawings[child].width
+                    wrapper.height += drawings[child].height
+                drawings[entity] = wrapper
+            elif type(entity) == Object:
+                wrapper = _ObjectWrapper(entity, adjust_size=default_size)
+                drawings[entity] = wrapper
+
+        pprint(drawings)
 
         # Step 2:   Pop the entities from the ordered list and resolve the position of
         #           the entities.

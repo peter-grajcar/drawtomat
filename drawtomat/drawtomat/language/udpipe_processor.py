@@ -121,8 +121,6 @@ class UDPipeProcessor:
                             frame_set.add(e)
                             frame_set_size += 1
 
-                    print(f"\t\t{frame_set}")
-
                     # if there are at least two entities in the entity stack frame
                     # merge them into one group.
                     if frame_set_size > 1:
