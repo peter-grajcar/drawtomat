@@ -1,99 +1,11 @@
-import random
+from tkinter import Tk, Canvas
 
+from drawtomat.graphics.wrapper.group_wrapper import GroupWrapper
+from drawtomat.graphics.wrapper.object_wrapper import ObjectWrapper
+from drawtomat.language.adposition import Adposition
 from drawtomat.model.group import Group
 from drawtomat.model.object import Object
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
-
-
-class _GroupWrapper:
-    """
-    A wrapper type for group entity.
-
-    Attributes
-    ----------
-    entity: Group
-        A reference to the original group from the model.
-    width:
-        Cumulative width of the group, i.e. the sum of widths of the entities in the group.
-    height:
-        Cumulative height of the group, i.e. the sum of height of the entities in the group.
-    """
-
-    def __init__(self, group: 'Group') -> None:
-        self.entity = group
-        self.width = 0
-        self.height = 0
-
-    def __repr__(self) -> str:
-        return self.entity.__repr__() + f"[w={self.width:.0f}, h={self.height:.0f}]"
-
-
-class _ObjectWrapper:
-    """
-    A wrapper type for object entity.
-
-    Attributes
-    ----------
-    entity: Object
-        A reference to the original object from the model.
-    """
-
-    def __init__(self, obj: 'Object', adjust_size: int = 0) -> None:
-        self.entity = obj
-        self._load_drawing(adjust_size=adjust_size)
-
-    def _load_drawing(self, adjust_size: int = 0) -> list:
-        """
-        Loads a drawing from the Quick, Draw! dataset, crops the drawing and returns the strokes.
-        Sets the boundary attributes of the wrapper (width, height) and adjusted strokes (in Quick, Draw! format).
-
-        Returns
-        -------
-        list
-            A list of strokes (in Quick, Draw! dataset format).
-        """
-        word = self.entity.word
-        # TODO: handle KeyError for unknown words
-        data = QuickDrawDataset.images(word)
-        drawing = random.choice(data)["drawing"]
-
-        min_x = min([min(stroke[0]) for stroke in drawing])
-        max_x = max([max(stroke[0]) for stroke in drawing])
-        min_y = min([min(stroke[1]) for stroke in drawing])
-        max_y = max([max(stroke[1]) for stroke in drawing])
-
-        width = max_x - min_x
-        height = max_y - min_y
-
-        if adjust_size:
-            # TODO: choose dominant dimension
-            q = max(width, height) / adjust_size
-        else:
-            q = 1
-
-        self.strokes = [
-            [
-                [(x - min_x) / q for x in stroke[0]],  # x-axis
-                [(y - min_y) / q for y in stroke[1]],  # y-axis
-                stroke[2],                             # time
-            ]
-            for stroke in drawing
-        ]
-        self.width = width / q
-        self.height = height / q
-
-    def centre_of_gravity(self):
-        """
-        Computes the centre of gravity, i.e. averages the points of all strokes.
-
-        Returns
-        -------
-            The centre of gravity of the object.
-        """
-        return 0, 0
-
-    def __repr__(self) -> str:
-        return self.entity.__repr__() + f"[w={self.width:.0f}, h={self.height:.0f}]"
 
 
 class QuickDrawComposer:
@@ -142,29 +54,117 @@ class QuickDrawComposer:
         """
         topological_order = self._topological_order(scene.entity_register)
 
-        print("="*80)
+        print("=" * 80)
         print("Topological order: ", topological_order)
 
-        # Step 1:   Go through the ordered list of entities and compute the dimensions
-        #           of entities.
+        #################################################################################
+        # Step 1:   Go through the ordered list of entities and compute the dimensions  #
+        #           of entities.                                                        #
+        #################################################################################
 
         drawings = dict()
-        default_size = 100
+        default_size = 100  # default size of the object (in cm)
+        unit = 1            # ?px = 1cm
+
         for entity in topological_order:
             if type(entity) == Group:
-                wrapper = _GroupWrapper(entity)
-                for child in entity.entities:
-                    wrapper.width += drawings[child].width
-                    wrapper.height += drawings[child].height
+                wrapper = GroupWrapper(entity)
+                # TODO: compute cumulative width and height of the group
+                # for child in entity.entities:
+                #    wrapper.width += drawings[child].width()
+                #    wrapper.height += drawings[child].height()
                 drawings[entity] = wrapper
             elif type(entity) == Object:
-                wrapper = _ObjectWrapper(entity, adjust_size=default_size)
+                wrapper = ObjectWrapper(entity, default_size=default_size, unit=unit)
                 drawings[entity] = wrapper
 
             print("\t", wrapper)
 
-        # Step 2:   Pop the entities from the ordered list and resolve the position of
-        #           the entities.
+        #################################################################################
+        # Step 2:   Pop the entities from the ordered list and resolve the position of  #
+        #           the entities.                                                       #
+        #################################################################################
 
-        while topological_order:
-            wrapper = topological_order.pop()
+        # ======== for debugging only ========
+        root = Tk()
+        root.title("Drawtomat")
+        canvas = Canvas(root, width=600, height=400)
+        canvas.pack()
+
+        def draw_obj(obj: 'ObjectWrapper'):
+            gx, gy = obj.centre_of_gravity()
+            cx, cy = obj.centre()
+            px, py = obj.x + 300 - cx, obj.y + 200 - cy
+
+            for stroke in obj.strokes:
+                if len(stroke[2]) < 2:
+                    continue
+                points = [(px + x, py + y) for (x, y) in zip(stroke[0], stroke[1])]
+                canvas.create_line(*points)
+
+            """
+            canvas.create_rectangle(px, py, px + obj.width(), py + obj.height(), outline="#ff00ff")
+            canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
+            canvas.create_line(px + gx - 4, py + gy,     px + gx + 4, py + gy,     fill="#ff00ff")
+            canvas.create_line(px + gx,     py + gy - 4, px + gx,     py + gy + 4, fill="#ff00ff")
+            canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
+            canvas.create_line(px + cx - 3, py + cy + 3, px + cx + 3, py + cy - 3, fill="#00ffff")
+            """
+
+        # =====================================
+
+        for e in topological_order[::-1]:
+            wrapper = drawings[e]
+            if type(wrapper) == GroupWrapper:
+                # TODO: set position of the group
+                container = wrapper.entity.container
+                if container:
+                    container_wrapper = drawings[container]
+                    dw = container_wrapper.width() - wrapper.width()
+                    dh = container_wrapper.height() - wrapper.height()
+                    wrapper.x = container_wrapper.x
+                    wrapper.y = container_wrapper.y
+                pass
+            elif type(wrapper) == ObjectWrapper:
+
+                if wrapper.entity.relations_out:
+                    rel = wrapper.entity.relations_out[0]
+                    dst_wrapper = drawings[rel.dst]
+
+                    # adjust scale with respect to destination object
+                    if dst_wrapper.scale < wrapper.scale:
+                        wrapper.set_scale(dst_wrapper.scale)
+
+                    # adjust position with respect to the adposition defining the relation
+                    if rel.rel == Adposition.ON:
+                        wrapper.x = dst_wrapper.x
+                        wrapper.y = dst_wrapper.y - wrapper.height() / 2 - dst_wrapper.height() / 2
+                    elif rel.rel == Adposition.ABOVE:
+                        wrapper.x = dst_wrapper.x
+                        wrapper.y = dst_wrapper.y - wrapper.height() / 2 - dst_wrapper.height()
+                    elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
+                        wrapper.x = dst_wrapper.x
+                        wrapper.y = dst_wrapper.y + wrapper.height() / 2 + dst_wrapper.height() / 2
+                    elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
+
+                        if rel.rel == Adposition.IN:
+                            # TODO: compute the scale
+                            wrapper.set_scale(0.5)
+
+                        # align centres of gravity
+                        gx, gy = dst_wrapper.centre_of_gravity()
+                        cx, cy = dst_wrapper.centre()
+                        dx, dy = gx - cx, gy - cy
+
+                        gx, gy = wrapper.centre_of_gravity()
+                        cx, cy = wrapper.centre()
+                        dx, dy = dx + cx - gx, dy + cy - gy
+
+                        wrapper.x, wrapper.y = dst_wrapper.x + dx, dst_wrapper.y + dy
+
+                draw_obj(wrapper)
+                pass
+
+        # ======== for debugging only ========
+        root.mainloop()
+        # =====================================
