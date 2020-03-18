@@ -69,10 +69,11 @@ class QuickDrawComposer:
         for entity in topological_order:
             if type(entity) == Group:
                 wrapper = GroupWrapper(entity)
-                # TODO: compute cumulative width and height of the group
-                # for child in entity.entities:
-                #    wrapper.width += drawings[child].width()
-                #    wrapper.height += drawings[child].height()
+                # TODO: compute cumulative get_width() and get_height() of the group
+                for child in entity.entities:
+                    wrapper.set_dimensions(wrapper.get_width() + drawings[child].get_width(),
+                                           wrapper.get_height() + drawings[child].get_height()
+                                           )
                 drawings[entity] = wrapper
             elif type(entity) == Object:
                 wrapper = ObjectWrapper(entity, default_size=default_size, unit=unit)
@@ -92,8 +93,8 @@ class QuickDrawComposer:
         canvas.pack()
 
         def draw_obj(obj: 'ObjectWrapper'):
-            gx, gy = obj.centre_of_gravity()
-            cx, cy = obj.centre()
+            gx, gy = obj.get_centre_of_gravity()
+            cx, cy = obj.get_centre()
             px, py = obj.x + 300 - cx, obj.y + 200 - cy
 
             for stroke in obj.strokes:
@@ -102,28 +103,27 @@ class QuickDrawComposer:
                 points = [(px + x, py + y) for (x, y) in zip(stroke[0], stroke[1])]
                 canvas.create_line(*points)
 
-            """
-            canvas.create_rectangle(px, py, px + obj.width(), py + obj.height(), outline="#ff00ff")
+            canvas.create_rectangle(px, py, px + obj.get_width(), py + obj.get_height(), outline="#ff00ff")
             canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
-            canvas.create_line(px + gx - 4, py + gy,     px + gx + 4, py + gy,     fill="#ff00ff")
-            canvas.create_line(px + gx,     py + gy - 4, px + gx,     py + gy + 4, fill="#ff00ff")
+            canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
+            canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
             canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
             canvas.create_line(px + cx - 3, py + cy + 3, px + cx + 3, py + cy - 3, fill="#00ffff")
-            """
 
         # =====================================
 
         for e in topological_order[::-1]:
             wrapper = drawings[e]
+
+            container = wrapper.entity.container
+            if container:
+                container_wrapper = drawings[container]
+                dw = container_wrapper.get_width() - wrapper.get_width()
+                dh = container_wrapper.get_height() - wrapper.get_height()
+                wrapper.x = container_wrapper.x
+                wrapper.y = container_wrapper.y
+
             if type(wrapper) == GroupWrapper:
-                # TODO: set position of the group
-                container = wrapper.entity.container
-                if container:
-                    container_wrapper = drawings[container]
-                    dw = container_wrapper.width() - wrapper.width()
-                    dh = container_wrapper.height() - wrapper.height()
-                    wrapper.x = container_wrapper.x
-                    wrapper.y = container_wrapper.y
                 pass
             elif type(wrapper) == ObjectWrapper:
 
@@ -132,32 +132,35 @@ class QuickDrawComposer:
                     dst_wrapper = drawings[rel.dst]
 
                     # adjust scale with respect to destination object
-                    if dst_wrapper.scale < wrapper.scale:
-                        wrapper.set_scale(dst_wrapper.scale)
+                    if dst_wrapper.get_scale() < wrapper.get_scale():
+                        wrapper.set_scale(dst_wrapper.get_scale())
 
                     # adjust position with respect to the adposition defining the relation
                     if rel.rel == Adposition.ON:
                         wrapper.x = dst_wrapper.x
-                        wrapper.y = dst_wrapper.y - wrapper.height() / 2 - dst_wrapper.height() / 2
+                        wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height() / 2
                     elif rel.rel == Adposition.ABOVE:
                         wrapper.x = dst_wrapper.x
-                        wrapper.y = dst_wrapper.y - wrapper.height() / 2 - dst_wrapper.height()
+                        wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height()
                     elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
                         wrapper.x = dst_wrapper.x
-                        wrapper.y = dst_wrapper.y + wrapper.height() / 2 + dst_wrapper.height() / 2
+                        wrapper.y = dst_wrapper.y + wrapper.get_height() / 2 + dst_wrapper.get_height() / 2
                     elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
 
-                        if rel.rel == Adposition.IN:
+                        if rel.rel == Adposition.IN and (
+                                wrapper.get_width() < dst_wrapper.get_width() and
+                                wrapper.get_height() < dst_wrapper.get_height()
+                        ):
                             # TODO: compute the scale
                             wrapper.set_scale(0.5)
 
                         # align centres of gravity
-                        gx, gy = dst_wrapper.centre_of_gravity()
-                        cx, cy = dst_wrapper.centre()
+                        gx, gy = dst_wrapper.get_centre_of_gravity()
+                        cx, cy = dst_wrapper.get_centre()
                         dx, dy = gx - cx, gy - cy
 
-                        gx, gy = wrapper.centre_of_gravity()
-                        cx, cy = wrapper.centre()
+                        gx, gy = wrapper.get_centre_of_gravity()
+                        cx, cy = wrapper.get_centre()
                         dx, dy = dx + cx - gx, dy + cy - gy
 
                         wrapper.x, wrapper.y = dst_wrapper.x + dx, dst_wrapper.y + dy

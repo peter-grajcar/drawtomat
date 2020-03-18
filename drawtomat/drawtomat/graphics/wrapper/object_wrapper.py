@@ -1,39 +1,22 @@
 import random
 
+from drawtomat.graphics.wrapper.entity_wrapper import EntityWrapper
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
-class ObjectWrapper:
+class ObjectWrapper(EntityWrapper):
     """
     A wrapper type for object entity.
 
     Attributes
     ----------
-    entity: Object
-        A reference to the original object from the model.
-    _width : int
-        The width of the object.
-    _height : int
-        The height of the object.
-    x : int
-        Position, x-axis.
-    y : int
-        Position, y-axis.
     strokes: list
-
-    scale: float
-        A ratio between the default size and actual size.
     """
 
     def __init__(self, obj: 'Object', default_size: int = 100, unit: int = 1) -> None:
-        self.entity = obj
+        super(ObjectWrapper, self).__init__(obj)
         self.strokes = []
-        self._width = 0
-        self._height = 0
         self._load_drawing(default_size=default_size, unit=unit)
-        self.x = 0
-        self.y = 0
-        self.scale = 1.0
 
     def _load_drawing(self, default_size: int = 100, unit: int = 1) -> list:
         """
@@ -49,6 +32,7 @@ class ObjectWrapper:
         # TODO: handle KeyError for unknown words
         data = QuickDrawDataset.images(word)
         drawing = random.choice(data)["drawing"]
+        attrs = QuickDrawDataset.attributes(word)
 
         min_x = min([min(stroke[0]) for stroke in drawing])
         max_x = max([max(stroke[0]) for stroke in drawing])
@@ -57,9 +41,20 @@ class ObjectWrapper:
 
         width = max_x - min_x
         height = max_y - min_y
+
         # TODO: load size of the object
         # TODO: choose dominant dimension
-        q = unit * default_size / max(width, height)
+        if attrs["main_dimension"] == "W":
+            q = unit * attrs["default_width"] / width
+        elif attrs["main_dimension"] == "H":
+            q = unit * attrs["default_height"] / height
+        elif attrs["default_width"] and attrs["default_height"]:
+            if attrs["default_width"] > attrs["default_height"]:
+                q = unit * attrs["default_width"] / width
+            else:
+                q = unit * attrs["default_height"] / height
+        else:
+            q = unit * default_size / max(width, height)
 
         self.strokes = [
             [
@@ -73,7 +68,17 @@ class ObjectWrapper:
         self._width = width * q
         self._height = height * q
 
-    def set_scale(self, scale: float):
+    def set_scale(self, scale: float) -> None:
+        """
+
+        Parameters
+        ----------
+        scale
+
+        Returns
+        -------
+        None
+        """
         q = scale / self.scale
         self.strokes = [
             [
@@ -85,39 +90,22 @@ class ObjectWrapper:
         ]
         self.scale = scale
 
-    def width(self) -> float:
+    def get_position(self) -> tuple:
         """
 
         Returns
         -------
-
-        """
-        return self._width * self.scale
-
-    def height(self) -> float:
-        """
-
-        Returns
-        -------
-
-        """
-        return self._height * self.scale
-
-    def position(self):
-        """
-
-        Returns
-        -------
-
+        tuple
         """
         return self.x, self.y
 
-    def centre_of_gravity(self):
+    def get_centre_of_gravity(self) -> tuple:
         """
         Computes the centre of gravity, i.e. averages the points of all strokes. The coordinates are relative.
 
         Returns
         -------
+        tuple
             The centre of gravity of the object.
         """
         x = 0
@@ -133,15 +121,13 @@ class ObjectWrapper:
         y /= n
         return x, y
 
-    def centre(self):
+    def get_centre(self) -> tuple:
         """
         Computes the centre of the object, i.e. centre of the bounding box. The coordinates are relative.
 
         Returns
         -------
+        tuple
             The centre of the object.
         """
-        return self.width() / 2, self.height() / 2
-
-    def __repr__(self) -> str:
-        return self.entity.__repr__() + f"[w={self.width():.0f}, h={self.height():.0f}]"
+        return self.get_width() / 2, self.get_height() / 2
