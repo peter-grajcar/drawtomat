@@ -64,7 +64,7 @@ class QuickDrawComposer:
 
         drawings = dict()
         default_size = 100  # default size of the object (in cm)
-        unit = 1            # ?px = 1cm
+        unit = 1.5            # ?px = 1cm
 
         for entity in topological_order:
             if type(entity) == Group:
@@ -103,12 +103,14 @@ class QuickDrawComposer:
                 points = [(px + x, py + y) for (x, y) in zip(stroke[0], stroke[1])]
                 canvas.create_line(*points)
 
+            """
             canvas.create_rectangle(px, py, px + obj.get_width(), py + obj.get_height(), outline="#ff00ff")
             canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
             canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
             canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
             canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
             canvas.create_line(px + cx - 3, py + cy + 3, px + cx + 3, py + cy - 3, fill="#00ffff")
+            """
 
         # =====================================
 
@@ -123,50 +125,48 @@ class QuickDrawComposer:
                 wrapper.x = container_wrapper.x
                 wrapper.y = container_wrapper.y
 
+            if wrapper.entity.relations_out:
+                rel = wrapper.entity.relations_out[0]
+                dst_wrapper = drawings[rel.dst]
+
+                # adjust scale with respect to destination object
+                if dst_wrapper.get_scale() < wrapper.get_scale():
+                    wrapper.set_scale(dst_wrapper.get_scale())
+
+                # adjust position with respect to the adposition defining the relation
+                if rel.rel == Adposition.ON:
+                    wrapper.x = dst_wrapper.x
+                    wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height() / 2
+                elif rel.rel == Adposition.ABOVE:
+                    wrapper.x = dst_wrapper.x
+                    wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height()
+                elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
+                    wrapper.x = dst_wrapper.x
+                    wrapper.y = dst_wrapper.y + wrapper.get_height() / 2 + dst_wrapper.get_height() / 2
+                elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
+
+                    if rel.rel == Adposition.IN and (
+                            wrapper.get_width() < dst_wrapper.get_width() and
+                            wrapper.get_height() < dst_wrapper.get_height()
+                    ):
+                        # TODO: compute the scale
+                        wrapper.set_scale(0.5)
+
+                    # align centres of gravity
+                    gx, gy = dst_wrapper.get_centre_of_gravity()
+                    cx, cy = dst_wrapper.get_centre()
+                    dx, dy = gx - cx, gy - cy
+
+                    gx, gy = wrapper.get_centre_of_gravity()
+                    cx, cy = wrapper.get_centre()
+                    dx, dy = dx + cx - gx, dy + cy - gy
+
+                    wrapper.x, wrapper.y = dst_wrapper.x + dx, dst_wrapper.y + dy
+
             if type(wrapper) == GroupWrapper:
                 pass
             elif type(wrapper) == ObjectWrapper:
-
-                if wrapper.entity.relations_out:
-                    rel = wrapper.entity.relations_out[0]
-                    dst_wrapper = drawings[rel.dst]
-
-                    # adjust scale with respect to destination object
-                    if dst_wrapper.get_scale() < wrapper.get_scale():
-                        wrapper.set_scale(dst_wrapper.get_scale())
-
-                    # adjust position with respect to the adposition defining the relation
-                    if rel.rel == Adposition.ON:
-                        wrapper.x = dst_wrapper.x
-                        wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height() / 2
-                    elif rel.rel == Adposition.ABOVE:
-                        wrapper.x = dst_wrapper.x
-                        wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height()
-                    elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
-                        wrapper.x = dst_wrapper.x
-                        wrapper.y = dst_wrapper.y + wrapper.get_height() / 2 + dst_wrapper.get_height() / 2
-                    elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
-
-                        if rel.rel == Adposition.IN and (
-                                wrapper.get_width() < dst_wrapper.get_width() and
-                                wrapper.get_height() < dst_wrapper.get_height()
-                        ):
-                            # TODO: compute the scale
-                            wrapper.set_scale(0.5)
-
-                        # align centres of gravity
-                        gx, gy = dst_wrapper.get_centre_of_gravity()
-                        cx, cy = dst_wrapper.get_centre()
-                        dx, dy = gx - cx, gy - cy
-
-                        gx, gy = wrapper.get_centre_of_gravity()
-                        cx, cy = wrapper.get_centre()
-                        dx, dy = dx + cx - gx, dy + cy - gy
-
-                        wrapper.x, wrapper.y = dst_wrapper.x + dx, dst_wrapper.y + dy
-
                 draw_obj(wrapper)
-                pass
 
         # ======== for debugging only ========
         root.mainloop()

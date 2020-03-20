@@ -66,7 +66,6 @@ class QuickDrawDataset:
                         QuickDrawDataset._attributes[row["category"]] = {
                             "default_width": float("0" + row["default_width"]),
                             "default_height": float("0" + row["default_height"]),
-                            "main_dimension": row["main_dimension"],
                         }
         if word:
             return QuickDrawDataset._attributes[word]

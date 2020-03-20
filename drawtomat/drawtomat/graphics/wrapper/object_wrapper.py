@@ -44,15 +44,15 @@ class ObjectWrapper(EntityWrapper):
 
         # TODO: load size of the object
         # TODO: choose dominant dimension
-        if attrs["main_dimension"] == "W":
-            q = unit * attrs["default_width"] / width
-        elif attrs["main_dimension"] == "H":
-            q = unit * attrs["default_height"] / height
-        elif attrs["default_width"] and attrs["default_height"]:
+        if attrs["default_width"] and attrs["default_height"]:
             if attrs["default_width"] > attrs["default_height"]:
                 q = unit * attrs["default_width"] / width
             else:
                 q = unit * attrs["default_height"] / height
+        elif attrs["default_width"]:
+            q = unit * attrs["default_width"] / width
+        elif attrs["default_height"]:
+            q = unit * attrs["default_height"] / height
         else:
             q = unit * default_size / max(width, height)
 
@@ -79,7 +79,7 @@ class ObjectWrapper(EntityWrapper):
         -------
         None
         """
-        q = scale / self.scale
+        q = scale / self.get_scale()
         self.strokes = [
             [
                 [(x * q) for x in stroke[0]],  # x-axis
@@ -88,7 +88,7 @@ class ObjectWrapper(EntityWrapper):
             ]
             for stroke in self.strokes
         ]
-        self.scale = scale
+        self._scale = scale
 
     def get_position(self) -> tuple:
         """
