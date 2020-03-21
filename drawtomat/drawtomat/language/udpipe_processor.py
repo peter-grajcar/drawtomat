@@ -158,10 +158,6 @@ class UDPipeProcessor:
         processed = pipeline.process(text, error)
         parsed = conllu.parse(processed)
 
-        print(processed)
-        # print(parsed)
-
-        # scene = self._approach_a(parsed)
         scene = self._traverse_tree(parsed)
 
         return scene

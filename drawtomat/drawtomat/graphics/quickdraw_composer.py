@@ -1,5 +1,3 @@
-from tkinter import Tk, Canvas
-
 from drawtomat.graphics.wrapper.group_wrapper import GroupWrapper
 from drawtomat.graphics.wrapper.object_wrapper import ObjectWrapper
 from drawtomat.language.adposition import Adposition
@@ -38,9 +36,9 @@ class QuickDrawComposer:
 
         return stack + order[::-1]
 
-    def compose(self, scene: 'Scene') -> dict:
+    def compose(self, scene: 'Scene') -> list:
         """
-        Composes object from the scene into a list of strokes.
+        Composes object from the scene into a list of wrapper objects.
 
         Parameters
         ----------
@@ -50,7 +48,7 @@ class QuickDrawComposer:
         Returns
         -------
         list
-            The list of strokes in format specified in (TODO: add reference to the format specification)
+            The list of wrapper objects
         """
         topological_order = self._topological_order(scene.entity_register)
 
@@ -85,43 +83,12 @@ class QuickDrawComposer:
         # Step 2:   Pop the entities from the ordered list and resolve the position of  #
         #           the entities.                                                       #
         #################################################################################
-
-        # ======== for debugging only ========
-        root = Tk()
-        root.title("Drawtomat")
-        canvas = Canvas(root, width=600, height=400)
-        canvas.pack()
-
-        def draw_obj(obj: 'ObjectWrapper'):
-            gx, gy = obj.get_centre_of_gravity()
-            cx, cy = obj.get_centre()
-            px, py = obj.x + 300 - cx, obj.y + 200 - cy
-
-            for stroke in obj.strokes:
-                if len(stroke[2]) < 2:
-                    continue
-                points = [(px + x, py + y) for (x, y) in zip(stroke[0], stroke[1])]
-                canvas.create_line(*points)
-
-            """
-            canvas.create_rectangle(px, py, px + obj.get_width(), py + obj.get_height(), outline="#ff00ff")
-            canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
-            canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
-            canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
-            canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
-            canvas.create_line(px + cx - 3, py + cy + 3, px + cx + 3, py + cy - 3, fill="#00ffff")
-            """
-
-        # =====================================
-
         for e in topological_order[::-1]:
             wrapper = drawings[e]
 
             container = wrapper.entity.container
             if container:
                 container_wrapper = drawings[container]
-                dw = container_wrapper.get_width() - wrapper.get_width()
-                dh = container_wrapper.get_height() - wrapper.get_height()
                 wrapper.x = container_wrapper.x
                 wrapper.y = container_wrapper.y
 
@@ -168,8 +135,6 @@ class QuickDrawComposer:
             if type(wrapper) == GroupWrapper:
                 pass
             elif type(wrapper) == ObjectWrapper:
-                draw_obj(wrapper)
+                pass
 
-        # ======== for debugging only ========
-        root.mainloop()
-        # =====================================
+        return [v for v in drawings.values() if type(v) == ObjectWrapper]

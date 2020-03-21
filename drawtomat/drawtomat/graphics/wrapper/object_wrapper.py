@@ -70,6 +70,7 @@ class ObjectWrapper(EntityWrapper):
 
     def set_scale(self, scale: float) -> None:
         """
+        Sets the scale of the object.
 
         Parameters
         ----------
@@ -92,6 +93,7 @@ class ObjectWrapper(EntityWrapper):
 
     def get_position(self) -> tuple:
         """
+        Returns a position of the object in the scene.
 
         Returns
         -------
@@ -120,14 +122,3 @@ class ObjectWrapper(EntityWrapper):
         x /= n
         y /= n
         return x, y
-
-    def get_centre(self) -> tuple:
-        """
-        Computes the centre of the object, i.e. centre of the bounding box. The coordinates are relative.
-
-        Returns
-        -------
-        tuple
-            The centre of the object.
-        """
-        return self.get_width() / 2, self.get_height() / 2
