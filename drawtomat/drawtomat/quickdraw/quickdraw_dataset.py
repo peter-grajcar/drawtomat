@@ -23,7 +23,7 @@ class QuickDrawDataset:
         """
         if not QuickDrawDataset._words:
             QuickDrawDataset._words = list()
-            with open("../resources/quickdraw/categories.txt") as f:
+            with open("resources/quickdraw/categories.txt") as f:
                 for word in f.readlines():
                     QuickDrawDataset._words.append(word.strip())
 
@@ -42,7 +42,7 @@ class QuickDrawDataset:
         if not QuickDrawDataset._images:
             QuickDrawDataset._images = dict()
             for w in QuickDrawDataset.words():
-                with open(f"../resources/quickdraw/dataset/{w}.ndjson") as f:
+                with open(f"resources/quickdraw/dataset/{w}.ndjson") as f:
                     QuickDrawDataset._images[w] = ndjson.load(f)
         if word:
             return QuickDrawDataset._images[word]
@@ -60,7 +60,7 @@ class QuickDrawDataset:
         if not QuickDrawDataset._attributes:
             QuickDrawDataset._attributes = dict()
             for w in QuickDrawDataset.words():
-                with open(f"../resources/quickdraw/attributes.csv") as f:
+                with open(f"resources/quickdraw/attributes.csv") as f:
                     reader = csv.DictReader(f)
                     for row in reader:
                         QuickDrawDataset._attributes[row["category"]] = {
