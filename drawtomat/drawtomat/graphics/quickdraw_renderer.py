@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas
+from tkinter import Tk, Canvas, PhotoImage, Label
 
 from drawtomat.graphics.quickdraw_composer import QuickDrawComposer
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
@@ -35,6 +35,10 @@ class QuickDrawRenderer:
         root.title("Drawtomat")
         canvas = Canvas(root, width=600, height=400)
         canvas.pack()
+
+        img = PhotoImage(file="output/model.dot.png")
+        label = Label(root, image=img)
+        label.pack()
 
         min_x = None
         max_x = None

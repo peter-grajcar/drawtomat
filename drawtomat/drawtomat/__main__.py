@@ -18,7 +18,7 @@ if __name__ == "__main__":
     graph = scene.export_dot(args.model_output)
     graph.graph_attr["label"] = f"\"{args.description}\""
     graph.graph_attr["labelloc"] = "t"
-    graph.view()
+    graph.render(filename=args.model_output, format="png")
 
     renderer = QuickDrawRenderer()
     renderer.render(scene)
