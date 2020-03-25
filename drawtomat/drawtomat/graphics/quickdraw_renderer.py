@@ -47,6 +47,7 @@ class QuickDrawRenderer:
         for wrapper in composition:
             cx, cy = wrapper.get_centre()
             px, py = wrapper.x - cx, wrapper.y - cy
+            # TODO: use width, height instead
             for stroke in wrapper.strokes:
                 mx = min(stroke[0]) + px
                 my = min(stroke[1]) + py

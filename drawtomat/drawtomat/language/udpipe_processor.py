@@ -1,4 +1,7 @@
+from collections import OrderedDict
+
 import conllu
+from conllu import TokenList
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
 from drawtomat.language.adposition import Adposition
@@ -22,8 +25,52 @@ class UDPipeProcessor:
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
 
-    @staticmethod
-    def _traverse_tree(parsed: 'list[TokenList]') -> Scene:
+    def _process_adposition(self, sentence: 'TokenList', token) -> bool:
+        """
+
+        Parameters
+        ----------
+        sentence
+        token
+
+        Returns
+        -------
+        bool
+            true if adposition should be skipped
+        """
+        token_idx = token["id"] - 1
+        skip = False
+        complex = None
+        last = None
+
+        # TODO: check length of the sentence
+        # skips the beginning of complex adpositions
+        # complex adposition of form PP, e.g. inside of
+        if sentence[token_idx + 1]["upostag"] == "ADP":
+            skip = True
+            complex = token["form"] + " " + sentence[token_idx + 1]["form"]
+            last = sentence[token_idx + 1]
+
+        # complex adposition of form PNP, e.g. in front of
+        if sentence[token_idx + 1]["upostag"] == "NOUN" and sentence[token_idx + 2]["upostag"] == "ADP":
+            skip = True
+            complex = token["form"] + " " + sentence[token_idx + 1]["form"] + " " + sentence[token_idx + 2]["form"]
+            last = sentence[token_idx + 2]
+
+        # complex adposition in form adverb + adposition, e.g. next to
+        if sentence[token_idx - 1]["upostag"] == "ADV":
+            complex = sentence[token_idx - 1]["form"] + " " + token["form"]
+            last = token
+
+        if complex:
+            if not last["misc"]:
+                last["misc"] = OrderedDict()
+            last["misc"]["Complex"] = complex
+
+        return skip
+
+
+    def _traverse_tree(self, parsed: 'list[TokenList]') -> Scene:
         """
         Processes the description via tree traversal (DFS).
 
@@ -75,38 +122,54 @@ class UDPipeProcessor:
                     # TODO: refactor this to a separate method.
                     # TODO: take into account compound nouns.
                     if token["upostag"] == "NOUN" or token["upostag"] == "PROPN":
-                        print(f"\tObject({token['lemma']})")
-                        obj = None
+                        token_idx = token["id"] - 1
+                        skip = False
 
-                        # If a noun is preceded by 'the' try to find an existing object
-                        # in scene's entity register.
-                        # TODO: refactor this into separate method
-                        for child in node.children:
-                            if child.token["lemma"] == "the":
-                                for e in scene.entity_register:
-                                    if type(e) == Object and e.word == token["lemma"]:
-                                        obj = e
+                        # TODO: check length
+                        # Noun is part of a complex adposition of form PNP
+                        if sentence[token_idx - 1]["upostag"] == "ADP" and sentence[token_idx + 1]["upostag"] == "ADP":
+                            skip = True
 
-                        if not obj:
-                            obj = Object(scene, word=token["lemma"])
+                        if not skip:
+                            print(f"\tObject({token['lemma']})")
+                            obj = None
 
-                        entity_stack.append(obj)
-                        entity_stack_size += 1
-                        entity_position[obj] = token["id"]
+                            # If a noun is preceded by 'the' try to find an existing object
+                            # in scene's entity register.
+                            # TODO: refactor this into separate method
+                            for child in node.children:
+                                if child.token["lemma"] == "the":
+                                    for e in scene.entity_register:
+                                        if type(e) == Object and e.word == token["lemma"]:
+                                            obj = e
+
+                            if not obj:
+                                obj = Object(scene, word=token["lemma"])
+
+                            entity_stack.append(obj)
+                            entity_stack_size += 1
+                            entity_position[obj] = token["id"]
 
                     # Creates relation between two objects at the top of
                     # the stack
                     # TODO: refactor this to a separate method.
                     if token["upostag"] == "ADP":
-                        print(f"\tRelation({token['lemma']})")
-                        adp = Adposition.for_name(token["lemma"])
+                        skip = self._process_adposition(sentence, token)
 
-                        src = entity_stack[-2]
-                        dst = entity_stack[-1]
-                        if entity_position[src] > entity_position[dst]:
-                            src, dst = dst, src
+                        if not skip:
+                            full_adp = token["form"]
+                            if token["misc"] and token["misc"]["Complex"]:
+                                full_adp = token["misc"]["Complex"]
 
-                        src.make_relation(dst, adp)
+                            print(f"\tRelation({full_adp})")
+                            adp = Adposition.for_name(full_adp)
+
+                            src = entity_stack[-2]
+                            dst = entity_stack[-1]
+                            if entity_position[src] > entity_position[dst]:
+                                src, dst = dst, src
+
+                            src.make_relation(dst, adp)
 
                 else:
                     ptr = entity_stack_ptrs[token["id"]]

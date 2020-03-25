@@ -16,6 +16,7 @@ class Adposition(Enum):
     BEHIND = 8
     IN_FRONT_OF = 9
     INSIDE = 10
+    INSIDE_OF = 11
 
     def __str__(self) -> str:
         return self.name
