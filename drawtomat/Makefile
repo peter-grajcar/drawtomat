@@ -13,5 +13,7 @@ venv/bin/activate: requirements.txt
 	. venv/bin/activate; pip install -Ur requirements.txt
 	touch venv/bin/activate
 
-run: venv
+install: venv
+
+run: install
 	venv/bin/python3 -m drawtomat
