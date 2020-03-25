@@ -9,9 +9,10 @@ class QuickDrawRenderer:
     An image renderer based on "Quick, Draw!" data.
     """
 
-    def __init__(self):
+    def __init__(self, show_bounds: bool = False):
         self.dataset = QuickDrawDataset.words()
         self.composer = QuickDrawComposer()
+        self.show_bounds = show_bounds
 
     def render(self, scene: 'Scene') -> None:
         """
@@ -69,8 +70,10 @@ class QuickDrawRenderer:
 
         for wrapper in composition:
             gx, gy = wrapper.get_centre_of_gravity()
+            gx, gy = gx * q, gy * q
             cx, cy = wrapper.get_centre()
-            px, py = wrapper.x * q + 300 - cx * q, wrapper.y * q + 200 - cy * q
+            cx, cy = cx*q, cy*q
+            px, py = wrapper.x * q + 300 - cx, wrapper.y * q + 200 - cy
 
             for stroke in wrapper.strokes:
                 if len(stroke[2]) < 2:
@@ -78,14 +81,14 @@ class QuickDrawRenderer:
                 points = [(px + x*q, py + y*q) for (x, y) in zip(stroke[0], stroke[1])]
                 canvas.create_line(*points)
 
-            """
-            canvas.create_rectangle(px, py, px + obj.get_width(), py + obj.get_height(), outline="#ff00ff")
-            canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
-            canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
-            canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
-            canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
-            canvas.create_line(px + cx - 3, py + cy + 3, px + cx + 3, py + cy - 3, fill="#00ffff")
-            """
+            if self.show_bounds:
+                canvas.create_rectangle(px, py, px + wrapper.get_width() * q, py + wrapper.get_height() * q, outline="#ff00ff")
+                # canvas.create_text(px + 4, py + 4, text=wrapper.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
+                canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
+                canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
+                canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
+                canvas.create_line(px + cx - 3, py + cy + 3, px + cx + 3, py + cy - 3, fill="#00ffff")
+
         root.mainloop()
         # =====================================
 

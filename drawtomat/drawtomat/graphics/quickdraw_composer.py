@@ -110,6 +110,9 @@ class QuickDrawComposer:
                 elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
                     wrapper.x = dst_wrapper.x
                     wrapper.y = dst_wrapper.y + wrapper.get_height() / 2 + dst_wrapper.get_height() / 2
+                elif rel.rel == Adposition.NEXT_TO:
+                    wrapper.x = dst_wrapper.x + wrapper.get_width() / 2 + dst_wrapper.get_width() / 2
+                    wrapper.y = dst_wrapper.y
                 elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
 
                     if rel.rel == Adposition.IN and (

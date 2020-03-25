@@ -57,10 +57,14 @@ class UDPipeProcessor:
             complex = token["form"] + " " + sentence[token_idx + 1]["form"] + " " + sentence[token_idx + 2]["form"]
             last = sentence[token_idx + 2]
 
-        # complex adposition in form adverb + adposition, e.g. next to
-        if sentence[token_idx - 1]["upostag"] == "ADV":
+        # complex adposition in form adverb/adjective + adposition, e.g. next to
+        # (a complex adposition is formed only if it is in a list of adpositions)
+        if sentence[token_idx - 1]["upostag"] == "ADV" or sentence[token_idx - 1]["upostag"] == "ADJ":
             complex = sentence[token_idx - 1]["form"] + " " + token["form"]
-            last = token
+            if Adposition.for_name(complex):
+                last = token
+            else:
+                complex = None
 
         if complex:
             if not last["misc"]:

@@ -20,5 +20,5 @@ if __name__ == "__main__":
     graph.graph_attr["labelloc"] = "t"
     graph.render(filename=args.model_output, format="png")
 
-    renderer = QuickDrawRenderer()
+    renderer = QuickDrawRenderer(show_bounds=False)
     renderer.render(scene)
