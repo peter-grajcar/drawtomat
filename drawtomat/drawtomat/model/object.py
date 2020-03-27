@@ -21,6 +21,7 @@ class Object(Entity):
         else:
             super(Object, self).__init__(scene)
         self.word = word
+        self.attributes = list()
 
     def __repr__(self) -> str:
         return f"ObjectEntity({self.word})"

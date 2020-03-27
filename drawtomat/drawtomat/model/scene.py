@@ -93,7 +93,8 @@ class Scene:
         graph.graph_attr["rankdir"] = "LR"
         graph.graph_attr["compound"] = "true"
         graph.node_attr["shape"] = "record"
-        graph.edge_attr["fontsize"] = "8"
+        graph.edge_attr["fontsize"] = "10"
+        graph.graph_attr["size"] = "8,8!"
 
         def register(entity: 'Entity'):
             nonlocal id_counter
@@ -102,7 +103,11 @@ class Scene:
                 id_counter += 1
 
         def object_dot_repr(g: 'Digraph', obj: 'Object'):
-            g.node(f"entity_{entity_ids[obj]}", label=obj.word)
+            if obj.attributes:
+                label = f"{obj.word}<font point-size='9'><br align='left'/>attrs:<br align='left'/>" + "<br align='left'/>".join(f" - {attr}" for attr in obj.attributes) + "</font>"
+                g.node(f"entity_{entity_ids[obj]}", label="<" + label + ">")
+            else:
+                g.node(f"entity_{entity_ids[obj]}", label=obj.word)
 
         def group_dot_repr(g: 'Digraph', group: 'Group'):
             with g.subgraph(name="cluster_" + str(entity_ids[group])) as sub:

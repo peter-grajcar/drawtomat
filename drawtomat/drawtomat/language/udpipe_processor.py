@@ -133,22 +133,33 @@ class UDPipeProcessor:
                         # Noun is part of a complex adposition of form PNP
                         if sentence[token_idx - 1]["upostag"] == "ADP" and sentence[token_idx + 1]["upostag"] == "ADP":
                             skip = True
+                        # skip the first part of a compound noun
+                        if token["deprel"] == "compound":
+                            skip = True
 
                         if not skip:
-                            print(f"\tObject({token['lemma']})")
                             obj = None
+                            obj_name = token["lemma"];
+                            attrs = list()
 
-                            # If a noun is preceded by 'the' try to find an existing object
-                            # in scene's entity register.
                             # TODO: refactor this into separate method
                             for child in node.children:
+                                # If a noun is preceded by 'the' try to find an existing object
+                                # in scene's entity register.
                                 if child.token["lemma"] == "the":
                                     for e in scene.entity_register:
                                         if type(e) == Object and e.word == token["lemma"]:
                                             obj = e
+                                # extend the object name if the noun is a part of a compound noun
+                                if child.token["deprel"] == "compound":
+                                    obj_name = child.token["lemma"] + " " + obj_name
+                                if child.token["upostag"] == "ADJ":
+                                    attrs.append(child.token["lemma"])
 
                             if not obj:
-                                obj = Object(scene, word=token["lemma"])
+                                obj = Object(scene, word=obj_name)
+                                obj.attributes = attrs
+                                print(f"\tnew Object({token['lemma']})")
 
                             entity_stack.append(obj)
                             entity_stack_size += 1
@@ -165,7 +176,7 @@ class UDPipeProcessor:
                             if token["misc"] and token["misc"]["Complex"]:
                                 full_adp = token["misc"]["Complex"]
 
-                            print(f"\tRelation({full_adp})")
+                            print(f"\tnew Relation({full_adp})")
                             adp = Adposition.for_name(full_adp)
 
                             src = entity_stack[-2]
