@@ -30,6 +30,9 @@ class ObjectWrapper(EntityWrapper):
         """
         word = self.entity.word
         # TODO: handle KeyError for unknown words
+        if not word in QuickDrawDataset.words():
+            raise Exception(f"Unknown word \"{word}\".")
+
         data = QuickDrawDataset.images(word)
         drawing = random.choice(data)["drawing"]
         attrs = QuickDrawDataset.attributes(word)
