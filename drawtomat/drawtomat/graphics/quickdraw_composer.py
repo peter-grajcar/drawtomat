@@ -116,13 +116,15 @@ class QuickDrawComposer:
                 elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
 
                     if rel.rel == Adposition.IN and (
-                            wrapper.get_width() > dst_wrapper.get_width() and
+                            wrapper.get_width() > dst_wrapper.get_width() or
                             wrapper.get_height() > dst_wrapper.get_height()
                     ):
-                        # TODO: compute the scale
                         padding = 2
                         q = min(dst_wrapper.get_width(), dst_wrapper.get_height()) / (max(wrapper.get_width(), wrapper.get_height()) * padding)
                         wrapper.set_scale(q * wrapper.get_scale())
+                    if rel.rel == Adposition.BEHIND:
+                        # make the object look smaller
+                        wrapper.set_scale(0.75)
 
                     # align centres of gravity
                     gx, gy = dst_wrapper.get_centre_of_gravity()

@@ -94,7 +94,7 @@ class Scene:
         graph.graph_attr["compound"] = "true"
         graph.node_attr["shape"] = "record"
         graph.edge_attr["fontsize"] = "10"
-        graph.graph_attr["size"] = "8,8!"
+        graph.graph_attr["size"] = "6,6!"
 
         def register(entity: 'Entity'):
             nonlocal id_counter

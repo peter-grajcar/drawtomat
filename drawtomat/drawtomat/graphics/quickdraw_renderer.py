@@ -34,11 +34,11 @@ class QuickDrawRenderer:
         # ======== for debugging only ========
         root = Tk()
         root.title("Drawtomat")
-        canvas = Canvas(root, width=600, height=300)
-        canvas.pack()
+        canvas = Canvas(root, width=600, height=400)
+        canvas.pack(side="left")
         img = PhotoImage(file="output/model.dot.png")
-        label = Label(root, image=img, width=600, borderwidth=2, relief="solid")
-        label.pack(fill="x")
+        label = Label(root, image=img, width=400, borderwidth=2, relief="solid")
+        label.pack(fill="both", side="left")
 
         min_x = None
         max_x = None
@@ -65,14 +65,14 @@ class QuickDrawRenderer:
 
         width = max_x - min_x
         height = max_y - min_y
-        q = min(300 / width, 150 / height)
+        q = min(300 / width, 200 / height)
 
         for wrapper in composition:
             gx, gy = wrapper.get_centre_of_gravity()
             gx, gy = gx * q, gy * q
             cx, cy = wrapper.get_centre()
             cx, cy = cx*q, cy*q
-            px, py = wrapper.x * q + 300 - cx, wrapper.y * q + 150 - cy
+            px, py = wrapper.x * q + 300 - cx, wrapper.y * q + 200 - cy
 
             for stroke in wrapper.strokes:
                 if len(stroke[2]) < 2:
@@ -82,7 +82,7 @@ class QuickDrawRenderer:
 
             if self.show_bounds:
                 canvas.create_rectangle(px, py, px + wrapper.get_width() * q, py + wrapper.get_height() * q, outline="#ff00ff")
-                # canvas.create_text(px + 4, py + 4, text=wrapper.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
+                canvas.create_text(px + 4, py + 4, text=wrapper.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
                 canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
                 canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
                 canvas.create_line(px + cx - 3, py + cy - 3, px + cx + 3, py + cy + 3, fill="#00ffff")
