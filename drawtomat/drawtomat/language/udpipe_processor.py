@@ -73,6 +73,18 @@ class UDPipeProcessor:
 
         return skip
 
+    def _process_noun(self, sentence: 'TokenList', token) -> bool:
+        token_idx = token["id"] - 1
+
+        # TODO: check length
+        # Noun is part of a complex adposition of form PNP
+        if sentence[token_idx - 1]["upostag"] == "ADP" and sentence[token_idx + 1]["upostag"] == "ADP":
+            return True
+        # skip the first part of a compound noun
+        if token["deprel"] == "compound":
+            return True
+
+        return False
 
     def _traverse_tree(self, parsed: 'list[TokenList]') -> Scene:
         """
@@ -123,26 +135,14 @@ class UDPipeProcessor:
                 if not closing:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
 
-                    # TODO: refactor this to a separate method.
-                    # TODO: take into account compound nouns.
                     if token["upostag"] == "NOUN" or token["upostag"] == "PROPN":
-                        token_idx = token["id"] - 1
-                        skip = False
-
-                        # TODO: check length
-                        # Noun is part of a complex adposition of form PNP
-                        if sentence[token_idx - 1]["upostag"] == "ADP" and sentence[token_idx + 1]["upostag"] == "ADP":
-                            skip = True
-                        # skip the first part of a compound noun
-                        if token["deprel"] == "compound":
-                            skip = True
+                        skip = self._process_noun(sentence, token)
 
                         if not skip:
                             obj = None
                             obj_name = token["lemma"];
                             attrs = list()
 
-                            # TODO: refactor this into separate method
                             for child in node.children:
                                 # If a noun is preceded by 'the' try to find an existing object
                                 # in scene's entity register.
@@ -167,7 +167,6 @@ class UDPipeProcessor:
 
                     # Creates relation between two objects at the top of
                     # the stack
-                    # TODO: refactor this to a separate method.
                     if token["upostag"] == "ADP":
                         skip = self._process_adposition(sentence, token)
 
@@ -179,8 +178,8 @@ class UDPipeProcessor:
                             print(f"\tnew Relation({full_adp})")
                             adp = Adposition.for_name(full_adp)
 
-                            src = entity_stack[-2]
-                            dst = entity_stack[-1]
+                            src =entity_stack[-2]
+                            dst =entity_stack[-1]
                             if entity_position[src] > entity_position[dst]:
                                 src, dst = dst, src
 
