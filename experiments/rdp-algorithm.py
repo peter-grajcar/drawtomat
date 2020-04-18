@@ -6,12 +6,12 @@ import tkinter
 import math
 import ndjson
 
-with open("../quickdraw-dataset/dataset/cat.ndjson") as f:
+with open("../quickdraw-dataset/saved/cat.ndjson") as f:
     cats = ndjson.load(f)
 
 px, py = 0, 0
 strokes = [
-    [(px + x * 0.25, py + y * 0.25) for (x, y) in zip(stroke[0], stroke[1])]
+    [(px + x * 0.5, py + y * 0.5) for (x, y) in zip(stroke[0], stroke[1])]
     for stroke in cats[1]["drawing"]
 ]
 
@@ -69,7 +69,7 @@ c = tkinter.Canvas(root)
 
 for points in strokes:
     # c.create_line(points, fill="#ff0000")
-    c.create_line(rdp(points, 10), fill="#00ff00")
+    c.create_line(rdp(points, 5), fill="#00ff00")
 
 c.pack(fill="both", expand=1)
 root.mainloop()
