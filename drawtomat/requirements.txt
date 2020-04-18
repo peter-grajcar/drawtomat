@@ -3,6 +3,7 @@ nltk
 ufal.udpipe
 conllu
 graphviz
+numpy
 
 sphinx
 numpydoc
