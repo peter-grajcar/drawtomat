@@ -3,56 +3,17 @@ from PIL import Image, ImageDraw
 import geometrical_constraints
 import numpy as np
 import ndjson
+from pprint import pprint
+from quick_draw import *
+
+with open("../quickdraw-dataset/saved/clock.ndjson") as f:
+    clocks = ndjson.load(f)
+
+with open("../quickdraw-dataset/saved/chair.ndjson") as f:
+    chairs = ndjson.load(f)
 
 with open("../quickdraw-dataset/saved/cat.ndjson") as f:
     cats = ndjson.load(f)
-
-with open("../quickdraw-dataset/saved/dog.ndjson") as f:
-    dogs = ndjson.load(f)
-
-
-def draw_quickdraw_obj(draw, obj, cx=0, cy=0, scale=1, colour="red"):
-    strokes = [
-        [(cx + x * scale, cy + y * scale) for (x, y) in zip(stroke[0], stroke[1])]
-        for stroke in obj["drawing"]
-    ]
-
-    for stroke in strokes:
-        draw.line(stroke, fill=colour)
-
-
-def get_quickdraw_obj_bounds(obj):
-    min_x = None
-    min_y = None
-    max_x = None
-    max_y = None
-    for stroke in obj["drawing"]:
-        m = max(stroke[0])
-        if max_x is None or max_x < m:
-            max_x = m
-        m = min(stroke[0])
-        if min_x is None or min_x > m:
-            min_x = m
-
-        m = max(stroke[1])
-        if max_y is None or max_y < m:
-            max_y = m
-        m = min(stroke[1])
-        if min_y is None or min_y > m:
-            min_y = m
-
-    return (min_x, max_x, min_y, max_y)
-
-
-def draw_bounding_box(draw, obj, cx=0, cy=0, scale=1, colour="blue"):
-    min_x, max_x, min_y, max_y = get_quickdraw_obj_bounds(obj)
-    draw.rectangle(
-        [
-            (cx + min_x * scale, cy + min_y * scale),
-            (cx + max_x * scale, cy + max_y * scale),
-        ],
-        outline=colour,
-    )
 
 
 if __name__ == "__main__":
@@ -62,25 +23,63 @@ if __name__ == "__main__":
     overlay = Image.new("RGBA", dimensions, (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    draw_quickdraw_obj(draw, cats[1], scale=0.5)
-    draw_bounding_box(draw, cats[1], scale=0.5)
+    clock = {
+        "drawing": clocks[1]["drawing"],
+        "position": (250, 150),
+        "scale": 0.15,
+        "bounds": get_quickdraw_obj_bounds(clocks[1]),
+    }
 
-    draw_quickdraw_obj(draw, dogs[4], scale=0.5, cx=200)
-    draw_bounding_box(draw, dogs[4], scale=0.5, cx=200)
+    chair = {
+        "drawing": chairs[1]["drawing"],
+        "position": (350, 250),
+        "scale": 0.35,
+        "bounds": get_quickdraw_obj_bounds(chairs[1]),
+    }
+
+    cat = {
+        "drawing": cats[4]["drawing"],
+        "position": (0, 0),
+        "scale": 0.1,
+        "bounds": get_quickdraw_obj_bounds(cats[4]),
+    }
+
+    poly = [
+        {"vector": np.array((-1, 0))},
+        {"point": np.array((300, 190))},
+        {"vector": np.array((0, 1))},
+    ]
 
     constraints = [
         {
-            "line": {"point": np.array((200, 100)), "vector": np.array((0, 1)),},
-            "side": "R",
+            "line": {"point": np.array((300, 190)), "vector": np.array((-1, 0)),},
+            "side": "L",
         },
         {
-            "line": {"point": np.array((10, 100)), "vector": np.array((1, 0)),},
+            "line": {"point": np.array((300, 190)), "vector": np.array((0, 1)),},
             "side": "R",
         },
     ]
 
-    for constraint in constraints:
-        geometrical_constraints.draw_plane(overlay, plane=constraint)
+    # geometrical_constraints.draw_extended_poly_v2(draw, poly)
+    # for point in geometrical_constraints.random_points_inside_extended_polygon_v2(
+    #    poly, size=500
+    # ):
+    #    geometrical_constraints.draw_point(draw, point, colour="cyan")
+
+    draw_quickdraw_obj(draw, clock, colour="red")
+    draw_quickdraw_obj(draw, chair, colour="blue")
+
+    # geometrical_constraints.draw_plane(overlay, constraints[0])
+    # geometrical_constraints.draw_plane(overlay, constraints[1])
+
+    cat["position"] = geometrical_constraints.random_points_inside_extended_polygon_v2(
+        poly
+    )
+    draw_quickdraw_obj(draw, cat, colour="green")
+
+    # for constraint in constraints:
+    #    geometrical_constraints.draw_plane(overlay, plane=constraint)
 
     img.paste(overlay, (0, 0), overlay)
     img.show()

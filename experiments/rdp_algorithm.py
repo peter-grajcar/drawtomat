@@ -6,20 +6,6 @@ import tkinter
 import math
 import ndjson
 
-with open("../quickdraw-dataset/saved/cat.ndjson") as f:
-    cats = ndjson.load(f)
-
-px, py = 0, 0
-strokes = [
-    [(px + x * 0.5, py + y * 0.5) for (x, y) in zip(stroke[0], stroke[1])]
-    for stroke in cats[1]["drawing"]
-]
-
-# points = [
-#    (x, 150 + 100 * math.exp(-x / 60) * math.cos(2 * math.pi * x / 60))
-#    for x in range(10, 290)
-# ]
-
 
 def perp_dist(p0, p1, p2):
     denom = math.sqrt((p2[1] - p1[1]) ** 2 + (p2[0] - p1[0]) ** 2)
@@ -63,13 +49,23 @@ def rdp(points: "list", epsilon: "float"):
     return result_stack[0]
 
 
-root = tkinter.Tk()
-root.configure(bg="#4f4f4f")
-c = tkinter.Canvas(root)
+if __name__ == "__main__":
+    root = tkinter.Tk()
+    root.configure(bg="#4f4f4f")
+    c = tkinter.Canvas(root)
 
-for points in strokes:
-    # c.create_line(points, fill="#ff0000")
-    c.create_line(rdp(points, 5), fill="#00ff00")
+    with open("../quickdraw-dataset/saved/house.ndjson") as f:
+        houses = ndjson.load(f)
 
-c.pack(fill="both", expand=1)
-root.mainloop()
+    px, py = 0, 0
+    strokes = [
+        [(px + x * 0.5, py + y * 0.5) for (x, y) in zip(stroke[0], stroke[1])]
+        for stroke in houses[1]["drawing"]
+    ]
+
+    for points in strokes:
+        c.create_line(points, fill="#00ff00", width=2)
+        c.create_line(rdp(points, 10), fill="#ff0000", width=2)
+
+    c.pack(fill="both", expand=1)
+    root.mainloop()

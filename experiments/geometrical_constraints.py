@@ -6,42 +6,11 @@ from PIL import Image, ImageDraw
 import numpy as np
 from drawing import *
 from pprint import pprint
+from geometry import *
 
-epsilon = 1e-8
-
-
-def get_side_line(line, point):
-    u = line["vector"]
-    v = point - line["point"]
-    nv = np.array((-v[1], v[0]))
-    angle = u.dot(nv)
-    return "R" if angle < 0 else "L"
-
-
-# returns side of point p3 with respect to line p1,p2
-def get_side(p1, p2, p3):
-    sign = (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p3[0] - p1[0]) * (p2[1] - p1[1])
-    return "R" if sign < 0 else "L"
-
-
-def line_line_intersection_with_t(line_a, line_b):
-    w = line_a["point"] - line_b["point"]
-    u = line_a["vector"]
-    v = line_b["vector"]
-    nv = np.array((-v[1], v[0]))
-
-    angle = nv.dot(u)
-    if abs(angle - 0) < epsilon:
-        return (None, None)
-
-    t = -nv.dot(w) / angle
-    return (line_a["point"] + u * t, t)
-
-
-def line_line_intersection(line_a, line_b):
-    return line_line_intersection_with_t[0]
-
-
+# idea for (maybe) simpler algorithm: compute intersections of all
+# half-planes and then start to eliminate points and vectors which
+# are on a wrong side
 def split_extended_polygon_v2(polygon, half_plane):
     result = []
 
@@ -147,10 +116,23 @@ def convex_triangulate(poly):
     return triangles
 
 
-def triangle_area(triangle):
-    u = triangle[1] - triangle[0]
-    v = triangle[2] - triangle[0]
-    return 0.5 * np.sqrt(u.dot(u) * v.dot(v) - u.dot(v) ** 2)
+def random_points_half_plane(half_plane, size=1):
+    result = []
+
+    unit = half_plane["line"]["vector"] / np.linalg.norm(half_plane["line"]["vector"])
+
+    normal = np.array((-unit[1], unit[0]))
+    normal = normal if half_plane["side"] == "R" else -normal
+
+    rs = np.random.normal(scale=50, size=size)
+    ss = abs(np.random.normal(scale=50, size=size))
+    for r, s in zip(rs, ss):
+        point = half_plane["line"]["point"] + r * unit
+        result.append(point + s * normal)
+
+    if size == 1:
+        return result[0]
+    return result
 
 
 def random_points_inside_extended_polygon_v2(polygon, size=1):
@@ -180,7 +162,6 @@ def random_points_inside_extended_polygon_v2(polygon, size=1):
     result = []
 
     rs = abs(np.random.normal(scale=3.5, size=size))
-    print(sum(rs > 1))
     for r in rs:
         if len(triangles) > 0 and (len(rays) == 0 or r < 1):
             # generate point inside the finite part of the polygon
@@ -210,7 +191,7 @@ def random_points_inside_extended_polygon_v2(polygon, size=1):
             unit_a = ray_a["vector"] / np.linalg.norm(ray_a["vector"])
             unit_b = ray_b["vector"] / np.linalg.norm(ray_b["vector"])
 
-            t = abs(np.random.normal(scale=50))
+            t = abs(np.random.normal(scale=150))
             s = np.random.uniform()
             a = ray_a["point"] + t * unit_a
             b = ray_b["point"] + t * unit_b
@@ -218,6 +199,8 @@ def random_points_inside_extended_polygon_v2(polygon, size=1):
             point = a + s * v
             result.append(point)
 
+    if size == 1:
+        return result[0]
     return result
 
 
@@ -237,26 +220,40 @@ def extended_polygon_v2_demo(draw, overlay):
     ]
 
     poly = [
-        {"vector": np.array((3, -1))},
-        {"point": np.array((80, 100))},
-        {"vector": np.array((-3, 1))},
+        {"point": np.array((60, 180))},
+        {"point": np.array((160, 180))},
+        {"point": np.array((160, 80))},
+        {"point": np.array((60, 80))},
     ]
 
     plane_a = {
-        "line": {"point": np.array((125, 125)), "vector": np.array((5, 1)),},
+        "line": {"point": np.array((125, 125)), "vector": np.array((1, 0)),},
+        "side": "R",
+    }
+
+    plane_b = {
+        "line": {"point": np.array((80, 125)), "vector": np.array((0, 1)),},
         "side": "L",
-        "interval": np.array((-10, 50)),
+    }
+
+    plane_c = {
+        "line": {"point": np.array((140, 125)), "vector": np.array((0, 1)),},
+        "side": "R",
     }
 
     draw_extended_poly_v2(draw, poly)
     draw_plane(overlay, plane_a)
+    draw_plane(overlay, plane_b)
+    draw_plane(overlay, plane_c)
 
     split_poly = split_extended_polygon_v2(poly, plane_a)
+    split_poly = split_extended_polygon_v2(split_poly, plane_b)
+    split_poly = split_extended_polygon_v2(split_poly, plane_c)
     pprint(split_poly)
     draw_extended_poly_v2(draw, split_poly, line_colour="red")
 
-    # for point in random_points_inside_extended_polygon_v2(split_poly, size=1000):
-    #    draw_point(draw, point, colour="green")
+    for point in random_points_inside_extended_polygon_v2(split_poly, size=500):
+        draw_point(draw, point, colour="green")
 
     # triangles = convex_triangulate(
     #    [vertex for vertex in split_poly if vertex.get("point") is not None]
@@ -278,7 +275,15 @@ if __name__ == "__main__":
     overlay = Image.new("RGBA", dimensions, (0, 0, 0, 0))
     pixels = overlay.load()
 
-    extended_polygon_v2_demo(draw, overlay)
+    # extended_polygon_v2_demo(draw, overlay)
+
+    plane_a = {
+        "line": {"point": np.array((125, 125)), "vector": np.array((1, 0)),},
+        "side": "R",
+    }
+    draw_plane(overlay, plane_a)
+    for point in random_points_half_plane(plane_a, size=500):
+        draw_point(draw, point, colour="green")
 
     img.paste(overlay, (0, 0), overlay)
     img.show()

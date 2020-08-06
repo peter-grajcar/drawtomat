@@ -87,7 +87,7 @@ def draw_extended_poly_v2(draw, polygon, line_colour="blue", point_colour="magen
 def draw_ray(draw, ray, colour="blue"):
     A = ray["point"]
     u = ray["vector"]
-    dim = np.argmax(u)
+    dim = np.argmax(abs(u))
     t = max(-A[dim] / u[dim], (draw.im.size[dim] - A[dim]) / u[dim])
     draw.line([tuple(A), tuple(A + t * u)], fill=colour)
 
@@ -98,7 +98,7 @@ def draw_plane(overlay, plane):
     sign = 1 if plane["side"] == "R" else -1
     # I = plane["interval"]
 
-    u = u / np.max(u)
+    u = u / u[np.argmax(abs(u))]
     n = np.array((-u[1], u[0])) * sign
 
     size = np.array((2, 2))
@@ -116,8 +116,8 @@ def draw_plane(overlay, plane):
     # draw.line([tuple(A), tuple(A + u * 20)], fill="red")
 
     pixels = overlay.load()
-    for i in range(0, overlay.size[0], 2):
-        for j in range(0, overlay.size[1], 2):
+    for i in range(0, overlay.size[0], 1):
+        for j in range(0, overlay.size[1], 1):
             p = np.array((i, j))
 
             # projection onto a line (u*u^T)/(u^T*u) * p
@@ -130,8 +130,8 @@ def draw_plane(overlay, plane):
                 old_pixel = pixels[i, j]
                 pixels[i, j] = (
                     64,
-                    255 - old_pixel[1] - 32,
-                    255 - old_pixel[2] - 32,
-                    32,
+                    128,
+                    128,
+                    32 if old_pixel[3] == 0 else old_pixel[3] * 2,
                 )
 
