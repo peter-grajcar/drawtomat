@@ -17,6 +17,17 @@ def get_side(p1, p2, p3):
     return "R" if sign < 0 else "L"
 
 
+def perp_dist(p0, p1, p2):
+    denom = np.sqrt((p2[1] - p1[1]) ** 2 + (p2[0] - p1[0]) ** 2)
+    num = abs(
+        (p2[1] - p1[1]) * p0[0]
+        - (p2[0] - p1[0]) * p0[1]
+        + p2[0] * p1[1]
+        - p2[1] * p1[0]
+    )
+    return num / denom
+
+
 def line_line_intersection_with_t(line_a, line_b):
     w = line_a["point"] - line_b["point"]
     u = line_a["vector"]

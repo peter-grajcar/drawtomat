@@ -5,17 +5,7 @@
 import tkinter
 import math
 import ndjson
-
-
-def perp_dist(p0, p1, p2):
-    denom = math.sqrt((p2[1] - p1[1]) ** 2 + (p2[0] - p1[0]) ** 2)
-    num = abs(
-        (p2[1] - p1[1]) * p0[0]
-        - (p2[0] - p1[0]) * p0[1]
-        + p2[0] * p1[1]
-        - p2[1] * p1[0]
-    )
-    return num / denom
+import geometry
 
 
 def rdp(points: "list", epsilon: "float"):
@@ -34,7 +24,7 @@ def rdp(points: "list", epsilon: "float"):
         dmax = 0
         index = 0
         for i in range(start + 1, end - 2):
-            d = perp_dist(points[i], points[start], points[end - 1])
+            d = geometry.perp_dist(points[i], points[start], points[end - 1])
             if d > dmax:
                 dmax = d
                 index = i
@@ -54,13 +44,13 @@ if __name__ == "__main__":
     root.configure(bg="#4f4f4f")
     c = tkinter.Canvas(root)
 
-    with open("../quickdraw-dataset/saved/house.ndjson") as f:
-        houses = ndjson.load(f)
+    with open("../quickdraw-dataset/saved/fence.ndjson") as f:
+        fences = ndjson.load(f)
 
     px, py = 0, 0
     strokes = [
         [(px + x * 0.5, py + y * 0.5) for (x, y) in zip(stroke[0], stroke[1])]
-        for stroke in houses[1]["drawing"]
+        for stroke in fences[2]["drawing"]
     ]
 
     for points in strokes:
