@@ -1,5 +1,6 @@
 import random
 
+import drawtomat.model.relational
 from drawtomat.model.physical.physical_entity import PhysicalEntity
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
@@ -13,12 +14,12 @@ class PhysicalObject(PhysicalEntity):
     strokes: list
     """
 
-    def __init__(self, obj: 'Object', default_size: int = 100, unit: int = 1) -> None:
+    def __init__(self, obj: 'drawtomat.model.relational.Object', default_size: int = 100, unit: float = 1) -> None:
         super(PhysicalObject, self).__init__(obj)
         self.strokes = []
         self._load_drawing(default_size=default_size, unit=unit)
 
-    def _load_drawing(self, default_size: int = 100, unit: int = 1) -> list:
+    def _load_drawing(self, default_size: int = 100, unit: float = 1) -> None:
         """
         Loads a drawing from the Quick, Draw! dataset, crops the drawing and returns the strokes.
         Sets the boundary attributes of the wrapper (width, height) and adjusted strokes (in Quick, Draw! format).

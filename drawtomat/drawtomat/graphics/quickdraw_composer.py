@@ -48,7 +48,7 @@ class QuickDrawComposer:
         Returns
         -------
         list
-            The list of wrapper objects
+            The list of physical entities
         """
         topological_order = self._topological_order(scene.entity_register)
 
@@ -62,84 +62,84 @@ class QuickDrawComposer:
 
         drawings = dict()
         default_size = 100  # default size of the object (in cm)
-        unit = 1.5            # ?px = 1cm
+        unit = 1.5  # ?px = 1cm
 
         for entity in topological_order:
             if type(entity) == Group:
-                wrapper = PhysicalGroup(entity)
+                physical_entity = PhysicalGroup(entity)
                 # TODO: compute cumulative get_width() and get_height() of the group
                 for child in entity.entities:
-                    wrapper.set_dimensions(wrapper.get_width() + drawings[child].get_width(),
-                                           wrapper.get_height() + drawings[child].get_height()
-                                           )
-                drawings[entity] = wrapper
+                    physical_entity.set_dimensions(physical_entity.get_width() + drawings[child].get_width(),
+                                                   physical_entity.get_height() + drawings[child].get_height())
+                drawings[entity] = physical_entity
             elif type(entity) == Object:
-                wrapper = PhysicalObject(entity, default_size=default_size, unit=unit)
-                drawings[entity] = wrapper
+                physical_entity = PhysicalObject(entity, default_size=default_size, unit=unit)
+                drawings[entity] = physical_entity
 
-            print("\t", wrapper)
+            print("\t", physical_entity)
 
         #################################################################################
         # Step 2:   Pop the entities from the ordered list and resolve the position of  #
         #           the entities.                                                       #
         #################################################################################
         for e in topological_order[::-1]:
-            wrapper = drawings[e]
+            physical_entity = drawings[e]
 
-            container = wrapper.entity.container
+            container = physical_entity.entity.container
             if container:
-                container_wrapper = drawings[container]
-                wrapper.x = container_wrapper.x
-                wrapper.y = container_wrapper.y
+                physical_container = drawings[container]
+                physical_entity.x = physical_container.x
+                physical_entity.y = physical_container.y
 
-            if wrapper.entity.relations_out:
-                rel = wrapper.entity.relations_out[0]
+            if physical_entity.entity.relations_out:
+                rel = physical_entity.entity.relations_out[0]
                 dst_wrapper = drawings[rel.dst]
 
                 # adjust scale with respect to destination object
-                if dst_wrapper.get_scale() < wrapper.get_scale():
-                    wrapper.set_scale(dst_wrapper.get_scale())
+                if dst_wrapper.get_scale() < physical_entity.get_scale():
+                    physical_entity.set_scale(dst_wrapper.get_scale())
 
                 # adjust position with respect to the adposition defining the relation
                 if rel.rel == Adposition.ON:
-                    wrapper.x = dst_wrapper.x
-                    wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height() / 2
+                    physical_entity.x = dst_wrapper.x
+                    physical_entity.y = dst_wrapper.y - physical_entity.get_height() / 2 - dst_wrapper.get_height() / 2
                 elif rel.rel == Adposition.ABOVE:
-                    wrapper.x = dst_wrapper.x
-                    wrapper.y = dst_wrapper.y - wrapper.get_height() / 2 - dst_wrapper.get_height()
+                    physical_entity.x = dst_wrapper.x
+                    physical_entity.y = dst_wrapper.y - physical_entity.get_height() / 2 - dst_wrapper.get_height()
                 elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
-                    wrapper.x = dst_wrapper.x
-                    wrapper.y = dst_wrapper.y + wrapper.get_height() / 2 + dst_wrapper.get_height() / 2
+                    physical_entity.x = dst_wrapper.x
+                    physical_entity.y = dst_wrapper.y + physical_entity.get_height() / 2 + dst_wrapper.get_height() / 2
                 elif rel.rel == Adposition.NEXT_TO:
-                    wrapper.x = dst_wrapper.x + wrapper.get_width() / 2 + dst_wrapper.get_width() / 2
-                    wrapper.y = dst_wrapper.y
+                    physical_entity.x = dst_wrapper.x + physical_entity.get_width() / 2 + dst_wrapper.get_width() / 2
+                    physical_entity.y = dst_wrapper.y
                 elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
 
                     if rel.rel == Adposition.IN and (
-                            wrapper.get_width() > dst_wrapper.get_width() or
-                            wrapper.get_height() > dst_wrapper.get_height()
+                            physical_entity.get_width() > dst_wrapper.get_width() or
+                            physical_entity.get_height() > dst_wrapper.get_height()
                     ):
                         padding = 2
-                        q = min(dst_wrapper.get_width(), dst_wrapper.get_height()) / (max(wrapper.get_width(), wrapper.get_height()) * padding)
-                        wrapper.set_scale(q * wrapper.get_scale())
+                        q = min(dst_wrapper.get_width(), dst_wrapper.get_height()) / (
+                                    max(physical_entity.get_width(), physical_entity.get_height()) * padding)
+                        physical_entity.set_scale(q * physical_entity.get_scale())
                     if rel.rel == Adposition.BEHIND:
                         # make the object look smaller
-                        wrapper.set_scale(0.75)
+                        physical_entity.set_scale(0.75)
 
                     # align centres of gravity
                     gx, gy = dst_wrapper.get_centre_of_gravity()
                     cx, cy = dst_wrapper.get_centre()
                     dx, dy = gx - cx, gy - cy
 
-                    gx, gy = wrapper.get_centre_of_gravity()
-                    cx, cy = wrapper.get_centre()
+                    gx, gy = physical_entity.get_centre_of_gravity()
+                    cx, cy = physical_entity.get_centre()
                     dx, dy = dx + cx - gx, dy + cy - gy
 
-                    wrapper.x, wrapper.y = dst_wrapper.x + dx, dst_wrapper.y + dy
+                    physical_entity.x, physical_entity.y = dst_wrapper.x + dx, dst_wrapper.y + dy
 
-            if type(wrapper) == PhysicalGroup:
+            if type(physical_entity) == PhysicalGroup:
                 pass
-            elif type(wrapper) == PhysicalObject:
+            elif type(physical_entity) == PhysicalObject:
                 pass
 
         return [v for v in drawings.values() if type(v) == PhysicalObject]

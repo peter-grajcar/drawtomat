@@ -21,13 +21,16 @@ class Adposition(Enum):
     def __str__(self) -> str:
         return self.name
 
+    @staticmethod
     def for_name(name: str) -> 'Adposition':
         """
+        Returns an adposition matching the name, Adposition.UNKNOWN is returned
+        if the name does not match any adposition.
 
         Returns
         -------
         Adposition
-            An adposition matching the name, Adposition.UNKNOWN is returned if the name does not match any adposition.
+            an adposition matching the name
         """
         for adp in Adposition:
             if name.replace(' ', '_').upper() == adp.name:

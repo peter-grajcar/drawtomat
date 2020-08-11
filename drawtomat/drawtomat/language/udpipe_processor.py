@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from typing import List
 
 import conllu
 from conllu import TokenList
@@ -86,7 +87,7 @@ class UDPipeProcessor:
 
         return False
 
-    def _traverse_tree(self, parsed: 'list[TokenList]') -> Scene:
+    def _traverse_tree(self, parsed: 'List[TokenList]') -> Scene:
         """
         Processes the description via tree traversal (DFS).
 

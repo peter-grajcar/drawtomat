@@ -1,5 +1,6 @@
 from tkinter import Tk, Canvas, PhotoImage, Label
 
+import drawtomat.model.relational
 from drawtomat.graphics.quickdraw_composer import QuickDrawComposer
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
@@ -14,7 +15,7 @@ class QuickDrawRenderer:
         self.composer = QuickDrawComposer()
         self.show_bounds = show_bounds
 
-    def render(self, scene: 'Scene') -> None:
+    def render(self, scene: 'drawtomat.model.relational.Scene') -> None:
         """
         Renders a scene into an image.
 

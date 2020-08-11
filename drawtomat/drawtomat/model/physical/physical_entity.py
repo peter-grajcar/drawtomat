@@ -1,5 +1,7 @@
 from abc import ABC
 
+import drawtomat.model.relational
+
 
 class PhysicalEntity(ABC):
     """
@@ -21,13 +23,24 @@ class PhysicalEntity(ABC):
             A ratio between the default size and actual size.
         """
 
-    def __init__(self, entity: 'Entity'):
+    def __init__(self, entity: 'drawtomat.model.relational.Entity'):
         self.entity = entity
         self.x = 0
         self.y = 0
         self._scale = 1
         self._width = 0
         self._height = 0
+
+    def get_size(self) -> tuple:
+        """
+        Returns the scaled width and height of the object.
+
+        Returns
+        -------
+        tuple
+            Width and height of the object
+        """
+        return self.get_width(), self.get_height()
 
     def get_width(self) -> float:
         """
