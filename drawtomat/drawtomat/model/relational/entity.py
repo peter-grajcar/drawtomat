@@ -1,7 +1,7 @@
 import uuid
 from abc import ABC
 
-from drawtomat.model.relation import Relation
+from drawtomat.model.relational.relation import Relation
 
 
 class Entity(ABC):

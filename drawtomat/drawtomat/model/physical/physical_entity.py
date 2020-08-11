@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class EntityWrapper(ABC):
+class PhysicalEntity(ABC):
     """
         An abstract wrapper type for entities.
 

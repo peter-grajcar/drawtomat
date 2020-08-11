@@ -1,4 +1,4 @@
-from drawtomat.model.entity import Entity
+from drawtomat.model.relational.entity import Entity
 
 
 class Group(Entity):

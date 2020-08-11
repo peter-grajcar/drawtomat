@@ -1,8 +1,8 @@
-from drawtomat.graphics.wrapper.group_wrapper import GroupWrapper
-from drawtomat.graphics.wrapper.object_wrapper import ObjectWrapper
 from drawtomat.language.adposition import Adposition
-from drawtomat.model.group import Group
-from drawtomat.model.object import Object
+from drawtomat.model.physical.physical_group import PhysicalGroup
+from drawtomat.model.physical.physical_object import PhysicalObject
+from drawtomat.model.relational.group import Group
+from drawtomat.model.relational.object import Object
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
@@ -66,7 +66,7 @@ class QuickDrawComposer:
 
         for entity in topological_order:
             if type(entity) == Group:
-                wrapper = GroupWrapper(entity)
+                wrapper = PhysicalGroup(entity)
                 # TODO: compute cumulative get_width() and get_height() of the group
                 for child in entity.entities:
                     wrapper.set_dimensions(wrapper.get_width() + drawings[child].get_width(),
@@ -74,7 +74,7 @@ class QuickDrawComposer:
                                            )
                 drawings[entity] = wrapper
             elif type(entity) == Object:
-                wrapper = ObjectWrapper(entity, default_size=default_size, unit=unit)
+                wrapper = PhysicalObject(entity, default_size=default_size, unit=unit)
                 drawings[entity] = wrapper
 
             print("\t", wrapper)
@@ -137,9 +137,9 @@ class QuickDrawComposer:
 
                     wrapper.x, wrapper.y = dst_wrapper.x + dx, dst_wrapper.y + dy
 
-            if type(wrapper) == GroupWrapper:
+            if type(wrapper) == PhysicalGroup:
                 pass
-            elif type(wrapper) == ObjectWrapper:
+            elif type(wrapper) == PhysicalObject:
                 pass
 
-        return [v for v in drawings.values() if type(v) == ObjectWrapper]
+        return [v for v in drawings.values() if type(v) == PhysicalObject]

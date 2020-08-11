@@ -1,10 +1,10 @@
 import random
 
-from drawtomat.graphics.wrapper.entity_wrapper import EntityWrapper
+from drawtomat.model.physical.physical_entity import PhysicalEntity
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
-class ObjectWrapper(EntityWrapper):
+class PhysicalObject(PhysicalEntity):
     """
     A wrapper type for object entity.
 
@@ -14,7 +14,7 @@ class ObjectWrapper(EntityWrapper):
     """
 
     def __init__(self, obj: 'Object', default_size: int = 100, unit: int = 1) -> None:
-        super(ObjectWrapper, self).__init__(obj)
+        super(PhysicalObject, self).__init__(obj)
         self.strokes = []
         self._load_drawing(default_size=default_size, unit=unit)
 

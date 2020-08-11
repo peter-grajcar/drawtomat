@@ -1,5 +1,2 @@
-from . import entity
-from . import scene
-from . import group
-from . import object
-from . import relation
+from . import physical
+from . import relational

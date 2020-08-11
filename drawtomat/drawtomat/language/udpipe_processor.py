@@ -5,9 +5,9 @@ from conllu import TokenList
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
 from drawtomat.language.adposition import Adposition
-from drawtomat.model.group import Group
-from drawtomat.model.object import Object
-from drawtomat.model.scene import Scene
+from drawtomat.model.relational.group import Group
+from drawtomat.model.relational.object import Object
+from drawtomat.model.relational.scene import Scene
 
 
 class UDPipeProcessor:

@@ -1,13 +1,13 @@
-from drawtomat.graphics.wrapper.entity_wrapper import EntityWrapper
+from drawtomat.model.physical.physical_entity import PhysicalEntity
 
 
-class GroupWrapper(EntityWrapper):
+class PhysicalGroup(PhysicalEntity):
     """
     A wrapper type for group entity.
     """
 
     def __init__(self, group: 'Group') -> None:
-        super(GroupWrapper, self).__init__(group)
+        super(PhysicalGroup, self).__init__(group)
 
     def set_dimensions(self, width, height) -> None:
         """
