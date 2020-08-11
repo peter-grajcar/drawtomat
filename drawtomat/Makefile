@@ -1,5 +1,5 @@
 apidocs:
-	sphinx-apidoc -o docs/source drawtomat -f -e
+	sphinx-apidoc -o docs/source src -f -e
 	$(MAKE) -C docs html
 
 udpipe:
@@ -16,4 +16,4 @@ venv/bin/activate: requirements.txt
 install: venv
 
 run: install
-	venv/bin/python3 -m drawtomat
+	(cd src && ../venv/bin/python3 -m drawtomat)

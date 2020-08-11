@@ -5,6 +5,7 @@ Submodules
 ----------
 
 .. toctree::
+   :maxdepth: 4
 
    drawtomat.language.adposition
    drawtomat.language.udpipe_processor

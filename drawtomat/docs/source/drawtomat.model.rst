@@ -1,16 +1,14 @@
 drawtomat.model package
 =======================
 
-Submodules
-----------
+Subpackages
+-----------
 
 .. toctree::
+   :maxdepth: 4
 
-   drawtomat.model.entity
-   drawtomat.model.group
-   drawtomat.model.object
-   drawtomat.model.relation
-   drawtomat.model.scene
+   drawtomat.model.physical
+   drawtomat.model.relational
 
 Module contents
 ---------------

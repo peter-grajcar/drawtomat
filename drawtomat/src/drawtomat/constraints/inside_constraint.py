@@ -5,7 +5,10 @@ from drawtomat.geometry import polygons
 from drawtomat.geometry.rdp import rdp
 
 
-class inside_constraint:
+class InsideConstraint:
+    """
+    Inside constraint
+    """
     def __init__(self, obj: 'drawtomat.model.physical.PhysicalObject'):
         self.obj = obj
         strokes = [

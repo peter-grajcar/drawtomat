@@ -5,18 +5,14 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
+   drawtomat.constraints
+   drawtomat.geometry
    drawtomat.graphics
    drawtomat.language
    drawtomat.model
    drawtomat.quickdraw
-
-Submodules
-----------
-
-.. toctree::
-
-   drawtomat.main
 
 Module contents
 ---------------

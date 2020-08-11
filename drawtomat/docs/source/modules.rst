@@ -1,5 +1,5 @@
-drawtomat
-=========
+src
+===
 
 .. toctree::
    :maxdepth: 4

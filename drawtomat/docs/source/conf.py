@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.append(os.path.abspath(".."))
-sys.path.append(os.path.abspath("../.."))
+sys.path.append(os.path.abspath("../../src"))
 sys.setrecursionlimit(1000)
 
 
@@ -53,3 +53,7 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+add_module_names = False
+
+body_max_width = "80px"
