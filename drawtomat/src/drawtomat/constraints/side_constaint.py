@@ -2,6 +2,7 @@ import numpy as np
 
 import drawtomat.model.physical
 from drawtomat.geometry import lines
+from drawtomat.geometry.lines import Line
 from drawtomat.geometry.side import Side
 
 
@@ -22,8 +23,8 @@ class SideConstraint:
         # in the direction of the dominant component
         offset = self.obj_size[np.argmax(abs(self.direction))] / 2
 
-        line = {
-            "point": self.obj["position"] + self.direction * offset,
-            "vector": norm_vec,
-        }
+        line = Line(
+            self.obj["position"] + self.direction * offset,
+            norm_vec
+        )
         return lines.get_side_line(line, np.array((x, y))) == Side.RIGHT

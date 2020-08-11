@@ -12,7 +12,11 @@ class OnConstraint:
         self.obj = obj
         self.limit = limit
 
-        strokes = quick_draw.get_quickdraw_strokes(self.obj)
+        strokes = [
+            [
+                (x + obj.x, y + obj.y) for x, y in zip(stroke[0], stroke[1])
+            ] for stroke in obj.strokes
+        ]
         rdp_strokes = [rdp(stroke, 5) for stroke in strokes]
 
         w, h = obj.get_size()

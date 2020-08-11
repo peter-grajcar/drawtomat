@@ -64,7 +64,7 @@ class PhysicalObject(PhysicalEntity):
             [
                 [(x - min_x) * q for x in stroke[0]],  # x-axis
                 [(y - min_y) * q for y in stroke[1]],  # y-axis
-                stroke[2],                         # time
+                stroke[2],                             # time
             ]
             for stroke in drawing
         ]
@@ -126,3 +126,4 @@ class PhysicalObject(PhysicalEntity):
         x /= n
         y /= n
         return x, y
+

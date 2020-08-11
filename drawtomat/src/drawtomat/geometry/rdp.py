@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
 from drawtomat.geometry import lines
 
 
-def rdp(points: 'List[np.ndarray]', epsilon: 'float') -> List[np.ndarray]:
+def rdp(points: 'List[Tuple[float, float]]', epsilon: 'float') -> List[np.ndarray]:
     """
     Ramer–Douglas–Peucker algorithm.
 
