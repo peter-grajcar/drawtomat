@@ -84,19 +84,23 @@ def get_side_line(line: Line, point: 'np.ndarray'):
     return Side.RIGHT if angle < 0 else Side.LEFT
 
 
-def perp_dist(p0: 'np.ndarray', p1: 'np.ndarray', p2: 'np.ndarray'):
+def perp_dist(p0: 'np.ndarray', p1: 'np.ndarray', p2: 'np.ndarray') -> float:
     """
-    Perpendicular distance
+    Perpendicular distance of point p0 from a line defined by points p1 and p2.
 
     Parameters
     ----------
     p0
+        Point
     p1
+        First point defining the line
     p2
+        Second point defining the line
 
     Returns
     -------
-
+    float
+        distance
     """
     denom = np.sqrt((p2[1] - p1[1]) ** 2 + (p2[0] - p1[0]) ** 2)
     num = abs(

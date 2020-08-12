@@ -1,3 +1,5 @@
+SOURCES = ./src
+
 apidocs:
 	sphinx-apidoc -o docs/source src -f -e
 	$(MAKE) -C docs html
@@ -16,4 +18,7 @@ venv/bin/activate: requirements.txt
 install: venv
 
 run: install
-	(cd src && ../venv/bin/python3 -m drawtomat)
+	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat
+
+test-constraints: install
+	PYTHONPATH=./src:./test python3 test/constraints.py

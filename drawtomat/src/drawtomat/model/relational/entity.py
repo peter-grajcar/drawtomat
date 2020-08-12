@@ -2,7 +2,7 @@ import uuid
 from abc import ABC
 
 from drawtomat.language.adposition import Adposition
-from drawtomat.model.relational.relation import Relation
+from .relation import Relation
 
 
 class Entity(ABC):

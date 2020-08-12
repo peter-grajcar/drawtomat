@@ -4,6 +4,7 @@ ufal.udpipe
 conllu
 graphviz
 numpy
+pillow
 
 sphinx
 numpydoc

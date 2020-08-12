@@ -1,6 +1,5 @@
 import random
 
-import drawtomat.model.relational
 from drawtomat.model.physical.physical_entity import PhysicalEntity
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
@@ -14,7 +13,7 @@ class PhysicalObject(PhysicalEntity):
     strokes: list
     """
 
-    def __init__(self, obj: 'drawtomat.model.relational.Object', default_size: int = 100, unit: float = 1) -> None:
+    def __init__(self, obj: 'Object', default_size: int = 100, unit: float = 1) -> None:
         super(PhysicalObject, self).__init__(obj)
         self.strokes = []
         self._load_drawing(default_size=default_size, unit=unit)

@@ -1,8 +1,5 @@
 from abc import ABC
 
-import drawtomat.model.relational
-
-
 class PhysicalEntity(ABC):
     """
         An abstract wrapper type for entities.
@@ -23,13 +20,31 @@ class PhysicalEntity(ABC):
             A ratio between the default size and actual size.
         """
 
-    def __init__(self, entity: 'drawtomat.model.relational.Entity'):
+    def __init__(self, entity: 'Entity'):
         self.entity = entity
         self.x = 0
         self.y = 0
         self._scale = 1
         self._width = 0
         self._height = 0
+
+    def set_position(self, x: float, y: float) -> None:
+        """
+        Sets a new position.
+
+        Parameters
+        ----------
+        x : float
+            x coordinate
+        y : float
+            y coordinate
+
+        Returns
+        -------
+        None
+        """
+        self.x = x
+        self.y = y
 
     def get_size(self) -> tuple:
         """
@@ -81,7 +96,8 @@ class PhysicalEntity(ABC):
 
         Parameters
         ----------
-        scale
+        scale : float
+            scale of the entity
 
         Returns
         -------
@@ -107,6 +123,7 @@ class PhysicalEntity(ABC):
         Returns
         -------
         tuple
+            coordinates of the centre of gravity
         """
         return self.get_centre()
 

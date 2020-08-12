@@ -1,4 +1,4 @@
-from drawtomat.model.relational.entity import Entity
+from .entity import Entity
 
 
 class Object(Entity):

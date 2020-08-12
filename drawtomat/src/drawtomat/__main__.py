@@ -12,7 +12,7 @@ if __name__ == "__main__":
     if not args.description:
         args.description = input("Description: ")
 
-    processor = UDPipeProcessor("../resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
+    processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
     scene = processor.process(args.description)
 
     graph = scene.export_dot(args.model_output)

@@ -1,1 +1,1 @@
-from . import quickdraw_dataset
+from .quickdraw_dataset import QuickDrawDataset

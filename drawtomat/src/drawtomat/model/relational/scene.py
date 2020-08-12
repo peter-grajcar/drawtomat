@@ -1,8 +1,8 @@
 from graphviz import Digraph
 
-from drawtomat.model.relational.entity import Entity
-from drawtomat.model.relational.group import Group
-from drawtomat.model.relational.object import Object
+from .entity import Entity
+from .group import Group
+from .object import Object
 
 
 class Scene:
