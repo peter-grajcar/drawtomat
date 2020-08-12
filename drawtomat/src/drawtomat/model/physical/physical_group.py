@@ -9,14 +9,16 @@ class PhysicalGroup(PhysicalEntity):
     def __init__(self, group: 'Group') -> None:
         super(PhysicalGroup, self).__init__(group)
 
-    def set_dimensions(self, width, height) -> None:
+    def set_dimensions(self, width: 'float', height: 'float') -> None:
         """
         Sets group width and height.
 
         Parameters
         ----------
-        width
-        height
+        width : float
+            width of the object
+        height : float
+            height of the object
 
         Returns
         -------

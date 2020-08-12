@@ -31,7 +31,8 @@ class UDPipeProcessor:
 
         Parameters
         ----------
-        sentence
+        sentence : TokenList
+            sentence as a list of tokens
         token
 
         Returns

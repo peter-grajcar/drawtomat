@@ -9,12 +9,13 @@ class OnConstraint:
 
     Attributes
     ----------
-    obj
+    obj : PhysicalObject
         an object to which the constraint relates
-    limit
+    limit : float
         maximal distance from the lines on the top
     """
-    def __init__(self, obj: 'PhysicalObject', limit=10):
+
+    def __init__(self, obj: 'PhysicalObject', limit: 'float' = 10):
         self.obj = obj
         self.limit = limit
 

@@ -40,11 +40,12 @@ class Group(Entity):
 
     def add_entities(self, *entities) -> None:
         """
-
+        Adds new entities to the group.
 
         Parameters
         ----------
-        entities
+        entities : Iterable[Entity]
+            The entities to be added to the group.
 
         Returns
         -------

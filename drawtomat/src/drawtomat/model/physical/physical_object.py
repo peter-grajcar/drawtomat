@@ -11,6 +11,7 @@ class PhysicalObject(PhysicalEntity):
     Attributes
     ----------
     strokes: list
+        object drawing strokes
     """
 
     def __init__(self, obj: 'Object', default_size: int = 100, unit: float = 1) -> None:
@@ -25,7 +26,7 @@ class PhysicalObject(PhysicalEntity):
 
         Returns
         -------
-        list
+        list : List[List[List[int]]
             A list of strokes (in Quick, Draw! dataset format).
         """
         word = self.entity.word
@@ -77,7 +78,8 @@ class PhysicalObject(PhysicalEntity):
 
         Parameters
         ----------
-        scale
+        scale : float
+            scale of the object
 
         Returns
         -------

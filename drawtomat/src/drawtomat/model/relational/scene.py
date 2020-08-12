@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from graphviz import Digraph
 
 from .entity import Entity
@@ -31,7 +33,7 @@ class Scene:
 
         Parameters
         ----------
-        entity
+        entity : Entity
             The entity to register
 
         Returns
@@ -61,7 +63,7 @@ class Scene:
 
         Parameters
         ----------
-        entities
+        entities : Iterable[Entity]
             A list of entities to add.
 
         Returns

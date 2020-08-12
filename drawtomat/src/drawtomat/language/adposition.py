@@ -27,6 +27,11 @@ class Adposition(Enum):
         Returns an adposition matching the name, Adposition.UNKNOWN is returned
         if the name does not match any adposition.
 
+        Parameters
+        ----------
+        name : str
+            adposition name
+
         Returns
         -------
         Adposition
