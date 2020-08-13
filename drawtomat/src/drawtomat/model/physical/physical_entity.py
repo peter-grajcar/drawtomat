@@ -1,5 +1,6 @@
 from abc import ABC
 
+
 class PhysicalEntity(ABC):
     """
         An abstract wrapper type for entities.
@@ -105,17 +106,6 @@ class PhysicalEntity(ABC):
         """
         self._scale = scale
 
-    def get_centre(self) -> tuple:
-        """
-        Computes the centre of the object, i.e. centre of the bounding box. The coordinates are relative.
-
-        Returns
-        -------
-        tuple
-            The centre of the object.
-        """
-        return self.get_width() / 2, self.get_height() / 2
-
     def get_centre_of_gravity(self) -> tuple:
         """
         By default returns the centre of a bounding box (same as get_centre).
@@ -125,7 +115,7 @@ class PhysicalEntity(ABC):
         tuple
             coordinates of the centre of gravity
         """
-        return self.get_centre()
+        return 0, 0
 
     def __repr__(self) -> str:
         return self.entity.__repr__() + f"[w={self.get_width():.0f}, h={self.get_height():.0f}]"

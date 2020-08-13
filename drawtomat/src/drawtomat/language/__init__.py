@@ -1,2 +1,2 @@
-from . import adposition
-from . import udpipe_processor
+from .adposition import Adposition
+from .udpipe_processor import UDPipeProcessor

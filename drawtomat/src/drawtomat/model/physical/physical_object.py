@@ -62,8 +62,8 @@ class PhysicalObject(PhysicalEntity):
 
         self.strokes = [
             [
-                [(x - min_x) * q for x in stroke[0]],  # x-axis
-                [(y - min_y) * q for y in stroke[1]],  # y-axis
+                [(x - min_x - width/2) * q for x in stroke[0]],  # x-axis
+                [(y - min_y - height/2) * q for y in stroke[1]],  # y-axis
                 stroke[2],                             # time
             ]
             for stroke in drawing

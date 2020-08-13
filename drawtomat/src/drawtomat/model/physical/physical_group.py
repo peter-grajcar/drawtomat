@@ -9,7 +9,7 @@ class PhysicalGroup(PhysicalEntity):
     def __init__(self, group: 'Group') -> None:
         super(PhysicalGroup, self).__init__(group)
 
-    def set_dimensions(self, width: 'float', height: 'float') -> None:
+    def set_size(self, width: 'float', height: 'float') -> None:
         """
         Sets group width and height.
 

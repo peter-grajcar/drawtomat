@@ -1,12 +1,13 @@
 import numpy as np
 
+from drawtomat.constraints import Constraint
 from drawtomat.geometry import lines
 from drawtomat.geometry.lines import Line
 from drawtomat.geometry.side import Side
 from drawtomat.model.physical import PhysicalObject
 
 
-class SideConstraint:
+class SideConstraint(Constraint):
     """
     A side constraint.
 
@@ -21,6 +22,7 @@ class SideConstraint:
         size of the object to which the constraint relates.
     """
     def __init__(self, obj: 'PhysicalObject', direction=(1, 0)):
+        super().__init__()
         self.obj = obj
         self.direction = np.array(direction)
         self.obj_size = np.array(obj.get_size())

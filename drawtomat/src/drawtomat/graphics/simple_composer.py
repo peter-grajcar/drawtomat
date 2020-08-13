@@ -1,42 +1,21 @@
+from typing import List
+
 from drawtomat.language.adposition import Adposition
-from drawtomat.model.physical.physical_group import PhysicalGroup
-from drawtomat.model.physical.physical_object import PhysicalObject
+from drawtomat.model.physical import PhysicalEntity, PhysicalObject, PhysicalGroup
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
-from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
+from drawtomat.model.relational.scene import Scene
 
 
-class QuickDrawComposer:
+class SimpleComposer:
     """
-    A scene composer based on "Quick, Draw!" data.
+    A simple scene composer.
     """
 
     def __init__(self):
-        self.dataset = QuickDrawDataset.words()
+        pass
 
-    def _topological_order(self, entity_register):
-        no_incoming_edges = [e for e in entity_register if not e.relations_in]
-
-        visited = set()
-        stack = []
-        order = []
-        q = list(no_incoming_edges)
-
-        while q:
-            v = q.pop()
-            if v not in visited:
-                visited.add(v)
-                q.extend([rel.dst for rel in v.relations_out])
-                if v.container:
-                    q.append(v.container)
-
-                while stack and v not in [rel.dst for rel in stack[-1].relations_out] + [stack[-1].container]:
-                    order.append(stack.pop())
-                stack.append(v)
-
-        return stack + order[::-1]
-
-    def compose(self, scene: 'Scene') -> list:
+    def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """
         Composes object from the scene into a list of wrapper objects.
 
@@ -47,10 +26,10 @@ class QuickDrawComposer:
 
         Returns
         -------
-        list
+        List
             The list of physical entities
         """
-        topological_order = self._topological_order(scene.entity_register)
+        topological_order = _topological_order(scene.entity_register)
 
         print("=" * 80)
         print("Topological order: ", topological_order)
@@ -69,8 +48,8 @@ class QuickDrawComposer:
                 physical_entity = PhysicalGroup(entity)
                 # TODO: compute cumulative get_width() and get_height() of the group
                 for child in entity.entities:
-                    physical_entity.set_dimensions(physical_entity.get_width() + drawings[child].get_width(),
-                                                   physical_entity.get_height() + drawings[child].get_height())
+                    physical_entity.set_size(physical_entity.get_width() + drawings[child].get_width(),
+                                             physical_entity.get_height() + drawings[child].get_height())
                 drawings[entity] = physical_entity
             elif type(entity) == Object:
                 physical_entity = PhysicalObject(entity, default_size=default_size, unit=unit)
@@ -128,12 +107,10 @@ class QuickDrawComposer:
 
                     # align centres of gravity
                     gx, gy = dst_wrapper.get_centre_of_gravity()
-                    cx, cy = dst_wrapper.get_centre()
-                    dx, dy = gx - cx, gy - cy
+                    dx, dy = gx, gy
 
                     gx, gy = physical_entity.get_centre_of_gravity()
-                    cx, cy = physical_entity.get_centre()
-                    dx, dy = dx + cx - gx, dy + cy - gy
+                    dx, dy = dx - gx, dy - gy
 
                     physical_entity.x, physical_entity.y = dst_wrapper.x + dx, dst_wrapper.y + dy
 
@@ -143,3 +120,26 @@ class QuickDrawComposer:
                 pass
 
         return [v for v in drawings.values() if type(v) == PhysicalObject]
+
+
+def _topological_order(entity_register):
+    no_incoming_edges = [e for e in entity_register if not e.relations_in]
+
+    visited = set()
+    stack = []
+    order = []
+    q = list(no_incoming_edges)
+
+    while q:
+        v = q.pop()
+        if v not in visited:
+            visited.add(v)
+            q.extend([rel.dst for rel in v.relations_out])
+            if v.container:
+                q.append(v.container)
+
+            while stack and v not in [rel.dst for rel in stack[-1].relations_out] + [stack[-1].container]:
+                order.append(stack.pop())
+            stack.append(v)
+
+    return stack + order[::-1]

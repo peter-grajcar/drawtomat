@@ -1,9 +1,10 @@
+from drawtomat.constraints import Constraint
 from drawtomat.geometry import lines
 from drawtomat.geometry.rdp import rdp
 from drawtomat.model.physical import PhysicalObject
 
 
-class OnConstraint:
+class OnConstraint(Constraint):
     """
     On constraint.
 
@@ -16,13 +17,13 @@ class OnConstraint:
     """
 
     def __init__(self, obj: 'PhysicalObject', limit: 'float' = 10):
+        super().__init__()
         self.obj = obj
         self.limit = limit
 
-        cx, cy = obj.get_centre()
         strokes = [
             [
-                (x + obj.x - cx, y + obj.y - cy) for x, y in zip(stroke[0], stroke[1])
+                (x + obj.x, y + obj.y) for x, y in zip(stroke[0], stroke[1])
             ] for stroke in obj.strokes
         ]
         rdp_strokes = [rdp(stroke, 5) for stroke in strokes]

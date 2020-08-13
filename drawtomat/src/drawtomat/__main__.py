@@ -1,12 +1,12 @@
 import argparse
 
-from drawtomat.graphics.quickdraw_renderer import QuickDrawRenderer
+from drawtomat.graphics.simple_renderer import SimpleRenderer
 from drawtomat.language.udpipe_processor import UDPipeProcessor
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--description", type=str)
-    parser.add_argument("--model_output", default="../output/model.dot", type=str)
+    parser.add_argument("--model_output", default="output/model.dot", type=str)
     args = parser.parse_args()
 
     if not args.description:
@@ -20,5 +20,5 @@ if __name__ == "__main__":
     graph.graph_attr["labelloc"] = "t"
     graph.render(filename=args.model_output, format="png")
 
-    renderer = QuickDrawRenderer(show_bounds=False)
+    renderer = SimpleRenderer(show_bounds=False)
     renderer.render(scene)
