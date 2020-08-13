@@ -7,8 +7,9 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   drawtomat.graphics.quickdraw_composer
-   drawtomat.graphics.quickdraw_renderer
+   drawtomat.graphics.constraint_composer
+   drawtomat.graphics.simple_composer
+   drawtomat.graphics.simple_renderer
 
 Module contents
 ---------------
