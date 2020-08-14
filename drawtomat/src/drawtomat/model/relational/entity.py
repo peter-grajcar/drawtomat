@@ -1,5 +1,6 @@
 import uuid
 from abc import ABC
+from typing import List
 
 from drawtomat.language.adposition import Adposition
 from .relation import Relation
@@ -9,10 +10,15 @@ class Entity(ABC):
     """
     An abstract class representing an entity in a scene. An entity can relate to other entity via Relation.
 
-    Parameters
+    Attributes
     ----------
-    relations : list
-        The list of relations.
+    relations_in : List[Relation]
+
+    relations_out : List[Relation]
+
+    container : Entity
+
+    id : uuid.UUID
     """
 
     def __init__(self, scene: 'Scene', container=None):

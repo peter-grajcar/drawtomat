@@ -5,7 +5,7 @@ import numpy as np
 from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, SideConstraint
 from drawtomat.language import Adposition
-from drawtomat.model.physical import PhysicalEntity, PhysicalObject, PhysicalGroup
+from drawtomat.model.physical import PhysicalEntity, PhysicalObject
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
 from drawtomat.model.relational.scene import Scene
@@ -37,6 +37,11 @@ class ConstraintComposer:
         """
         obj_size = max(obj.get_size())
 
+        if not constraints:
+            rand_point = np.random.normal(scale=np.sqrt(obj_size), size=2)
+            obj.set_position(rand_point[0], rand_point[1])
+            return
+
         best_point = {"score": None, "point": None}
         num_of_constraints = len(constraints)
         centre = (
@@ -58,7 +63,7 @@ class ConstraintComposer:
             if constraints_satisfied == num_of_constraints:
                 break
 
-        print(best_point)
+        # print(best_point)
         obj.set_position(best_point["point"][0], best_point["point"][1])
 
     def _get_constraints(self, adposition: 'Adposition', obj: 'PhysicalObject') -> List[Constraint]:
@@ -68,11 +73,14 @@ class ConstraintComposer:
             return [InsideConstraint(obj)]
         elif adposition is Adposition.ON:
             return [OnConstraint(obj)]
+        elif adposition is Adposition.UNDER:
+            return [SideConstraint(obj, direction=(0, 1))]
         elif adposition is Adposition.NEXT_TO:
             return [
                 SideConstraint(obj, direction=(-1, 0)),
                 SideConstraint(obj, direction=(1, 0))
             ]
+        return []
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """
@@ -90,27 +98,41 @@ class ConstraintComposer:
         """
         topological_order = _topological_order(scene.entity_register)
 
-        physical_entities = []
+        physical_entities = dict()
         default_size = 100  # default size of the object (in cm)
         unit = 1.5  # ?px = 1cm
 
-        # Create physical entities while maintaining
-        # the topological order
+        # Create physical objects
         for entity in topological_order[::-1]:
             if type(entity) == Group:
-                physical_entity = PhysicalGroup(entity)
-
-                physical_entities.append(physical_entity)
+                pass
             elif type(entity) == Object:
                 physical_entity = PhysicalObject(entity, default_size=default_size, unit=unit)
-                physical_entities.append(physical_entity)
+                constraints = []
+                for rel in entity.relations_out:
+                    dst_obj = physical_entities[rel.dst]["obj"]
+                    constraints.extend(self._get_constraints(rel.rel, dst_obj))
+                physical_entities[entity] = {"obj": physical_entity, "constraints": constraints}
 
-            print("\t", physical_entity)
+        for entity in topological_order[::-1]:
+            # all objects contained in a group will inherit all
+            # group's constraint
+            if type(entity) == Group:
+                # accumulate group constraints
+                constraints = []
+                for rel in entity.relations_out:
+                    dst_obj = physical_entities[rel.dst]["obj"]
+                    constraints.extend(self._get_constraints(rel.rel, dst_obj))
+                # add constraints to objects in the group
+                for e in entity.entities:
+                    if type(e) == Object:
+                        physical_entities[e]["constraints"].extend(constraints)
+            elif type(entity) == Object:
+                physical_entity = physical_entities[entity]
+                self._place_object(physical_entity["obj"], physical_entity["constraints"])
+                print("\t", physical_entity)
 
-        for entity in physical_entities:
-            pass
-
-        return  # TODO
+        return [v["obj"] for v in physical_entities.values()]
 
 
 def _topological_order(entity_register):

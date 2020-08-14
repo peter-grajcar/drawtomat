@@ -1,3 +1,5 @@
+from typing import List
+
 from .entity import Entity
 
 
@@ -5,9 +7,9 @@ class Group(Entity):
     """
     An entity representing a group of entities
 
-    Parameters
+    Attributes
     ----------
-    group : list
+    group : List[Entity]
         The list of entities contained in the group.
     """
 

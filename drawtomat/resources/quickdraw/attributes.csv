@@ -41,7 +41,7 @@ bowtie,,
 bracelet,,
 brain,,
 bread,,
-bridge,,
+bridge,,1000
 broccoli,,
 broom,,
 bucket,,
@@ -320,7 +320,7 @@ toothpaste,,
 tornado,,
 tractor,,
 traffic light,,
-train,300,1000
+train,,400
 tree,100,250
 triangle,,
 trombone,,

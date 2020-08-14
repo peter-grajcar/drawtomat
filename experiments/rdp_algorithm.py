@@ -44,13 +44,13 @@ if __name__ == "__main__":
     root.configure(bg="#4f4f4f")
     c = tkinter.Canvas(root)
 
-    with open("../quickdraw-dataset/saved/fence.ndjson") as f:
-        fences = ndjson.load(f)
+    with open("../quickdraw-dataset/saved/house.ndjson") as f:
+        houses = ndjson.load(f)
 
     px, py = 0, 0
     strokes = [
         [(px + x * 0.5, py + y * 0.5) for (x, y) in zip(stroke[0], stroke[1])]
-        for stroke in fences[2]["drawing"]
+        for stroke in houses[1]["drawing"]
     ]
 
     for points in strokes:

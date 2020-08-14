@@ -35,3 +35,6 @@ class Constraint(metaclass=ABCMeta):
             True if (x,y) meet the condition
         """
         pass
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.obj.entity.word})"

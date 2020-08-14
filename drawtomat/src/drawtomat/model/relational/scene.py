@@ -106,7 +106,7 @@ class Scene:
 
         def object_dot_repr(g: 'Digraph', obj: 'Object'):
             if obj.attributes:
-                label = f"{obj.word}<font point-size='9'><br align='left'/>attrs:<br align='left'/>" + "<br align='left'/>".join(f" - {attr}" for attr in obj.attributes) + "</font>"
+                label = f"{obj.word}<font point-size='9'><br align='left'/>attributes:<br align='left'/>" + "<br align='left'/>".join(f" - {attr}" for attr in obj.attributes) + "</font>"
                 g.node(f"entity_{entity_ids[obj]}", label="<" + label + ">")
             else:
                 g.node(f"entity_{entity_ids[obj]}", label=obj.word)

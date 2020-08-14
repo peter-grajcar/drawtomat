@@ -3,7 +3,7 @@ import colorsys
 import numpy as np
 from PIL import Image, ImageDraw
 
-from drawtomat.constraints.inside_constraint import InsideConstraint
+from drawtomat.constraints import OnConstraint
 from drawtomat.model.physical import PhysicalObject
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     scene = Scene()
     group = Group(scene)
 
-    house_rel = Object(scene, "house", group)
+    house_rel = Object(scene, "bridge", group)
     house = PhysicalObject(house_rel)
     house.set_position(250, 250)
     house.set_scale(0.5)
@@ -56,12 +56,13 @@ if __name__ == "__main__":
 
     central_obj = house
     constraints = [
-        # SideConstraint(house, direction=(-1, 0)),
-        InsideConstraint(house),
-        # OnConstraint(house),
+        #SideConstraint(house, direction=(-1, 0)),
+        #SideConstraint(house, direction=(1, 0)),
+        # InsideConstraint(house),
+        OnConstraint(house),
     ]
     num_of_constraints = len(constraints)
-    for i in range(5000):
+    for i in range(1000):
         rand_point = np.random.normal(scale=100, size=2) + np.array(central_obj.get_position())
         constraints_satisfied = 0
 

@@ -1,18 +1,23 @@
 from tkinter import Tk, Canvas, PhotoImage, Label
 
 import drawtomat.model.relational
-from drawtomat.graphics.simple_composer import SimpleComposer
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
 class SimpleRenderer:
     """
     A simple image renderer.
+
+    Attributes
+    ----------
+    dataset
+    composer
+    show_bounds : bool
     """
 
-    def __init__(self, show_bounds: bool = False):
+    def __init__(self, composer, show_bounds: bool = False):
         self.dataset = QuickDrawDataset.words()
-        self.composer = SimpleComposer()
+        self.composer = composer
         self.show_bounds = show_bounds
 
     def render(self, scene: 'drawtomat.model.relational.Scene') -> None:
@@ -29,17 +34,16 @@ class SimpleRenderer:
         None
         """
 
-        composer = SimpleComposer()
-        composition = composer.compose(scene)
+        composition = self.composer.compose(scene)
 
         # ======== for debugging only ========
         root = Tk()
         root.title("Drawtomat")
-        canvas = Canvas(root, width=600, height=400)
-        canvas.pack(side="left")
+        canvas = Canvas(root, width=600, height=400, borderwidth=2, relief="solid")
+        canvas.pack(side="top")
         img = PhotoImage(file="output/model.dot.png")
         label = Label(root, image=img, width=400, borderwidth=2, relief="solid")
-        label.pack(fill="both", side="left")
+        label.pack(fill="both", side="top")
 
         min_x = None
         max_x = None
@@ -62,14 +66,12 @@ class SimpleRenderer:
                 if max_y is None or min_y < my:
                     max_y = my
 
-        width = max_x - min_x
-        height = max_y - min_y
+        width = max_x - min_x + 50
+        height = max_y - min_y + 50
         q = min(300 / width, 200 / height)
 
         for obj in composition:
-            gx, gy = obj.get_centre_of_gravity()
-            gx, gy = gx * q, gy * q
-            px, py = obj.x * q + 300, obj.y * q + 200
+            px, py = (obj.x - min_x + width/2) * q, (obj.y - min_y + height / 2) * q
 
             for stroke in obj.strokes:
                 if len(stroke[2]) < 2:
@@ -80,10 +82,9 @@ class SimpleRenderer:
             if self.show_bounds:
                 canvas.create_rectangle(px, py, px + obj.get_width() * q, py + obj.get_height() * q, outline="#ff00ff")
                 canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
-                canvas.create_line(px + gx - 4, py + gy, px + gx + 4, py + gy, fill="#ff00ff")
-                canvas.create_line(px + gx, py + gy - 4, px + gx, py + gy + 4, fill="#ff00ff")
-                canvas.create_line(px - 3, py - 3, px + 3, py + 3, fill="#00ffff")
-                canvas.create_line(px - 3, py + 3, px + 3, py - 3, fill="#00ffff")
+                canvas.create_line(px - 4, py, px + 4, py, fill="#ff00ff")
+                canvas.create_line(px, py - 4, px, py + 4, fill="#ff00ff")
+
 
         root.mainloop()
         # =====================================

@@ -1,7 +1,10 @@
 import argparse
 
+from drawtomat.graphics import ConstraintComposer
 from drawtomat.graphics.simple_renderer import SimpleRenderer
 from drawtomat.language.udpipe_processor import UDPipeProcessor
+
+# A dog and a chair are inside a house. The dog is sitting on the chair.
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -20,5 +23,8 @@ if __name__ == "__main__":
     graph.graph_attr["labelloc"] = "t"
     graph.render(filename=args.model_output, format="png")
 
-    renderer = SimpleRenderer(show_bounds=False)
+    composer = ConstraintComposer()
+    # composer.compose(scene)
+
+    renderer = SimpleRenderer(composer=composer, show_bounds=False)
     renderer.render(scene)

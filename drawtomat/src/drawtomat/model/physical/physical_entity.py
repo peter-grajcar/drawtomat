@@ -118,4 +118,4 @@ class PhysicalEntity(ABC):
         return 0, 0
 
     def __repr__(self) -> str:
-        return self.entity.__repr__() + f"[w={self.get_width():.0f}, h={self.get_height():.0f}]"
+        return self.entity.__repr__() + f"[w={self.get_width():.0f}, h={self.get_height():.0f}, x={self.x:.0f}, y={self.y:.0f}]"

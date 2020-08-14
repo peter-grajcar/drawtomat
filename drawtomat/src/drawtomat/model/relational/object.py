@@ -5,10 +5,11 @@ class Object(Entity):
     """
     An entity representing a single object in the scene.
 
-    Parameters
+    Attributes
     ----------
     word : str
         The word describing the object.
+    attributes : list
     """
 
     def __init__(self, scene: 'Scene', word: str, container=None) -> None:

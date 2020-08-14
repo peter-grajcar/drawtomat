@@ -160,6 +160,7 @@ if __name__ == "__main__":
     quick_draw.draw_quickdraw_obj(draw, bird, colour="blue")
 
     ############################################################################
+    """"
     rgb_to_hex = lambda rgb: "#{:02x}{:02x}{:02x}".format(
         int(255 * rgb[0]), int(255 * rgb[1]), int(255 * rgb[2])
     )
@@ -182,6 +183,7 @@ if __name__ == "__main__":
         hex_colour = rgb_to_hex(colour)
         if constraints_satisfied > 0:
             drawing.draw_point(draw, rand_point, colour=hex_colour)
+    """
     ############################################################################
 
     img.show()

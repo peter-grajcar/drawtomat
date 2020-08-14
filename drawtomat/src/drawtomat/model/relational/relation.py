@@ -4,7 +4,7 @@ class Relation:
     """
      A class representing a relationship between two entities.
 
-     Parameters
+     Attributes
      ----------
      src : Entity
         The docs entity.

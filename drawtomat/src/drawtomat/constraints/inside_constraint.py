@@ -33,7 +33,7 @@ class InsideConstraint(Constraint):
             ] for stroke in obj.strokes
         ]
 
-        self.rdp_strokes = [rdp(stroke, 10) for stroke in strokes]
+        self.rdp_strokes = [rdp(stroke, 50) for stroke in strokes]
 
     def __call__(self, x: 'float', y: 'float') -> bool:
         for stroke in self.rdp_strokes:
