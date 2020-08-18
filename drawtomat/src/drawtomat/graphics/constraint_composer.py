@@ -4,6 +4,7 @@ import numpy as np
 
 from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, SideConstraint
+from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.language import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
 from drawtomat.model.relational.group import Group
@@ -20,7 +21,8 @@ class ConstraintComposer:
     drawtomat.constraints
     """
 
-    def _place_object(self, obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 1000) -> None:
+    @staticmethod
+    def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 1000) -> None:
         """
 
         Parameters
@@ -66,15 +68,26 @@ class ConstraintComposer:
         # print(best_point)
         obj.set_position(best_point["point"][0], best_point["point"][1])
 
-    def _get_constraints(self, adposition: 'Adposition', obj: 'PhysicalObject') -> List[Constraint]:
+    @staticmethod
+    def _get_constraints(adposition: 'Adposition', obj: 'PhysicalObject') -> List[Constraint]:
         if adposition is Adposition.IN:
             return [InsideConstraint(obj)]
         elif adposition is Adposition.INSIDE:
+            return [InsideConstraint(obj)]
+        elif adposition is Adposition.INSIDE_OF:
             return [InsideConstraint(obj)]
         elif adposition is Adposition.ON:
             return [OnConstraint(obj)]
         elif adposition is Adposition.UNDER:
             return [SideConstraint(obj, direction=(0, 1))]
+        elif adposition is Adposition.BELOW:
+            return [SideConstraint(obj, direction=(0, 1))]
+        elif adposition is Adposition.ABOVE:
+            return [SideConstraint(obj, direction=(0, -1))]
+        elif adposition is Adposition.BEHIND:
+            return [BoxConstraint(obj, scale=0.75)]
+        elif adposition is Adposition.IN_FRONT_OF:
+            return [BoxConstraint(obj, scale=1.5)]
         elif adposition is Adposition.NEXT_TO:
             return [
                 SideConstraint(obj, direction=(-1, 0)),

@@ -21,7 +21,7 @@ class InsideConstraint(Constraint):
 
     See Also
     --------
-    ~drawtomat.geometry.rdp
+    drawtomat.geometry.rdp
     """
     def __init__(self, obj: 'PhysicalObject'):
         super().__init__()

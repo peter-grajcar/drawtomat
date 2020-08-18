@@ -1,6 +1,5 @@
 .vscode
-quickdraw-dataset
-sketchyscene-dataset
+*-dataset
 notes
 papers
 description.txt
