@@ -8,3 +8,6 @@ Then the programme can be executed with following:
 
 `make run`
 
+## Sphinx Code Documentation Generation
+
+`make apidocs`

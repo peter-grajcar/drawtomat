@@ -85,6 +85,9 @@ class SimpleRenderer:
                 canvas.create_line(px - 4, py, px + 4, py, fill="#ff00ff")
                 canvas.create_line(px, py - 4, px, py + 4, fill="#ff00ff")
 
+        canvas.update()
+        canvas.postscript(file="output/image.ps", colormode='color')
+
 
         root.mainloop()
         # =====================================

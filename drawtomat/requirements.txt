@@ -1,10 +1,11 @@
-ndjson
-nltk
-ufal.udpipe
-conllu
-graphviz
-numpy
-pillow
+ndjson==0.3.1
+nltk==3.5
+ufal.udpipe==1.2.0.3
+conllu==4.1
+graphviz==0.14.1
+numpy==1.19.1
+pillow==7.2.0
+gensim==3.8.3
 
-sphinx
-numpydoc
+sphinx==3.2.1
+numpydoc==1.1.0

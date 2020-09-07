@@ -1,5 +1,6 @@
 .idea
 venv
 *.udpipe
+*.model
 output
 docs/build

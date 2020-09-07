@@ -22,7 +22,7 @@ class ConstraintComposer:
     """
 
     @staticmethod
-    def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 1000) -> None:
+    def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 10000) -> None:
         """
 
         Parameters

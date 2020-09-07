@@ -142,14 +142,14 @@ class UDPipeProcessor:
 
                         if not skip:
                             obj = None
-                            obj_name = token["lemma"];
+                            obj_name = token["lemma"]
                             attrs = list()
 
                             for child in node.children:
                                 # If a noun is preceded by 'the' try to find an existing object
                                 # in scene's entity register.
                                 if child.token["lemma"] == "the":
-                                    for e in scene.entity_register:
+                                    for e in reversed(scene.entity_register):
                                         if type(e) == Object and e.word == token["lemma"]:
                                             obj = e
                                 # extend the object name if the noun is a part of a compound noun
@@ -180,8 +180,8 @@ class UDPipeProcessor:
                             print(f"\tnew Relation({full_adp})")
                             adp = Adposition.for_name(full_adp)
 
-                            src =entity_stack[-2]
-                            dst =entity_stack[-1]
+                            src = entity_stack[-2]
+                            dst = entity_stack[-1]
                             if entity_position[src] > entity_position[dst]:
                                 src, dst = dst, src
 
@@ -203,6 +203,7 @@ class UDPipeProcessor:
                     # if there are at least two entities in the entity stack frame
                     # merge them into one group.
                     if frame_set_size > 1:
+                        print(f"\tnew Group({frame_set_size})")
                         g = Group(scene, entities=frame_set)
                         entity_position[g] = max([entity_position[e] for e in frame])
 
