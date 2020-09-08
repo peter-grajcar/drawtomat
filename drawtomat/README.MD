@@ -31,9 +31,13 @@ objects and groups of objects.
 The second phases uses relation graph to place objects and compose a scene 
 which is then drawn. 
 
-![Drawtomat picture generation phases](resources/images/phase-diagram.svg)
+<p align="center">
+<img alt="Drawtomat picture generation phases" src="resources/images/phase-diagram.svg" />
+</p>
 
-*Picture generation phases diagram*
+<p align="center">
+<i>Diagram of picture generation phases</i>
+</p>
 
 Drawtomat user interface is very simple. It takes the standard input as a
 description.
@@ -43,14 +47,20 @@ $ make run
 Description: A dog and a couch are in a house. The dog is on the couch.
 ```
 
-*Example input*
+<p align="center">
+<i>Example input</i>
+</p>
 
 After receiving the input an image is generated and a window with the image
 and relation graph will show up.
 
+<p align="center">
 <img height="400" alt="Drawtomat output example" src="resources/images/drawtomat-window.png" />
+</p>
 
-*Example output*
+<p align="center">
+<i>Example output</i>
+</p>
 
 ## Description Processing
 
@@ -60,9 +70,13 @@ parsing of the picture description. _UDPipe_ produces annotated data in
 saved in `resources/udpipe` directory by `udpipe` make target (`run` target 
 depends on `udpipe` target).
 
-![UDPipe dependency tree](resources/images/udpipe-tree.svg)
+<p align="center">
+<img alt="UDPipe dependency tree" src="resources/images/udpipe-tree.svg" />
+</p>
 
-*Dependency tree generated with [_UDPipe_ online service][3]*
+<p align="center">
+<i>Dependency tree generated with <a href="http://lindat.mff.cuni.cz/services/udpipe/">UDPipe online service</a></i>
+</p>
 
 ### Dependency Tree Traversal
 
@@ -138,7 +152,9 @@ closing:  house
 	new Group(2)
 ```
 
-*Example sentence tree traversal log*
+<p align="center">
+<i>Example sentence tree traversal log</i>
+</p>
 
 ### Relation Graph
 
@@ -153,9 +169,12 @@ diagrams.
 
 Drawtomat allows relation graph export in [dot language][6].
 
+<p align="center">
 <img height="350" alt="Relation graph example" src="resources/images/relation-graph.svg" />
-
-*Example of a relation graph*
+</p>
+<p align="center">
+<i>Example of a relation graph</i>
+</p>
 
 ## Picture Composition and Generation
 
@@ -214,9 +233,12 @@ least one of these polygons the constraint is satisfied.
 Before running point-inside-polygon algorithm, Ramer–Douglas–Peucker algorithm
 is used to simplify (reduce number of vertices) the strokes.
 
+<p align="center">
 <img height="350" alt="Inside constraint example" src="resources/images/inside-constraint.png" />
-
-*Example of an "inside constraint"*
+</p>
+<p align="center">
+<i>Example of an "inside constraint"</i>
+</p>
 
 #### On Constraint
 
@@ -224,9 +246,12 @@ This constraint takes all line segments in the top 25% of a drawing. If the
 square distance of a point is within a specified limit the constraint is 
 satisfied.
 
+<p align="center">
 <img height="350" alt="On constraint example" src="resources/images/on-constraint.png" />
-
-*Example of an "on constraint"*
+</p>
+<p align="center">
+<i>Example of an "on constraint"</i>
+</p>
 
 #### Side Constraint
 
@@ -236,9 +261,12 @@ a drawing and by a normal vector (perpendicular to the half-plane boundary).
 
 For example, this constraint is used by _next to_ relation.
 
+<p align="center">
 <img height="350" alt="Side constraint example" src="resources/images/side-constraint.png" />
-
-*Example of a "side constraint"*
+</p>
+<p align="center">
+<i>Example of a "side constraint"</i>
+</p>
 
 #### Box Constraint
 
@@ -248,9 +276,12 @@ bounding box can also be scaled.
 For example, this constraint is used by _in front of_ and _behind_ relations 
 with different scales.
 
+<p align="center">
 <img height="350" alt="Side constraint example" src="resources/images/box-constraint.png" />
-
-*Example of a "box constraint"*
+</p>
+<p align="center">
+<i>Example of a "box constraint"</i>
+</p>
 
 #### Combination of Multiple Constraints
 
@@ -262,10 +293,15 @@ relates to the couch in the house. Red points satisfy both constraints.
 [InsideConstraint(house), OnConstraint(couch)]
 ```
 
+<p align="center">
 <img height="350" alt="Multiple constraints example" src="resources/images/inside-on-constraint.png" />
-
-*Example of a combination of two constraints (inside and on), the magenta 
-points meet only one constraint whereas the red points meet both constraints*
+</p>
+<p align="center">
+<i>
+Example of a combination of two constraints (inside and on), the magenta 
+points meet only one constraint whereas the red points meet both constraints
+</i>
+</p>
 
 ### Generating Picture from a Composition
 
