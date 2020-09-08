@@ -207,7 +207,12 @@ the average position of objects to which the object to be placed relates.
 
 #### Inside Constraint
 
-TODO: RDP, point inside polygon
+This constraint is implemented using point-inside-polygon algorithm where each
+stroke is considered a separate polygon (a closed loop). If a point lies in at
+least one of these polygons the constraint is satisfied. 
+
+Before running point-inside-polygon algorithm, Ramer–Douglas–Peucker algorithm
+is used to simplify (reduce number of vertices) the strokes.
 
 <img height="350" alt="Inside constraint example" src="resources/images/inside-constraint.png" />
 
@@ -215,7 +220,9 @@ TODO: RDP, point inside polygon
 
 #### On Constraint
 
-TODO:
+This constraint takes all line segments in the top 25% of a drawing. If the
+square distance of a point is within a specified limit the constraint is 
+satisfied.
 
 <img height="350" alt="On constraint example" src="resources/images/on-constraint.png" />
 
@@ -223,7 +230,9 @@ TODO:
 
 #### Side Constraint
 
-TODO:
+This constraint is satisfied if a point lies on the correct side of a
+half-plane. The half-plane is defined by a point which lies on a boundary of
+a drawing and by a normal vector (perpendicular to the half-plane boundary). 
 
 For example, this constraint is used by _next to_ relation.
 
@@ -233,7 +242,8 @@ For example, this constraint is used by _next to_ relation.
 
 #### Box Constraint
 
-TODO:
+Box constraint is satisfied if a point lies in a bounding box of a drawing. The
+bounding box can also be scaled.
 
 For example, this constraint is used by _in front of_ and _behind_ relations 
 with different scales.
@@ -243,8 +253,6 @@ with different scales.
 *Example of a "box constraint"*
 
 #### Combination of Multiple Constraints
-
-TODO:
 
 Following picture shows combination of two constraints. The example uses 
 _inside_ constraint which relates to the house and _on_ constraint which 
@@ -266,7 +274,7 @@ Current implementation uses [_Tkinter_][7] canvas to render the scene.
 ## Code Documentation
 
 Code is documented using [_Sphinx_][5]. Documentation can be generated using
-folowwing command:
+following command:
 
 ```console
 $ make apidocs
