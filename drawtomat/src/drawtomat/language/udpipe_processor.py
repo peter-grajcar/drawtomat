@@ -149,7 +149,7 @@ class UDPipeProcessor:
                                 # If a noun is preceded by 'the' try to find an existing object
                                 # in scene's entity register.
                                 if child.token["lemma"] == "the":
-                                    for e in reversed(scene.entity_register):
+                                    for e in reversed(list(scene.entity_register)):
                                         if type(e) == Object and e.word == token["lemma"]:
                                             obj = e
                                 # extend the object name if the noun is a part of a compound noun

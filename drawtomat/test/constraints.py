@@ -3,7 +3,7 @@ import colorsys
 import numpy as np
 from PIL import Image, ImageDraw
 
-from drawtomat.constraints import InsideConstraint
+from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.model.physical import PhysicalObject
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
@@ -64,9 +64,9 @@ if __name__ == "__main__":
     constraints = [
         # SideConstraint(house, direction=(-1, 0)),
         # SideConstraint(house, direction=(1, 0)),
-        InsideConstraint(house),
-        #OnConstraint(couch),
-        # BoxConstraint(house, scale=1.5),
+        # InsideConstraint(house),
+        # OnConstraint(couch),
+        BoxConstraint(house, scale=1.5),
     ]
     num_of_constraints = len(constraints)
     for i in range(1000):

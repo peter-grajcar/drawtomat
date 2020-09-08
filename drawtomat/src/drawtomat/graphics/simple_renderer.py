@@ -39,11 +39,11 @@ class SimpleRenderer:
         # ======== for debugging only ========
         root = Tk()
         root.title("Drawtomat")
-        canvas = Canvas(root, width=600, height=400, borderwidth=2, relief="solid")
-        canvas.pack(side="top")
+        canvas = Canvas(root, width=600, height=600, borderwidth=2, relief="solid")
+        canvas.pack(side="left")
         img = PhotoImage(file="output/model.dot.png")
-        label = Label(root, image=img, width=400, borderwidth=2, relief="solid")
-        label.pack(fill="both", side="top")
+        label = Label(root, image=img, width=600, borderwidth=2, relief="solid")
+        label.pack(fill="both", side="left")
 
         min_x = None
         max_x = None
