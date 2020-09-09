@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   drawtomat.constraints.box_constraint
    drawtomat.constraints.constraint
    drawtomat.constraints.inside_constraint
    drawtomat.constraints.on_constraint

@@ -12,8 +12,6 @@ Welcome to Drawtomat's documentation!
 
    modules
 
-
-
 Indices and tables
 ==================
 

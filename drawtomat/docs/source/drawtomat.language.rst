@@ -9,6 +9,7 @@ Submodules
 
    drawtomat.language.adposition
    drawtomat.language.udpipe_processor
+   drawtomat.language.word_embedding
 
 Module contents
 ---------------
