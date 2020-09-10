@@ -308,7 +308,7 @@ points meet only one constraint whereas the red points meet both constraints
 
 #### Adpositions with Corresponding Constraints
 
-| Adpositon   | Constraint Definition             |
+|  Adpositon  |      Constraint Definition        |
 | :---------: | :-------------------------------: |
 | IN          | InsideConstraint                  |
 | INSIDE      | InsideConstraint                  |
@@ -333,6 +333,8 @@ following command:
 ```console
 $ make apidocs
 ```
+
+&copy; 2020 Peter Grajcar
 
 [1]: http://ufal.mff.cuni.cz/udpipe "UDPipe"
 [2]: https://universaldependencies.org/format.html "CoNLL-U Format"

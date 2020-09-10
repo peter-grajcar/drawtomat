@@ -8,6 +8,6 @@ pillow==7.2.0
 gensim==3.8.3
 
 sphinx==3.2.1
-recommonmark
+recommonmark==0.6.0
 m2r==0.2.1
 numpydoc==1.1.0
