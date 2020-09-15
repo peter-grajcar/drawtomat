@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="referrer" content="strict-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://use.fontawesome.com/97eaf779ce.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="spinner.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- production version, optimized for size and speed -->
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+  </head>
+  <body>
+    <header>
+      <div class="body">
+        <h1>Drawtomat</h1>
+      </div>
+    </header>
+    <div class="content">
+      <div class="body">
+        <div class="description">
+          <textarea
+            rows="1"
+            class="description-input input"
+            id="description-input"
+            onkeydown="resizeTextarea()"
+            placeholder="enter a picture description, e.g. a dog sits on a couch"
+          ></textarea>
+
+          <div class="pad">
+            <button class="draw button">
+              <i class="fa fa-pencil"></i> Draw
+            </button>
+          </div>
+        </div>
+
+        <div class="canvas-container">
+          <canvas class="canvas" width="750" height="500"> </canvas>
+          <div class="canvas-shadow">
+            <img class="center" src="resources/hint.png" width="300px" />
+            <div aria-hidden="true" class="lds-roller center">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+
+        <h2>About Drawtomat</h2>
+        <p>
+          Drawtomat is a picture generator which creates pictures based on a
+          natural language description. It was created as a part of a bachelor's
+          thesis. Source code and documentation can be found in the
+          <a target="_blank" href="https://github.com/peter-grajcar/drawtomat"
+            >GitHub repository</a
+          >.
+        </p>
+      </div>
+    </div>
+    <footer>
+      <div class="body">
+        <a
+          href="https://github.com/peter-grajcar/drawtomat"
+          class="plain-link medium"
+          ><i class="fa fa-github"></i> GitHub</a
+        >
+        <div class="copy">&copy; 2020 Peter Grajcar</div>
+      </div>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
