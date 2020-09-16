@@ -24,7 +24,7 @@ if __name__ == "__main__":
     graph.render(filename=args.model_output, format="png")
 
     composer = ConstraintComposer()
-    # composer.compose(scene)
+    entities = composer.compose(scene)
 
     renderer = SimpleRenderer(composer=composer, show_bounds=False)
     renderer.render(scene)

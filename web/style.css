@@ -1,169 +1,171 @@
 @font-face {
-  font-family: quicksand;
-  src: url(font/Quicksand-VariableFont_wght.ttf);
+    font-family: quicksand;
+    src: url(font/Quicksand-VariableFont_wght.ttf);
 }
 
 html {
-  font-family: quicksand;
+    font-family: quicksand;
 }
 
 body {
-  color: #1a1c20;
-  background-color: #f0a500;
-  padding: 0;
-  margin: 0;
+    color: #1a1c20;
+    background-color: #f0a500;
+    padding: 0;
+    margin: 0;
 }
 
 header {
-  background-color: #f0a500;
+    background-color: #f0a500;
 }
 
 header h1 {
-  margin: 0;
-  padding: 10px 5px;
+    margin: 0;
+    padding: 10px 5px;
 }
 
 footer {
-  background-color: #f0a500;
-  text-align: center;
-  padding-top: 10px;
+    background-color: #f0a500;
+    text-align: center;
+    padding-top: 10px;
 }
 
 .content {
-  background-color: #f4f4f4;
-  padding: 20px 10px;
+    background-color: #f4f4f4;
+    padding: 20px 10px;
 }
 
 .input {
-  outline: none;
-  background: none;
-  border: 2px solid #cf7500;
-  border-radius: 2px;
-  font-family: quicksand;
+    outline: none;
+    background: none;
+    border: 2px solid #cf7500;
+    border-radius: 2px;
+    font-family: quicksand;
 }
 
 .button {
-  background-color: #f0a500;
-  border: 1px solid #cf7500;
-  border-radius: 2px;
-  box-shadow: -3px 3px #cf7500, -2px 2px #cf7500, -1px 1px #cf7500;
-  outline: none;
-  margin-bottom: 3px;
-  margin-left: 3px;
-  font-family: quicksand;
-  cursor: pointer;
-  transition: 0.1s;
+    background-color: #f0a500;
+    border: 1px solid #cf7500;
+    border-radius: 2px;
+    box-shadow: -3px 3px #cf7500, -2px 2px #cf7500, -1px 1px #cf7500;
+    outline: none;
+    margin-bottom: 3px;
+    margin-left: 3px;
+    font-family: quicksand;
+    cursor: pointer;
+    transition: 0.1s;
 }
 
 .button:active {
-  box-shadow: -1px 1px #cf7500;
-  transform: translate(-2px, 2px);
+    box-shadow: -1px 1px #cf7500;
+    transform: translate(-2px, 2px);
 }
 
 .small {
-  font-size: 0.5em;
+    font-size: 0.5em;
 }
 
 .normal {
-  font-size: 1em;
+    font-size: 1em;
 }
 
 .medium {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .large {
-  font-size: 2em;
+    font-size: 2em;
 }
 
 .body {
-  max-width: 768px;
-  margin: 0 auto;
+    max-width: 768px;
+    margin: 0 auto;
 }
 
 .description {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .pad {
-  padding: 5px;
+    padding: 5px;
 }
 
 .description-input {
-  flex-grow: 1;
-  padding: 5px;
-  font-size: 1.25em;
-  resize: none;
-  overflow: hidden;
-  margin: 0;
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1.25em;
+    resize: none;
+    overflow: hidden;
+    margin: 0;
 }
 
 .draw {
-  align-self: flex-end;
-  width: 6em;
-  font-size: 1.25em;
-  padding: 5px;
-  font-weight: bold;
+    align-self: flex-end;
+    width: 6em;
+    font-size: 1.25em;
+    padding: 5px;
+    font-weight: bold;
 }
 
 .canvas-container {
-  border: 2px solid #cf7500;
-  border-radius: 2px;
-  position: relative;
-  width: 95%;
-  height: auto;
-  margin: 1em auto;
+    border: 2px solid #cf7500;
+    border-radius: 2px;
+    position: relative;
+    width: 95%;
+    height: auto;
+    margin: 1em auto;
 }
 
 .canvas {
-  width: 100%;
-  height: auto;
-  padding: 0;
-  margin: 0;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    margin: 0;
 }
 
 .canvas-shadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f0a50040;
-  transition: 1s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f0a50040;
+    transition: 0.3s;
 }
 
 .canvas-shadow:hover {
-  background-color: #f0a50080;
+    background-color: #f0a50060;
 }
 
 .canvas-shadow .center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
 }
 
 .plain-link {
-  text-decoration: none;
-  color: #1a1c20;
+    text-decoration: none;
+    color: #1a1c20;
 }
 
 .plain-link:hover {
-  color: #4e4e4e;
+    color: #4e4e4e;
 }
 
 .copy {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
 [aria-hidden="true"] {
-  visibility: hidden;
+    visibility: hidden;
+    opacity: 0;
 }
 
 a {
-  color: #cf7500;
+    color: #cf7500;
 }

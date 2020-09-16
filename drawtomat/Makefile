@@ -20,5 +20,8 @@ install: venv resources/udpipe
 run: install
 	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat
 
+run-api: install
+	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py flask run
+
 test-constraints: install
 	PYTHONPATH=./src:./test python3 test/constraints.py
