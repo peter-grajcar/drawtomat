@@ -1,17 +1,17 @@
 category,default_width,default_height
-aircraft carrier,,
-airplane,,
-alarm clock,,
-ambulance,,
-angel,,
+aircraft carrier,,1000
+airplane,,300
+alarm clock,20,20
+ambulance,,300
+angel,,180
 animal migration,,
-ant,,
-anvil,,
-apple,,
-arm,,
-asparagus,,
-axe,,
-backpack,,
+ant,1,1
+anvil,,50
+apple,,15
+arm,,100
+asparagus,,30
+axe,,50
+backpack,40,
 banana,,
 bandage,,
 barn,,
@@ -152,7 +152,7 @@ hot air balloon,,
 hot dog,,
 hot tub,,
 hourglass,,
-house,500,
+house,300,
 house plant,,
 hurricane,,
 ice cream,,

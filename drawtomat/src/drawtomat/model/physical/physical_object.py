@@ -106,6 +106,23 @@ class PhysicalObject(PhysicalEntity):
         """
         return self.x, self.y
 
+    def get_relative_strokes(self) -> list:
+        """
+
+        Returns
+        -------
+        list
+            list of stroke coordinates relative to the object position
+        """
+        return [
+            [
+                [(x + self.x) for x in stroke[0]],  # x-axis
+                [(y + self.y) for y in stroke[1]],  # y-axis
+                stroke[2],  # time
+            ]
+            for stroke in self.strokes
+        ]
+
     def get_centre_of_gravity(self) -> tuple:
         """
         Computes the centre of gravity, i.e. averages the points of all strokes. The coordinates are relative.

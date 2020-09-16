@@ -1,5 +1,6 @@
 import numpy as np
 from flask import Flask, request
+
 from drawtomat.graphics import ConstraintComposer
 from drawtomat.language import UDPipeProcessor
 
@@ -15,7 +16,7 @@ def drawtomat():
     scene = processor.process(desc)
 
     entities = composer.compose(scene)
-    drawing = [entity.strokes for entity in entities]
+    drawing = [entity.get_relative_strokes() for entity in entities]
     extrema = [[min(stroke[0]), min(stroke[1]), max(stroke[0]), max(stroke[1])] for strokes in drawing for stroke in strokes]
     minima = np.min(extrema, axis=0)
     maxima = np.max(extrema, axis=0)
