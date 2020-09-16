@@ -3,20 +3,40 @@ const error = document.getElementById("canvas-error");
 const spinner = document.getElementById("spinner");
 const shadow = document.getElementById("shadow");
 const description = document.getElementById("description-input");
+const draw = document.getElementById("draw");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-function resizeTextarea() {
+description.addEventListener("keydown", function () {
     window.setTimeout(() => {
         description.style.height = "auto";
         description.style.height = description.scrollHeight - 10 + "px";
     }, 0);
-}
+});
+
+description.addEventListener("keydown", function (e) {
+    let code;
+    if (e.key !== undefined) {
+        code = e.key;
+    } else if (e.keyIdentifier !== undefined) {
+        code = e.keyIdentifier;
+    } else if (e.keyCode !== undefined) {
+        code = e.keyCode;
+    }
+
+    console.log(code);
+
+    if (code === "Enter" || code === 13) {
+        e.preventDefault();
+        draw.click();
+    }
+});
 
 window.addEventListener("resize", resizeTextarea);
 window.addEventListener("load", resizeTextarea);
 
 function apiCall() {
+    shadow.setAttribute("aria-hidden", false);
     hint.setAttribute("aria-hidden", true);
     error.setAttribute("aria-hidden", true);
     spinner.setAttribute("aria-hidden", false);
@@ -42,30 +62,47 @@ function apiCall() {
 function drawPicture(data) {
     let width = data.bounds.right - data.bounds.left;
     let height = data.bounds.top - data.bounds.bottom;
-    let padding = 50;
+    let padding = 20;
 
-    let scale = Math.min(canvas.width / (width + padding), canvas.height / (height + padding));
     let cx = canvas.width / 2;
     let cy = canvas.height / 2;
+    let scale = Math.min(cx / (width + padding), cy / (height + padding));
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let obj = 0; obj < data.drawing.length; ++obj)
-        for (let s = 0; s < data.drawing[obj].length; ++s) drawStroke(ctx, data.drawing[obj][s], cx, cy, scale);
-}
-
-function drawStroke(ctx, stroke, cx, cy, scale) {
+    let objIdx = 0;
+    let stkIdx = 0;
+    let idx = 0;
+    let duration = 200;
+    let stroke = data.drawing[objIdx][stkIdx];
     let t0 = Math.min(...stroke[2]);
     let t1 = Math.max(...stroke[2]);
-    let duration = 1000;
-    let timeScale = duration / (t1 - t0);
     let t = 0;
-    let idx = 0;
-
+    let timeScale = duration / (t1 - t0);
     let step = 10;
-    let interval = setInterval(function () {
+    let id = setInterval(function () {
         t += step;
-        if (t > duration) clearInterval(interval);
+
+        if (t > duration) {
+            ++stkIdx;
+            idx = 0;
+
+            if (stkIdx >= data.drawing[objIdx].length) {
+                ++objIdx;
+                stkIdx = 0;
+            }
+            if (objIdx >= data.drawing.length) {
+                clearInterval(id);
+                return;
+            }
+
+            stroke = data.drawing[objIdx][stkIdx];
+            t0 = Math.min(...stroke[2]);
+            t1 = Math.max(...stroke[2]);
+            timeScale = duration / (t1 - t0);
+            t = 0;
+        }
+
         while (t > (stroke[2][idx] - t0) * timeScale) {
             ++idx;
             ctx.beginPath();

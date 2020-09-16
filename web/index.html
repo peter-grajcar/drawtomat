@@ -22,12 +22,13 @@
                         rows="1"
                         class="description-input input"
                         id="description-input"
-                        onkeydown="resizeTextarea()"
-                        placeholder="enter a picture description, e.g. a dog sits on a couch"
+                        placeholder="enter a picture description, e.g. a dog is sitting on a couch"
                     ></textarea>
 
                     <div class="pad">
-                        <button class="draw button" onclick="apiCall(null)"><i class="fa fa-pencil"></i> Draw</button>
+                        <button id="draw" class="draw button" onclick="apiCall(null)">
+                            <i class="fa fa-pencil"></i> Draw
+                        </button>
                     </div>
                 </div>
 

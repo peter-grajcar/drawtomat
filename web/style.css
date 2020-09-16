@@ -8,14 +8,14 @@ html {
 }
 
 body {
-    color: #1a1c20;
-    background-color: #f0a500;
+    color: #1b262c;
+    background-color: #3282b8;
     padding: 0;
     margin: 0;
 }
 
 header {
-    background-color: #f0a500;
+    background-color: #3282b8;
 }
 
 header h1 {
@@ -24,29 +24,29 @@ header h1 {
 }
 
 footer {
-    background-color: #f0a500;
+    background-color: #3282b8;
     text-align: center;
     padding-top: 10px;
 }
 
 .content {
-    background-color: #f4f4f4;
+    background-color: #f0f9ff;
     padding: 20px 10px;
 }
 
 .input {
     outline: none;
     background: none;
-    border: 2px solid #cf7500;
+    border: 2px solid #0f4c75;
     border-radius: 2px;
     font-family: quicksand;
 }
 
 .button {
-    background-color: #f0a500;
-    border: 1px solid #cf7500;
+    background-color: #3282b8;
+    border: 1px solid #0f4c75;
     border-radius: 2px;
-    box-shadow: -3px 3px #cf7500, -2px 2px #cf7500, -1px 1px #cf7500;
+    box-shadow: -3px 3px #0f4c75, -2px 2px #0f4c75, -1px 1px #0f4c75;
     outline: none;
     margin-bottom: 3px;
     margin-left: 3px;
@@ -56,7 +56,7 @@ footer {
 }
 
 .button:active {
-    box-shadow: -1px 1px #cf7500;
+    box-shadow: -1px 1px #0f4c75;
     transform: translate(-2px, 2px);
 }
 
@@ -111,7 +111,7 @@ footer {
 }
 
 .canvas-container {
-    border: 2px solid #cf7500;
+    border: 2px solid #0f4c75;
     border-radius: 2px;
     position: relative;
     width: 95%;
@@ -132,12 +132,12 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #f0a50040;
+    background-color: #3282b840;
     transition: 0.3s;
 }
 
 .canvas-shadow:hover {
-    background-color: #f0a50060;
+    background-color: #3282b860;
 }
 
 .canvas-shadow .center {
@@ -150,11 +150,7 @@ footer {
 
 .plain-link {
     text-decoration: none;
-    color: #1a1c20;
-}
-
-.plain-link:hover {
-    color: #4e4e4e;
+    color: #1b262c;
 }
 
 .copy {
@@ -167,5 +163,5 @@ footer {
 }
 
 a {
-    color: #cf7500;
+    color: #0f4c75;
 }
