@@ -6,13 +6,39 @@ const description = document.getElementById("description-input");
 const draw = document.getElementById("draw");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const advanced = document.getElementById("advanced");
+const settings = document.getElementById("settings");
+const caret = document.getElementById("caret");
+const speed = document.getElementById("drawing-speed");
+const clear = document.getElementById("clear");
+const download = document.getElementById("download");
 
-description.addEventListener("keydown", function () {
-    window.setTimeout(() => {
-        description.style.height = "auto";
-        description.style.height = description.scrollHeight - 10 + "px";
-    }, 0);
+advanced.addEventListener("click", function () {
+    if (settings.getAttribute("aria-hidden") !== "true") {
+        caret.style.transform = "rotate(0deg)";
+    } else {
+        caret.style.transform = "rotate(90deg)";
+    }
+    settings.setAttribute("aria-hidden", settings.getAttribute("aria-hidden") !== "true");
 });
+
+clear.addEventListener("click", function () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+download.addEventListener("click", function () {
+    let dataURL = canvas.toDataURL("image/png");
+    downloadImage(dataURL, "picture.png");
+});
+
+function downloadImage(data, filename) {
+    var a = document.createElement("a");
+    a.href = data;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
 
 description.addEventListener("keydown", function (e) {
     let code;
@@ -32,6 +58,13 @@ description.addEventListener("keydown", function (e) {
     }
 });
 
+function resizeTextarea() {
+    window.setTimeout(() => {
+        description.style.height = "auto";
+        description.style.height = description.scrollHeight - 10 + "px";
+    }, 0);
+}
+description.addEventListener("keydown", resizeTextarea);
 window.addEventListener("resize", resizeTextarea);
 window.addEventListener("load", resizeTextarea);
 
@@ -73,12 +106,12 @@ function drawPicture(data) {
     let objIdx = 0;
     let stkIdx = 0;
     let idx = 0;
-    let duration = 200;
+    let duration = speed.value;
     let stroke = data.drawing[objIdx][stkIdx];
     let t0 = Math.min(...stroke[2]);
     let t1 = Math.max(...stroke[2]);
     let t = 0;
-    let timeScale = duration / (t1 - t0);
+    let timeScale = duration < t1 - t0 ? duration / (t1 - t0) : 1;
     let step = 10;
     let id = setInterval(function () {
         t += step;
@@ -99,7 +132,7 @@ function drawPicture(data) {
             stroke = data.drawing[objIdx][stkIdx];
             t0 = Math.min(...stroke[2]);
             t1 = Math.max(...stroke[2]);
-            timeScale = duration / (t1 - t0);
+            timeScale = duration < t1 - t0 ? duration / (t1 - t0) : 1;
             t = 0;
         }
 

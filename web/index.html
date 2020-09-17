@@ -32,9 +32,31 @@
                     </div>
                 </div>
 
+                <div class="settings-container">
+                    <a id="advanced"><i id="caret" class="fa fa-caret-right"></i> Advanced</a>
+                    <div aria-hidden="true" class="settings" id="settings">
+                        <ul>
+                            <li>
+                                <div>Drawing speed</div>
+                                <span class="slider-container">
+                                    <input
+                                        type="range"
+                                        min="100"
+                                        max="2000"
+                                        step="50"
+                                        value="500"
+                                        class="slider"
+                                        id="drawing-speed"
+                                    />
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="canvas-container">
                     <canvas id="canvas" class="canvas" width="750" height="500"> </canvas>
-                    <div id="shadow" class="canvas-shadow">
+                    <div id="shadow" class="canvas-shadow fade">
                         <img id="hint" class="center" src="resources/hint.png" width="300px" />
                         <div id="canvas-error" class="center" aria-hidden="true">
                             <i class="fa fa-exclamation-triangle large"></i>
@@ -51,6 +73,13 @@
                             <div></div>
                         </div>
                     </div>
+                </div>
+
+                <div class="toolbar">
+                    <button id="clear" class="button normal"><i class="fa fa-eraser"></i> Clear</button>
+                    <button id="download" download="test.png" class="button normal">
+                        <i class="fa fa-download"></i> Download
+                    </button>
                 </div>
 
                 <h2>About Drawtomat</h2>
