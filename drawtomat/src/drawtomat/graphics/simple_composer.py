@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from drawtomat.language.adposition import Adposition
@@ -13,7 +14,7 @@ class SimpleComposer:
     """
 
     def __init__(self):
-        pass
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """
@@ -31,8 +32,8 @@ class SimpleComposer:
         """
         topological_order = _topological_order(scene.entity_register)
 
-        print("=" * 80)
-        print("Topological order: ", topological_order)
+        self.logger.debug("=" * 80)
+        self.logger.debug("Topological order: ", topological_order)
 
         #################################################################################
         # Step 1:   Go through the ordered list of entities and compute the dimensions  #
@@ -55,7 +56,7 @@ class SimpleComposer:
                 physical_entity = PhysicalObject(entity, default_size=default_size, unit=unit)
                 drawings[entity] = physical_entity
 
-            print("\t", physical_entity)
+            self.logger.debug("\t", physical_entity)
 
         #################################################################################
         # Step 2:   Pop the entities from the ordered list and resolve the position of  #

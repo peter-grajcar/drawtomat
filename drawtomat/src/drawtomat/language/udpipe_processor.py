@@ -1,3 +1,4 @@
+import logging
 from collections import OrderedDict
 from typing import List
 
@@ -23,6 +24,7 @@ class UDPipeProcessor:
 
     def __init__(self, model_filename: str) -> None:
         self.model = Model.load(model_filename)
+        self.logger = logging.getLogger(self.__class__.__name__)
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
 
@@ -80,7 +82,8 @@ class UDPipeProcessor:
         if token["misc"] and token["misc"]["Complex"]:
             full_adp = token["misc"]["Complex"]
 
-        print(f"\tnew Relation({full_adp})")
+        self.logger.debug(f"\tnew Relation({full_adp})")
+
         return Adposition.for_name(full_adp)
 
     def _process_noun(self, scene: 'Scene', sentence: 'TokenList', token, children) -> 'Object':
@@ -118,7 +121,8 @@ class UDPipeProcessor:
         if not obj:
             obj = Object(scene, word=obj_name)
             obj.attributes = attrs
-            print(f"\tnew Object({token['lemma']})")
+
+            self.logger.debug(f"\tnew Object({token['lemma']})")
 
         return obj
 
@@ -166,7 +170,8 @@ class UDPipeProcessor:
                         node_stack_size += 1
 
                 token = node.token
-                print("closing: " if closing else "opening: ", token["form"])
+
+                self.logger.debug(f"{'closing' if closing else 'opening'}: {token['form']}")
 
                 if not closing:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
@@ -196,7 +201,7 @@ class UDPipeProcessor:
                     ptr = entity_stack_ptrs[token["id"]]
                     frame = entity_stack[ptr:]
                     frame_size = entity_stack_size - ptr
-                    print(f"\tFrame:\t{frame}")
+                    self.logger.debug(f"\tFrame:\t{frame}")
 
                     frame_set = set()
                     frame_set_size = 0
@@ -208,7 +213,8 @@ class UDPipeProcessor:
                     # if there are at least two entities in the entity stack frame
                     # merge them into one group.
                     if frame_set_size > 1:
-                        print(f"\tnew Group({frame_set_size})")
+                        self.logger.debug(f"\tnew Group({frame_set_size})")
+
                         g = Group(scene, entities=frame_set)
                         entity_position[g] = max([entity_position[e] for e in frame])
 
@@ -220,7 +226,8 @@ class UDPipeProcessor:
             for e in entity_stack:
                 if e.container is None:
                     scene.add_entity(e)
-            print("done")
+
+            self.logger.debug("done")
 
         return scene
 

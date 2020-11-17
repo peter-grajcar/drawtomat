@@ -1,3 +1,5 @@
+import logging.config
+
 import numpy as np
 from flask import Flask, request
 
@@ -5,6 +7,8 @@ from drawtomat.graphics import ConstraintComposer
 from drawtomat.language import UDPipeProcessor
 
 app = Flask(__name__)
+
+logging.config.fileConfig(fname="resources/logging.conf", disable_existing_loggers=False)
 
 processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
 composer = ConstraintComposer()

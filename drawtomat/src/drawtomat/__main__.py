@@ -1,4 +1,5 @@
 import argparse
+import logging.config
 
 from drawtomat.graphics import ConstraintComposer
 from drawtomat.graphics.simple_renderer import SimpleRenderer
@@ -7,6 +8,8 @@ from drawtomat.language.udpipe_processor import UDPipeProcessor
 # A dog and a chair are inside a house. The dog is sitting on the chair.
 
 if __name__ == "__main__":
+    logging.config.fileConfig(fname="resources/logging.conf", disable_existing_loggers=False)
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--description", type=str)
     parser.add_argument("--model_output", default="output/model.dot", type=str)

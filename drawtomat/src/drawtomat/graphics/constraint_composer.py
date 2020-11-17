@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 import numpy as np
@@ -64,7 +65,8 @@ class ConstraintComposer:
             if constraints_satisfied == num_of_constraints:
                 break
 
-        print(best_point)
+        logging.getLogger(ConstraintComposer.__name__).debug(f"best: {best_point}")
+
         obj.set_position(best_point["point"][0], best_point["point"][1])
 
     @staticmethod
@@ -142,7 +144,8 @@ class ConstraintComposer:
             elif type(entity) == Object:
                 physical_entity = physical_entities[entity]
                 self._place_object(physical_entity["obj"], physical_entity["constraints"])
-                print("\t", physical_entity)
+
+                logging.getLogger(ConstraintComposer.__name__).debug(f"\t{physical_entity}")
 
         return [v["obj"] for v in physical_entities.values()]
 

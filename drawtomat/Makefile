@@ -1,5 +1,7 @@
 SOURCES = ./src
 
+.PHONY: udpipe install run run-api apidocs
+
 apidocs:
 	sphinx-apidoc -o docs/source src -f -e
 	$(MAKE) -C docs html
@@ -15,7 +17,7 @@ venv/bin/activate: requirements.txt
 	. venv/bin/activate; venv/bin/pip3 install -Ur requirements.txt
 	touch venv/bin/activate
 
-install: venv udpipe
+install: venv resources/udpipe
 
 run: install
 	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat
