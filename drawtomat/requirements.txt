@@ -4,7 +4,7 @@ ufal.udpipe==1.2.0.3
 conllu==4.1
 graphviz==0.14.1
 numpy==1.19.1
-pillow==7.2.0
+pillow==8.0.1
 gensim==3.8.3
 flask
 

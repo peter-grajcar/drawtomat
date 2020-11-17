@@ -12,7 +12,7 @@ venv: venv/bin/activate
 
 venv/bin/activate: requirements.txt
 	test -d venv || virtualenv venv
-	. venv/bin/activate; pip install -Ur requirements.txt
+	. venv/bin/activate; venv/bin/pip3 install -Ur requirements.txt
 	touch venv/bin/activate
 
 install: venv resources/udpipe
@@ -21,7 +21,7 @@ run: install
 	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat
 
 run-api: install
-	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py flask run
+	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py venv/bin/flask run
 
 test-constraints: install
 	PYTHONPATH=./src:./test python3 test/constraints.py

@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas, PhotoImage, Label
+from tkinter import Tk, Canvas
 
 import drawtomat.model.relational
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
@@ -40,10 +40,7 @@ class SimpleRenderer:
         root = Tk()
         root.title("Drawtomat")
         canvas = Canvas(root, width=600, height=600, borderwidth=2, relief="solid")
-        canvas.pack(side="left")
-        img = PhotoImage(file="output/model.dot.png")
-        label = Label(root, image=img, width=600, borderwidth=2, relief="solid")
-        label.pack(fill="both", side="left")
+        canvas.pack()
 
         min_x = None
         max_x = None
@@ -87,7 +84,6 @@ class SimpleRenderer:
 
         canvas.update()
         canvas.postscript(file="output/image.ps", colormode='color')
-
 
         root.mainloop()
         # =====================================
