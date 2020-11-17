@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="referrer" content="strict-origin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="https://use.fontawesome.com/97eaf779ce.js"></script>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="spinner.css" />
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="body">
+                <h1>Drawtomat</h1>
+            </div>
+        </header>
+        <div class="content">
+            <div class="body">
+                <div class="description">
+                    <textarea
+                        rows="1"
+                        class="description-input input"
+                        id="description-input"
+                        placeholder="enter a picture description, e.g. a dog is sitting on a couch"
+                    ></textarea>
+
+                    <div class="pad">
+                        <button id="draw" class="draw button" onclick="apiCall(null)">
+                            <i class="fa fa-pencil"></i> Draw
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-container">
+                    <a id="advanced"><i id="caret" class="fa fa-caret-right"></i> Advanced</a>
+                    <div aria-hidden="true" class="settings" id="settings">
+                        <ul>
+                            <li>
+                                <div>Drawing speed</div>
+                                <span class="slider-container">
+                                    <input
+                                        type="range"
+                                        min="100"
+                                        max="2000"
+                                        step="50"
+                                        value="500"
+                                        class="slider"
+                                        id="drawing-speed"
+                                    />
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="canvas" class="canvas" width="750" height="500"> </canvas>
+                    <div id="shadow" class="canvas-shadow fade">
+                        <img id="hint" class="center" src="resources/hint.png" width="300px" />
+                        <div id="canvas-error" class="center" aria-hidden="true">
+                            <i class="fa fa-exclamation-triangle large"></i>
+                            <h2>an error has occured</h2>
+                        </div>
+                        <div id="spinner" aria-hidden="true" class="lds-roller center">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <button id="clear" class="button normal"><i class="fa fa-eraser"></i> Clear</button>
+                    <button id="download" download="test.png" class="button normal">
+                        <i class="fa fa-download"></i> Download
+                    </button>
+                </div>
+
+                <h2>About Drawtomat</h2>
+                <p>
+                    Drawtomat is a picture generator which creates pictures based on a natural language description. It
+                    was created as a part of a bachelor's thesis. Source code and documentation can be found in the
+                    <a target="_blank" href="https://github.com/peter-grajcar/drawtomat">GitHub repository</a>.
+                </p>
+            </div>
+        </div>
+        <footer>
+            <div class="body">
+                <a href="https://github.com/peter-grajcar/drawtomat" class="plain-link medium"
+                    ><i class="fa fa-github"></i> GitHub</a
+                >
+                <div class="copy">&copy; 2020 Peter Grajcar</div>
+            </div>
+        </footer>
+        <script src="main.js"></script>
+    </body>
+</html>

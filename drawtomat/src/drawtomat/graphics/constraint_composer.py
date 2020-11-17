@@ -46,13 +46,12 @@ class ConstraintComposer:
 
         best_point = {"score": None, "point": None}
         num_of_constraints = len(constraints)
-        centre = (
-            sum([constraint.obj.x for constraint in constraints]) / num_of_constraints,
-            sum([constraint.obj.y for constraint in constraints]) / num_of_constraints
-        )
+        constraint_objs = [constraint.obj for constraint in constraints]
 
         for i in range(point_limit):
-            rand_point = np.random.normal(scale=obj_size, size=2) + np.array(centre)
+            centre = np.random.choice(constraint_objs)
+            # TODO: compute scale
+            rand_point = np.random.normal(scale=100, size=2) + np.array(centre.get_position())
             constraints_satisfied = 0
 
             for constraint in constraints:
@@ -65,7 +64,7 @@ class ConstraintComposer:
             if constraints_satisfied == num_of_constraints:
                 break
 
-        # print(best_point)
+        print(best_point)
         obj.set_position(best_point["point"][0], best_point["point"][1])
 
     @staticmethod
@@ -90,8 +89,8 @@ class ConstraintComposer:
             return [BoxConstraint(obj, scale=1.5)]
         elif adposition is Adposition.NEXT_TO:
             return [
-                SideConstraint(obj, direction=(-1, 0)),
-                SideConstraint(obj, direction=(1, 0))
+                SideConstraint(obj, direction=(-1, 0), padding=10),
+                SideConstraint(obj, direction=(1, 0), padding=10)
             ]
         return []
 

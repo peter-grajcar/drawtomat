@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Tuple
 
 
 class PhysicalEntity(ABC):
@@ -47,7 +48,16 @@ class PhysicalEntity(ABC):
         self.x = x
         self.y = y
 
-    def get_size(self) -> tuple:
+    def get_position(self) -> Tuple[float, float]:
+        """
+
+        Returns
+        -------
+
+        """
+        return self.x, self.y
+
+    def get_size(self) -> Tuple[float, float]:
         """
         Returns the scaled width and height of the object.
 
@@ -106,7 +116,7 @@ class PhysicalEntity(ABC):
         """
         self._scale = scale
 
-    def get_centre_of_gravity(self) -> tuple:
+    def get_centre_of_gravity(self) -> Tuple[float, float]:
         """
         By default returns the centre of a bounding box (same as get_centre).
 

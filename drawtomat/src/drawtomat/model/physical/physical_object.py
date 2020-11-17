@@ -62,9 +62,9 @@ class PhysicalObject(PhysicalEntity):
 
         self.strokes = [
             [
-                [(x - min_x - width/2) * q for x in stroke[0]],  # x-axis
+                [(x - min_x - width/2) * q for x in stroke[0]],   # x-axis
                 [(y - min_y - height/2) * q for y in stroke[1]],  # y-axis
-                stroke[2],                             # time
+                stroke[2],                                        # time
             ]
             for stroke in drawing
         ]
@@ -105,6 +105,23 @@ class PhysicalObject(PhysicalEntity):
         tuple
         """
         return self.x, self.y
+
+    def get_relative_strokes(self) -> list:
+        """
+
+        Returns
+        -------
+        list
+            list of stroke coordinates relative to the object position
+        """
+        return [
+            [
+                [(x + self.x) for x in stroke[0]],  # x-axis
+                [(y + self.y) for y in stroke[1]],  # y-axis
+                stroke[2],  # time
+            ]
+            for stroke in self.strokes
+        ]
 
     def get_centre_of_gravity(self) -> tuple:
         """
