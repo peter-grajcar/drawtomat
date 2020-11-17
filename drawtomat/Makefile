@@ -15,7 +15,7 @@ venv/bin/activate: requirements.txt
 	. venv/bin/activate; venv/bin/pip3 install -Ur requirements.txt
 	touch venv/bin/activate
 
-install: venv resources/udpipe
+install: venv udpipe
 
 run: install
 	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat

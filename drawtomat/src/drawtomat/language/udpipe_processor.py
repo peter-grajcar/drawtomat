@@ -26,7 +26,7 @@ class UDPipeProcessor:
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
 
-    def _process_adposition(self, sentence: 'TokenList', token) -> bool:
+    def _process_adposition(self, sentence: 'TokenList', token) -> 'Adposition':
         """
 
         Parameters
@@ -73,20 +73,54 @@ class UDPipeProcessor:
                 last["misc"] = OrderedDict()
             last["misc"]["Complex"] = complex
 
-        return skip
+        if skip:
+            return None
 
-    def _process_noun(self, sentence: 'TokenList', token) -> bool:
+        full_adp = token["form"]
+        if token["misc"] and token["misc"]["Complex"]:
+            full_adp = token["misc"]["Complex"]
+
+        print(f"\tnew Relation({full_adp})")
+        return Adposition.for_name(full_adp)
+
+    def _process_noun(self, scene: 'Scene', sentence: 'TokenList', token, children) -> 'Object':
         token_idx = token["id"] - 1
+        skip = False
 
         # TODO: check length
         # Noun is part of a complex adposition of form PNP
         if sentence[token_idx - 1]["upostag"] == "ADP" and sentence[token_idx + 1]["upostag"] == "ADP":
-            return True
+            skip = True
         # skip the first part of a compound noun
         if token["deprel"] == "compound":
-            return True
+            skip = True
 
-        return False
+        if skip:
+            return None
+
+        obj = None
+        obj_name = token["lemma"]
+        attrs = list()
+
+        for child in children:
+            # If a noun is preceded by 'the' try to find an existing object
+            # in scene's entity register.
+            if child.token["lemma"] == "the":
+                for e in reversed(list(scene.entity_register)):
+                    if type(e) == Object and e.word == token["lemma"]:
+                        obj = e
+            # extend the object name if the noun is a part of a compound noun
+            if child.token["deprel"] == "compound":
+                obj_name = child.token["lemma"] + " " + obj_name
+            if child.token["upostag"] == "ADJ":
+                attrs.append(child.token["lemma"])
+
+        if not obj:
+            obj = Object(scene, word=obj_name)
+            obj.attributes = attrs
+            print(f"\tnew Object({token['lemma']})")
+
+        return obj
 
     def _traverse_tree(self, parsed: 'List[TokenList]') -> Scene:
         """
@@ -138,31 +172,9 @@ class UDPipeProcessor:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
 
                     if token["upostag"] == "NOUN" or token["upostag"] == "PROPN":
-                        skip = self._process_noun(sentence, token)
+                        obj = self._process_noun(scene, sentence, token, node.children)
 
-                        if not skip:
-                            obj = None
-                            obj_name = token["lemma"]
-                            attrs = list()
-
-                            for child in node.children:
-                                # If a noun is preceded by 'the' try to find an existing object
-                                # in scene's entity register.
-                                if child.token["lemma"] == "the":
-                                    for e in reversed(list(scene.entity_register)):
-                                        if type(e) == Object and e.word == token["lemma"]:
-                                            obj = e
-                                # extend the object name if the noun is a part of a compound noun
-                                if child.token["deprel"] == "compound":
-                                    obj_name = child.token["lemma"] + " " + obj_name
-                                if child.token["upostag"] == "ADJ":
-                                    attrs.append(child.token["lemma"])
-
-                            if not obj:
-                                obj = Object(scene, word=obj_name)
-                                obj.attributes = attrs
-                                print(f"\tnew Object({token['lemma']})")
-
+                        if obj:
                             entity_stack.append(obj)
                             entity_stack_size += 1
                             entity_position[obj] = token["id"]
@@ -170,23 +182,16 @@ class UDPipeProcessor:
                     # Creates relation between two objects at the top of
                     # the stack
                     if token["upostag"] == "ADP":
-                        skip = self._process_adposition(sentence, token)
+                        adp = self._process_adposition(sentence, token)
 
-                        if not skip:
-                            full_adp = token["form"]
-                            if token["misc"] and token["misc"]["Complex"]:
-                                full_adp = token["misc"]["Complex"]
-
-                            print(f"\tnew Relation({full_adp})")
-                            adp = Adposition.for_name(full_adp)
-
+                        if adp:
                             src = entity_stack[-2]
                             dst = entity_stack[-1]
                             if entity_position[src] > entity_position[dst]:
                                 src, dst = dst, src
 
                             src.make_relation(dst, adp)
-
+                # closing the node
                 else:
                     ptr = entity_stack_ptrs[token["id"]]
                     frame = entity_stack[ptr:]
