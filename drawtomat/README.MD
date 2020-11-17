@@ -5,18 +5,28 @@ language description.
 
 ## Installation
 
+To download UDPipe pretreained models use:
+
+```console
+$ make udpipe
+```
+
 Following command will set up Python virtual environment:
 
 ```console
 $ make install
 ```
 
-This will also download UDPipe trained models.
-
 Then the programme can be executed with following command:
 
 ```console
 $ make run
+```
+
+Or start a HTTP API server:
+
+```console
+$ make run-api
 ```
 
 ## Overview
