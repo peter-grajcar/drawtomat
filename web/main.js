@@ -50,8 +50,6 @@ description.addEventListener("keydown", function (e) {
         code = e.keyCode;
     }
 
-    console.log(code);
-
     if (code === "Enter" || code === 13) {
         e.preventDefault();
         draw.click();
