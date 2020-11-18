@@ -2,5 +2,6 @@
 venv
 *.udpipe
 *.model
+*.vec
 output
 docs/build
