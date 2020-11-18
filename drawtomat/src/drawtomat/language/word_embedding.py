@@ -7,7 +7,8 @@ class WordEmbedding:
     """
     def __init__(self, word_list: 'list'):
         self.word_list = word_list
-        self.model = gensim.models.KeyedVectors.load("resources/conceptualcaptions/train.wv.model")
+        #self.model = gensim.models.KeyedVectors.load("resources/conceptualcaptions/train.wv.model")
+        self.model = gensim.models.KeyedVectors.load_word2vec_format("resources/fasttext/wiki-news-300d-1M.vec")
 
     def get_similarity(self, word1: 'str', word2: 'str') -> 'float':
         try:
