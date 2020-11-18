@@ -2,11 +2,13 @@ SOURCES = ./src
 
 .PHONY: udpipe install run run-api apidocs
 
-install: venv udpipe fasttext
+install: venv udpipe conceptualcaptions
 
 udpipe: resources/udpipe
 
 fasttext: resources/fasttext
+
+conceptualcaptions: resources/conceptualcaptions
 
 venv: venv/bin/activate
 
@@ -24,15 +26,21 @@ test-constraints: install
 	PYTHONPATH=./src:./test python3 test/constraints.py
 
 resources/udpipe:
-	@mkdir -p resources/udpipe
-	(cd resources/udpipe && curl -O resources/udpipe --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131{/english-ewt-ud-2.5-191206.udpipe,/english-partut-ud-2.5-191206.udpipe,/english-lines-ud-2.5-191206.udpipe,/english-gum-ud-2.5-191206.udpipe})
-	@touch resources/udpipe/*
+	mkdir -p $@
+	(cd $@ && curl -O resources/udpipe --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131{/english-ewt-ud-2.5-191206.udpipe,/english-partut-ud-2.5-191206.udpipe,/english-lines-ud-2.5-191206.udpipe,/english-gum-ud-2.5-191206.udpipe})
+	@touch $@/*
 
 resources/fasttext:
-	@mkdir -p resources/fasttext
-	wget https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip -O resources/fasttext/wiki-news-300d-1M.vec.zip
-	@unzip resources/fasttext/wiki-news-300d-1M.vec.zip
-	@rm -f resources/fasttext/wiki-news-300d-1M.vec.zip
+	mkdir -p $@
+	wget https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip -O $@/wiki-news-300d-1M.vec.zip
+	unzip $@/wiki-news-300d-1M.vec.zip -d $@
+	rm -f $@/wiki-news-300d-1M.vec.zip
+
+resources/conceptualcaptions:
+	mkdir -p $@
+	wget https://www.ms.mff.cuni.cz/~grajcarp/drawtomat/train.wv.model.tar.gz -O $@/train.wv.model.tar.gz
+	tar -xzf $@/train.wv.model.tar.gz -C $@
+	rm -f $@/train.wv.model.tar.gz
 
 venv/bin/activate: requirements.txt
 	test -d venv || virtualenv venv
