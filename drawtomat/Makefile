@@ -2,22 +2,11 @@ SOURCES = ./src
 
 .PHONY: udpipe install run run-api apidocs
 
-apidocs:
-	sphinx-apidoc -o docs/source src -f -e
-	$(MAKE) -C docs html
+install: venv udpipe
 
-udpipe:
-	@mkdir -p resources/udpipe
-	(cd resources/udpipe && curl -O resources/udpipe --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131{/english-ewt-ud-2.5-191206.udpipe,/english-partut-ud-2.5-191206.udpipe,/english-lines-ud-2.5-191206.udpipe,/english-gum-ud-2.5-191206.udpipe})
+udpipe: resources/udpipe
 
 venv: venv/bin/activate
-
-venv/bin/activate: requirements.txt
-	test -d venv || virtualenv venv
-	. venv/bin/activate; venv/bin/pip3 install -Ur requirements.txt
-	touch venv/bin/activate
-
-install: venv resources/udpipe
 
 run: install
 	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat
@@ -25,5 +14,20 @@ run: install
 run-api: install
 	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py venv/bin/flask run
 
+apidocs:
+	sphinx-apidoc -o docs/source src -f -e
+	$(MAKE) -C docs html
+
 test-constraints: install
 	PYTHONPATH=./src:./test python3 test/constraints.py
+
+resources/udpipe:
+	@mkdir -p resources/udpipe
+	(cd resources/udpipe && curl -O resources/udpipe --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131{/english-ewt-ud-2.5-191206.udpipe,/english-partut-ud-2.5-191206.udpipe,/english-lines-ud-2.5-191206.udpipe,/english-gum-ud-2.5-191206.udpipe})
+	touch resources/udpipe/*
+
+venv/bin/activate: requirements.txt
+	test -d venv || virtualenv venv
+	. venv/bin/activate; venv/bin/pip3 install -Ur requirements.txt
+	touch venv/bin/activate
+
