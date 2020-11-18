@@ -4,8 +4,8 @@ import logging.config
 from drawtomat.graphics import ConstraintComposer
 from drawtomat.graphics.simple_renderer import SimpleRenderer
 from drawtomat.language.udpipe_processor import UDPipeProcessor
-
 # A dog and a chair are inside a house. The dog is sitting on the chair.
+from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
 
 if __name__ == "__main__":
     logging.config.fileConfig(fname="resources/logging.conf", disable_existing_loggers=False)
@@ -26,7 +26,8 @@ if __name__ == "__main__":
     graph.graph_attr["labelloc"] = "t"
     graph.render(filename=args.model_output, format="png")
 
-    composer = ConstraintComposer()
+    obj_factory = QuickDrawObjectFactory()
+    composer = ConstraintComposer(obj_factory)
     entities = composer.compose(scene)
 
     renderer = SimpleRenderer(composer=composer, show_bounds=False)

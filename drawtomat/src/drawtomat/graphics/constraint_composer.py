@@ -8,12 +8,16 @@ from drawtomat.constraints import InsideConstraint, OnConstraint, SideConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.language import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
+from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
 from drawtomat.model.relational.scene import Scene
 
 
 class ConstraintComposer:
+    def __init__(self, obj_factory: 'PhysicalObjectFactory'):
+        self.obj_factory = obj_factory
+
     """
     Composer which uses geometrical constraints from `drawtomat.constraints` to place objects.
 
@@ -121,7 +125,7 @@ class ConstraintComposer:
             if type(entity) == Group:
                 pass
             elif type(entity) == Object:
-                physical_entity = PhysicalObject(entity, default_size=default_size, unit=unit)
+                physical_entity = self.obj_factory.get_physical_object(entity, default_size=default_size, unit=unit)
                 constraints = []
                 for rel in entity.relations_out:
                     dst_obj = physical_entities[rel.dst]["obj"]

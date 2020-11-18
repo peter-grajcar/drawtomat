@@ -5,13 +5,15 @@ from flask import Flask, request
 
 from drawtomat.graphics import ConstraintComposer
 from drawtomat.language import UDPipeProcessor
+from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
 
 app = Flask(__name__)
 
 logging.config.fileConfig(fname="resources/logging.conf", disable_existing_loggers=False)
 
 processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
-composer = ConstraintComposer()
+obj_factory = QuickDrawObjectFactory()
+composer = ConstraintComposer(obj_factory)
 
 
 @app.route("/drawtomat", methods=["POST"])

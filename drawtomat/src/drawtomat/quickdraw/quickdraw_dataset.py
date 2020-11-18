@@ -12,7 +12,7 @@ class QuickDrawDataset:
     _attributes = None
 
     @staticmethod
-    def words() -> list:
+    def words() -> 'list':
         """
         Returns a list of words present in the Quick, Draw! dataset.
 
@@ -30,7 +30,7 @@ class QuickDrawDataset:
         return QuickDrawDataset._words
 
     @staticmethod
-    def images(word: str = None) -> dict:
+    def images(word: 'str' = None) -> 'dict':
         """
         Returns a dictionary of data for each word.
 
@@ -49,7 +49,7 @@ class QuickDrawDataset:
         return QuickDrawDataset._images
 
     @staticmethod
-    def attributes(word: str = None) -> dict:
+    def attributes(word: 'str' = None) -> 'dict':
         """
         Returns a dictionary of attributes for each word.
 

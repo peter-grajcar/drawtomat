@@ -9,7 +9,13 @@ class WordEmbedding:
         self.word_list = word_list
         self.model = gensim.models.KeyedVectors.load("resources/conceptualcaptions/train.wv.model")
 
-    def most_similar_word(self, word: 'str') -> str:
+    def get_similarity(self, word1: 'str', word2: 'str') -> 'float':
+        try:
+            return self.model.similarity(w1=word1, w2=word2)
+        except KeyError:
+            return 0
+
+    def most_similar_word(self, word: 'str') -> 'str':
         """
         Finds most similar word from the word_list.
 
@@ -24,7 +30,7 @@ class WordEmbedding:
         """
         maximum = None
         for w in self.word_list:
-            score = max([self.model.similarity(w1=word, w2=v) for v in w.split()])
+            score = max([self.get_similarity(word, v) for v in w.split()])
             if maximum is None or maximum["score"] < score:
                 maximum = {"word": w, "score": score}
         return maximum["word"]
