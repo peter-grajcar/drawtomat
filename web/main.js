@@ -13,6 +13,13 @@ const speed = document.getElementById("drawing-speed");
 const clear = document.getElementById("clear");
 const download = document.getElementById("download");
 
+var textureImg = new Image();
+textureImg.src = 'resources/texture32.png'
+var texture;
+textureImg.onload = function() {
+	texture = ctx.createPattern(textureImg, "repeat");
+}
+
 advanced.addEventListener("click", function () {
     if (settings.getAttribute("aria-hidden") !== "true") {
         caret.style.transform = "rotate(0deg)";
@@ -100,6 +107,10 @@ function drawPicture(data) {
     let scale = Math.min(cx / (width + padding), cy / (height + padding));
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	ctx.strokeStyle = texture;
+	ctx.lineWidth = 2;
+	ctx.lineCap = "round";
 
     let objIdx = 0;
     let stkIdx = 0;
