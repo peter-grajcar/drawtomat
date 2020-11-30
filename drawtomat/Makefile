@@ -22,8 +22,8 @@ apidocs:
 	sphinx-apidoc -o docs/source src -f -e
 	$(MAKE) -C docs html
 
-test-constraints: install
-	PYTHONPATH=./src:./test python3 test/constraints.py
+test: install
+	PYTHONPATH=./src:./test python3 test/$(TEST).py
 
 resources/udpipe:
 	mkdir -p $@
