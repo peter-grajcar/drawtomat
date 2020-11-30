@@ -137,12 +137,12 @@ class UDPipeProcessor:
 
                 self.logger.debug(f"\tnew Object({token['lemma']})")
             else:
-                count = max(count, 10)  # TODO: add MAX_COUNT
+                count = min(count, 10)  # TODO: add MAX_COUNT
                 obj = Group(scene)
                 for _ in range(count):
                     obj.add_entity(Object(scene, word=obj_name, attrs=attrs))
 
-                self.logger.debug(f"new Group({count}x{obj_name})")
+                self.logger.debug(f"new Group({count} x {obj_name})")
 
         return obj
 

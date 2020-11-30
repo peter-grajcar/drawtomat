@@ -1,10 +1,10 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
 from drawtomat.constraints import Constraint
-from drawtomat.constraints import InsideConstraint, OnConstraint, SideConstraint
+from drawtomat.constraints import InsideConstraint, OnConstraint, SideConstraint, DisjunctionConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.language import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
@@ -27,7 +27,7 @@ class ConstraintComposer:
     """
 
     @staticmethod
-    def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 10000) -> None:
+    def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 5000) -> None:
         """
 
         Parameters
@@ -74,31 +74,31 @@ class ConstraintComposer:
         obj.set_position(best_point["point"][0], best_point["point"][1])
 
     @staticmethod
-    def _get_constraints(adposition: 'Adposition', obj: 'PhysicalObject') -> List[Constraint]:
+    def _get_constraints(adposition: 'Adposition', obj: 'PhysicalObject') -> 'Optional[Constraint]':
         if adposition is Adposition.IN:
-            return [InsideConstraint(obj)]
+            return InsideConstraint(obj)
         elif adposition is Adposition.INSIDE:
-            return [InsideConstraint(obj)]
+            return InsideConstraint(obj)
         elif adposition is Adposition.INSIDE_OF:
-            return [InsideConstraint(obj)]
+            return InsideConstraint(obj)
         elif adposition is Adposition.ON:
-            return [OnConstraint(obj)]
+            return OnConstraint(obj)
         elif adposition is Adposition.UNDER:
-            return [SideConstraint(obj, direction=(0, 1))]
+            return SideConstraint(obj, direction=(0, 1))
         elif adposition is Adposition.BELOW:
-            return [SideConstraint(obj, direction=(0, 1))]
+            return SideConstraint(obj, direction=(0, 1))
         elif adposition is Adposition.ABOVE:
-            return [SideConstraint(obj, direction=(0, -1))]
+            return SideConstraint(obj, direction=(0, -1))
         elif adposition is Adposition.BEHIND:
-            return [BoxConstraint(obj, scale=0.75)]
+            return BoxConstraint(obj, scale=0.75)
         elif adposition is Adposition.IN_FRONT_OF:
-            return [BoxConstraint(obj, scale=1.5)]
+            return BoxConstraint(obj, scale=1.5)
         elif adposition is Adposition.NEXT_TO:
-            return [
+            return DisjunctionConstraint(obj, [
                 SideConstraint(obj, direction=(-1, 0), padding=10),
                 SideConstraint(obj, direction=(1, 0), padding=10)
-            ]
-        return []
+            ])
+        return None
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """
@@ -129,7 +129,7 @@ class ConstraintComposer:
                 constraints = []
                 for rel in entity.relations_out:
                     dst_obj = physical_entities[rel.dst]["obj"]
-                    constraints.extend(self._get_constraints(rel.rel, dst_obj))
+                    constraints.append(self._get_constraints(rel.rel, dst_obj))
                 physical_entities[entity] = {"obj": physical_entity, "constraints": constraints}
 
         for entity in topological_order[::-1]:
@@ -140,7 +140,7 @@ class ConstraintComposer:
                 constraints = []
                 for rel in entity.relations_out:
                     dst_obj = physical_entities[rel.dst]["obj"]
-                    constraints.extend(self._get_constraints(rel.rel, dst_obj))
+                    constraints.append(self._get_constraints(rel.rel, dst_obj))
                 # add constraints to objects in the group
                 for e in entity.entities:
                     if type(e) == Object:
