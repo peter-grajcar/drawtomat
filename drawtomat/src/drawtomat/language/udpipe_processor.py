@@ -53,7 +53,6 @@ class UDPipeProcessor:
         next_token = sentence[token_idx + 1] if token_idx + 1 < len(sentence) else False
         next_next_token = sentence[token_idx + 2] if token_idx + 2 < len(sentence) else False
 
-        # TODO: check length of the sentence
         # skips the beginning of complex adpositions
         # complex adposition of form PP, e.g. inside of
         if next_token and next_token["upostag"] == "ADP":
@@ -129,15 +128,21 @@ class UDPipeProcessor:
             if child.token["upostag"] == "ADJ":
                 attrs.append(child.token["lemma"])
             if child.token["upostag"] == "NUM":
-                # TODO:
-                # count = n
-                pass
+                count = int(child.token["lemma"])
 
         if not obj:
-            obj = Object(scene, word=obj_name)
-            obj.attributes = attrs
+            if count == 1:
+                obj = Object(scene, word=obj_name)
+                obj.attributes = attrs
 
-            self.logger.debug(f"\tnew Object({token['lemma']})")
+                self.logger.debug(f"\tnew Object({token['lemma']})")
+            else:
+                count = max(count, 10)  # TODO: add MAX_COUNT
+                obj = Group(scene)
+                for _ in range(count):
+                    obj.add_entity(Object(scene, word=obj_name, attrs=attrs))
+
+                self.logger.debug(f"new Group({count}x{obj_name})")
 
         return obj
 

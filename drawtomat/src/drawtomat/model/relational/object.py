@@ -12,7 +12,7 @@ class Object(Entity):
     attributes : list
     """
 
-    def __init__(self, scene: 'Scene', word: str, container=None) -> None:
+    def __init__(self, scene: 'Scene', word: str, container=None, attrs=None) -> None:
         """
         Initialises a new object with given word inside a container.
 
@@ -22,7 +22,10 @@ class Object(Entity):
         else:
             super(Object, self).__init__(scene)
         self.word = word
-        self.attributes = list()
+        if attrs:
+            self.attributes = attrs
+        else:
+            self.attributes = list()
 
     def __repr__(self) -> str:
         return f"ObjectEntity({self.word})"
