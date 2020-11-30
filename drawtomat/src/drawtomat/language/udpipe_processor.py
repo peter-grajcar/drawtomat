@@ -1,11 +1,12 @@
 import logging
 from collections import OrderedDict
-from typing import List
+from typing import List, Optional
 
 import conllu
 from conllu import TokenList
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
+import drawtomat.language.text2num as t2n
 from drawtomat.language.adposition import Adposition
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
@@ -28,7 +29,7 @@ class UDPipeProcessor:
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
 
-    def _process_adposition(self, sentence: 'TokenList', token) -> 'Adposition':
+    def _process_adposition(self, sentence: 'TokenList', node) -> 'Optional[Adposition]':
         """
 
         Parameters
@@ -42,38 +43,43 @@ class UDPipeProcessor:
         bool
             true if adposition should be skipped
         """
+        token = node.token
         token_idx = token["id"] - 1
         skip = False
-        complex = None
+        complex_adp = None
         last = None
+
+        prev_token = sentence[token_idx - 1] if token_idx > 0 else False
+        next_token = sentence[token_idx + 1] if token_idx + 1 < len(sentence) else False
+        next_next_token = sentence[token_idx + 2] if token_idx + 2 < len(sentence) else False
 
         # TODO: check length of the sentence
         # skips the beginning of complex adpositions
         # complex adposition of form PP, e.g. inside of
-        if sentence[token_idx + 1]["upostag"] == "ADP":
+        if next_token and next_token["upostag"] == "ADP":
             skip = True
-            complex = token["form"] + " " + sentence[token_idx + 1]["form"]
-            last = sentence[token_idx + 1]
+            complex_adp = token["form"] + " " + next_token["form"]
+            last = next_token
 
         # complex adposition of form PNP, e.g. in front of
-        if sentence[token_idx + 1]["upostag"] == "NOUN" and sentence[token_idx + 2]["upostag"] == "ADP":
+        if next_token and next_next_token and next_token["upostag"] == "NOUN" and next_next_token["upostag"] == "ADP":
             skip = True
-            complex = token["form"] + " " + sentence[token_idx + 1]["form"] + " " + sentence[token_idx + 2]["form"]
-            last = sentence[token_idx + 2]
+            complex_adp = token["form"] + " " + next_token["form"] + " " + next_next_token["form"]
+            last = next_next_token
 
         # complex adposition in form adverb/adjective + adposition, e.g. next to
         # (a complex adposition is formed only if it is in a list of adpositions)
-        if sentence[token_idx - 1]["upostag"] == "ADV" or sentence[token_idx - 1]["upostag"] == "ADJ":
-            complex = sentence[token_idx - 1]["form"] + " " + token["form"]
-            if Adposition.for_name(complex):
+        if prev_token and prev_token["upostag"] == "ADV" or prev_token["upostag"] == "ADJ":
+            complex_adp = prev_token["form"] + " " + token["form"]
+            if Adposition.for_name(complex_adp):
                 last = token
             else:
-                complex = None
+                complex_adp = None
 
-        if complex:
+        if complex_adp:
             if not last["misc"]:
                 last["misc"] = OrderedDict()
-            last["misc"]["Complex"] = complex
+            last["misc"]["Complex"] = complex_adp
 
         if skip:
             return None
@@ -86,13 +92,17 @@ class UDPipeProcessor:
 
         return Adposition.for_name(full_adp)
 
-    def _process_noun(self, scene: 'Scene', sentence: 'TokenList', token, children) -> 'Object':
+    def _process_noun(self, scene: 'Scene', sentence: 'TokenList', node) -> 'Optional[Object]':
+        token = node.token
+        children = node.children
         token_idx = token["id"] - 1
         skip = False
 
-        # TODO: check length
+        prev_token = sentence[token_idx - 1] if token_idx > 0 else False
+        next_token = sentence[token_idx + 1] if token_idx + 1 < len(sentence) else False
+
         # Noun is part of a complex adposition of form PNP
-        if sentence[token_idx - 1]["upostag"] == "ADP" and sentence[token_idx + 1]["upostag"] == "ADP":
+        if prev_token and next_token and prev_token["upostag"] == "ADP" and next_token["upostag"] == "ADP":
             skip = True
         # skip the first part of a compound noun
         if token["deprel"] == "compound":
@@ -101,6 +111,7 @@ class UDPipeProcessor:
         if skip:
             return None
 
+        count = 1
         obj = None
         obj_name = token["lemma"]
         attrs = list()
@@ -117,6 +128,10 @@ class UDPipeProcessor:
                 obj_name = child.token["lemma"] + " " + obj_name
             if child.token["upostag"] == "ADJ":
                 attrs.append(child.token["lemma"])
+            if child.token["upostag"] == "NUM":
+                # TODO:
+                # count = n
+                pass
 
         if not obj:
             obj = Object(scene, word=obj_name)
@@ -126,7 +141,7 @@ class UDPipeProcessor:
 
         return obj
 
-    def _traverse_tree(self, parsed: 'List[TokenList]') -> Scene:
+    def _traverse_tree(self, parsed: 'List[TokenList]') -> 'Scene':
         """
         Processes the description via tree traversal (DFS).
 
@@ -177,7 +192,7 @@ class UDPipeProcessor:
                     entity_stack_ptrs[token["id"]] = entity_stack_size
 
                     if token["upostag"] == "NOUN" or token["upostag"] == "PROPN":
-                        obj = self._process_noun(scene, sentence, token, node.children)
+                        obj = self._process_noun(scene, sentence, node)
 
                         if obj:
                             entity_stack.append(obj)
@@ -187,7 +202,7 @@ class UDPipeProcessor:
                     # Creates relation between two objects at the top of
                     # the stack
                     if token["upostag"] == "ADP":
-                        adp = self._process_adposition(sentence, token)
+                        adp = self._process_adposition(sentence, node)
 
                         if adp:
                             src = entity_stack[-2]
@@ -231,7 +246,12 @@ class UDPipeProcessor:
 
         return scene
 
-    def process(self, text: str) -> Scene:
+    def _preprocess(self, text: 'str') -> 'str':
+        text_preprocessed = t2n.replace_with_numbers(text)
+        self.logger.debug(f"preprocessed input: {text_preprocessed}")
+        return text_preprocessed
+
+    def process(self, text: 'str') -> 'Scene':
         """
         Processes the description and builds a scene based on it.
 
@@ -245,9 +265,11 @@ class UDPipeProcessor:
         Scene
             The scene described by the text
         """
+        text_preprocessed = self._preprocess(text)
+
         pipeline = Pipeline(self.model, "tokenize", Pipeline.DEFAULT, Pipeline.DEFAULT, "conllu")
         error = ProcessingError()
-        processed = pipeline.process(text, error)
+        processed = pipeline.process(text_preprocessed, error)
         parsed = conllu.parse(processed)
 
         scene = self._traverse_tree(parsed)
