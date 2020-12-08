@@ -12,81 +12,81 @@ arm,,100
 asparagus,,30
 axe,,50
 backpack,40,
-banana,,
-bandage,,
-barn,,
-baseball,,
-baseball bat,,
-basket,,
-basketball,,
-bat,,
-bathtub,,
-beach,,
-bear,,
+banana,20,20
+bandage,6,6
+barn,,600
+baseball,22,22
+baseball bat,120,120
+basket,50,100
+basketball,50,50
+bat,10,10
+bathtub,250,150
+beach,1000,
+bear,220,130
 beard,,
-bed,,
-bee,,
+bed,100,220
+bee,1,1
 belt,,
-bench,,
-bicycle,,
+bench,250,150
+bicycle,170,110
 binoculars,,
-bird,,
-birthday cake,,
-blackberry,,
-blueberry,,
-book,,
-boomerang,,
-bottlecap,,
-bowtie,,
-bracelet,,
+bird,15,15
+birthday cake,40,
+blackberry,2,2
+blueberry,2,2
+book,15,25
+boomerang,40,40
+bottlecap,2,2
+bowtie,12,5
+bracelet,6,6
 brain,,
-bread,,
+bread,30,15
 bridge,,1000
-broccoli,,
-broom,,
-bucket,,
-bulldozer,,
-bus,,
-bush,,
-butterfly,,
-cactus,,
-cake,,
-calculator,,
-calendar,,
-camel,,
-camera,,
+broccoli,,10
+broom,,130
+bucket,30,40
+bulldozer,400,300
+bus,800,300
+bush,100,70
+butterfly,5,5
+cactus,20,40
+cake,40,
+calculator,15,15
+calendar,30,30
+camel,,200
+camera,,15
 camouflage,,
 campfire,,
-candle,,
+candle,4,20
 cannon,,
 canoe,,
-car,,
+car,300,180
 carrot,,
 castle,1000,
-cat,,30,
+cat,60,40,
 ceiling fan,,
-cello,,
+cello,,76
 cell phone,,
 chair,50,
 chandelier,,
-church,,
+church,600,900
 circle,,
 clarinet,,
-clock,,
-cloud,,
+clock,30,30
+cloud,,200
 coffee cup,,
-compass,,
-computer,,
-cookie,,
+compass,10,10
+computer,,40
+cookie,8,8
 cooler,,
 couch,120,
-cow,,
-crab,,
-crayon,,
-crocodile,,
-crown,,
-cruise ship,,
-cup,,
+cow,,160
+crab,,20
+crayon,,10
+crocodile,300,
+crown,,20
+cruise ship,,900
+cup,,13
 diamond,,
 dishwasher,,
 diving board,,
@@ -122,7 +122,7 @@ flip flops,,
 floor lamp,,
 flower,8,20
 flying saucer,,
-foot,,
+foot,30,
 fork,,
 frog,,
 frying pan,,
@@ -141,7 +141,7 @@ harp,,
 hat,,
 headphones,,
 hedgehog,,
-helicopter,,
+helicopter,400,200
 helmet,,
 hexagon,,
 hockey puck,,
@@ -154,7 +154,7 @@ hot tub,,
 hourglass,,
 house,300,
 house plant,,
-hurricane,,
+hurricane,,800
 ice cream,,
 jacket,,
 jail,,
@@ -162,7 +162,7 @@ kangaroo,,
 key,,
 keyboard,,
 knee,,
-knife,,
+knife,,20
 ladder,,
 lantern,,
 laptop,,
@@ -177,7 +177,7 @@ lion,,
 lipstick,,
 lobster,,
 lollipop,,
-mailbox,,
+mailbox,,150
 map,,
 marker,,
 matches,,
@@ -198,7 +198,7 @@ mushroom,,
 nail,,
 necklace,,
 nose,,
-ocean,,
+ocean,2000,
 octagon,,
 octopus,,
 onion,,
@@ -206,9 +206,9 @@ oven,,
 owl,,
 paintbrush,,
 paint can,,
-palm tree,,
+palm tree,,400
 panda,,
-pants,,
+pants,,120
 paper clip,,
 parachute,,
 parrot,,
@@ -216,7 +216,7 @@ passport,,
 peanut,,
 pear,,
 peas,,
-pencil,,
+pencil,,12
 penguin,80,30
 piano,,
 pickup truck,,
@@ -296,50 +296,50 @@ submarine,,
 suitcase,,
 sun,,
 swan,,
-sweater,,
+sweater,,100
 swing set,,
 sword,,
 syringe,,
 table,150,120
-teapot,,
-teddy-bear,,
-telephone,,
+teapot,,25
+teddy-bear,,30
+telephone,15,15
 television,60,50
 tennis racquet,,
-tent,,
+tent,,150
 The Eiffel Tower,,
 The Great Wall of China,,
 The Mona Lisa,,
-tiger,,
+tiger,200,120
 toaster,,
 toe,,
 toilet,,
 tooth,,
 toothbrush,,
 toothpaste,,
-tornado,,
-tractor,,
+tornado,,500
+tractor,400,250
 traffic light,,
 train,,400
 tree,100,250
 triangle,,
 trombone,,
-truck,,
+truck,250,600
 trumpet,,
-t-shirt,,
-umbrella,,
+t-shirt,100,120
+umbrella,,110
 underwear,,
 van,,
 vase,10,25
-violin,,
+violin,,58
 washing machine,,
 watermelon,,
 waterslide,,
 whale,,
-wheel,,
+wheel,50,50
 windmill,,
-wine bottle,,
-wine glass,,
+wine bottle,15,40
+wine glass,15,20
 wristwatch,,
 yoga,,
 zebra,,
