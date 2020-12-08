@@ -1,5 +1,4 @@
 ndjson==0.3.1
-nltk==3.5
 ufal.udpipe==1.2.0.3
 conllu==4.1
 graphviz==0.14.1

@@ -98,7 +98,13 @@ class ConstraintComposer:
                 SideConstraint(obj, direction=(-1, 0), padding=10),
                 SideConstraint(obj, direction=(1, 0), padding=10)
             ])
-        return None
+        # default
+        return DisjunctionConstraint(obj, [
+                SideConstraint(obj, direction=(-1, 0), padding=10),
+                SideConstraint(obj, direction=(1, 0), padding=10),
+                SideConstraint(obj, direction=(0, 1), padding=10),
+                SideConstraint(obj, direction=(0, -1), padding=10),
+            ])
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """

@@ -6,7 +6,7 @@ import conllu
 from conllu import TokenList
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
-import drawtomat.language.text2num as t2n
+from drawtomat.language import text2num as t2n
 from drawtomat.language.adposition import Adposition
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
@@ -210,6 +210,7 @@ class UDPipeProcessor:
                         adp = self._process_adposition(sentence, node)
 
                         if adp:
+                            # TODO: check stack size
                             src = entity_stack[-2]
                             dst = entity_stack[-1]
                             if entity_position[src] > entity_position[dst]:
