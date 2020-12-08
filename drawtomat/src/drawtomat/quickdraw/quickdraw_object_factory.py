@@ -29,9 +29,8 @@ class QuickDrawObjectFactory(PhysicalObjectFactory):
         word = obj.word
 
         if not obj.word in QuickDrawDataset.words():
-            self.logger.error(f"unknown word \"{word}\"")
             word = self.word_embedding.most_similar_word(word)
-            self.logger.debug(f"changed {obj.word} to {word}")
+            self.logger.debug(f"unknown word {obj.word} changed to {word}")
 
         data = QuickDrawDataset.images(word)
         drawing = random.choice(data)["drawing"]
