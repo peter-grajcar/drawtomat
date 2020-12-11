@@ -25,8 +25,11 @@ class SideConstraint(Constraint):
         super().__init__()
         self.obj = obj
         self.direction = np.array(direction)
-        self.obj_size = np.array(obj.get_size())
         self.padding = padding
+        self.init()
+
+    def init(self):
+        self.obj_size = np.array(self.obj.get_size())
 
     def __call__(self, x: 'float', y: 'float') -> bool:
         norm_vec = np.array((self.direction[1], -self.direction[0]))

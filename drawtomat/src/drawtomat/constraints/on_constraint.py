@@ -20,16 +20,18 @@ class OnConstraint(Constraint):
         super().__init__()
         self.obj = obj
         self.limit = limit
+        self.init()
 
+    def init(self):
         strokes = [
             [
-                (x + obj.x, y + obj.y) for x, y in zip(stroke[0], stroke[1])
-            ] for stroke in obj.strokes
+                (x + self.obj.x, y + self.obj.y) for x, y in zip(stroke[0], stroke[1])
+            ] for stroke in self.obj.strokes
         ]
         rdp_strokes = [rdp(stroke, 5) for stroke in strokes]
 
         is_on_top = (
-            lambda point: (point[1] - obj.y) / obj.get_height() < -0.25
+            lambda point: (point[1] - self.obj.y) / self.obj.get_height() < -0.25
         )
         self.top = [
             point for stroke in rdp_strokes for point in stroke if is_on_top(point)

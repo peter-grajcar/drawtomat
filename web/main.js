@@ -102,6 +102,9 @@ function drawPicture(data) {
     let height = data.bounds.top - data.bounds.bottom;
     let padding = 20;
 
+    let offx = (data.bounds.right + data.bounds.left) / 2;
+    let offy = (data.bounds.top + data.bounds.bottom) / 2;
+
     let cx = canvas.width / 2;
     let cy = canvas.height / 2;
     let scale = Math.min(cx / (width + padding), cy / (height + padding));
@@ -148,8 +151,8 @@ function drawPicture(data) {
         while (t > (stroke[2][idx] - t0) * timeScale) {
             ++idx;
             ctx.beginPath();
-            ctx.moveTo(cx + scale * stroke[0][idx], cy + scale * stroke[1][idx]);
-            ctx.lineTo(cx + scale * stroke[0][idx + 1], cy + scale * stroke[1][idx + 1]);
+            ctx.moveTo(cx + scale * (stroke[0][idx] - offx), cy + scale * (stroke[1][idx] - offy));
+            ctx.lineTo(cx + scale * (stroke[0][idx + 1] - offx), cy + scale * (stroke[1][idx + 1] - offy));
             ctx.stroke();
         }
     }, step);

@@ -16,6 +16,9 @@ class Constraint(metaclass=ABCMeta):
     def __init__(self):
         self.obj = None
 
+    def init(self):
+        pass
+
     @abstractmethod
     def __call__(self, x: 'float', y: 'float') -> bool:
         """

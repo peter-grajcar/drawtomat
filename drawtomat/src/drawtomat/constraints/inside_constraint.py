@@ -26,13 +26,15 @@ class InsideConstraint(Constraint):
     def __init__(self, obj: 'PhysicalObject'):
         super().__init__()
         self.obj = obj
+        self.init()
 
+
+    def init(self):
         strokes = [
             [
-                (x + obj.x, y + obj.y) for x, y in zip(stroke[0], stroke[1])
-            ] for stroke in obj.strokes
+                (x + self.obj.x, y + self.obj.y) for x, y in zip(stroke[0], stroke[1])
+            ] for stroke in self.obj.strokes
         ]
-
         self.rdp_strokes = [rdp(stroke, 50) for stroke in strokes]
 
     def __call__(self, x: 'float', y: 'float') -> bool:

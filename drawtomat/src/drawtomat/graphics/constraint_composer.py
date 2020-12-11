@@ -45,13 +45,16 @@ class ConstraintComposer:
         obj_size = max(obj.get_size())
 
         if not constraints:
-            rand_point = np.random.normal(scale=np.sqrt(obj_size), size=2)
+            rand_point = np.random.normal(scale=obj_size, size=2)
             obj.set_position(rand_point[0], rand_point[1])
             return
 
         best_point = {"score": None, "point": None}
         num_of_constraints = len(constraints)
         constraint_objs = [constraint.obj for constraint in constraints]
+
+        for constraint in constraints:
+            constraint.init()
 
         for i in range(point_limit):
             centre = np.random.choice(constraint_objs)

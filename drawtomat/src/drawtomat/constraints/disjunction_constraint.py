@@ -19,6 +19,9 @@ class DisjunctionConstraint(Constraint):
         self.obj = obj
         self.constraints = constraints
 
+    def init(self):
+        pass
+
     def __call__(self, x: 'float', y: 'float') -> bool:
         for constraint in self.constraints:
             if constraint(x, y):
