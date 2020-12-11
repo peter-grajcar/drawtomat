@@ -1,3 +1,5 @@
+import itertools
+
 import gensim
 
 
@@ -31,7 +33,7 @@ class WordEmbedding:
         """
         maximum = None
         for w in self.word_list:
-            score = max([self.get_similarity(word, v) for v in w.split()])
+            score = max([self.get_similarity(w, v) for w, v in itertools.product(word.split(), w.split())])
             if maximum is None or maximum["score"] < score:
                 maximum = {"word": w, "score": score}
         return maximum["word"]

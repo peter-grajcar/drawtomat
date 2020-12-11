@@ -68,7 +68,7 @@ class UDPipeProcessor:
 
         # complex adposition in form adverb/adjective + adposition, e.g. next to
         # (a complex adposition is formed only if it is in a list of adpositions)
-        if prev_token and prev_token["upostag"] == "ADV" or prev_token["upostag"] == "ADJ":
+        if prev_token and (prev_token["upostag"] == "ADV" or prev_token["upostag"] == "ADJ"):
             complex_adp = prev_token["form"] + " " + token["form"]
             if Adposition.for_name(complex_adp):
                 last = token
