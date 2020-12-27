@@ -1,7 +1,5 @@
-import itertools
-
-import gensim
-
+import fasttext
+import numpy as np
 
 class WordEmbedding:
     """
@@ -9,14 +7,7 @@ class WordEmbedding:
     """
     def __init__(self, word_list: 'list'):
         self.word_list = word_list
-        self.model = gensim.models.KeyedVectors.load("resources/conceptualcaptions/train.wv.model")
-        # self.model = gensim.models.KeyedVectors.load_word2vec_format("resources/fasttext/wiki-news-300d-1M.vec")
-
-    def get_similarity(self, word1: 'str', word2: 'str') -> 'float':
-        try:
-            return self.model.similarity(w1=word1, w2=word2)
-        except KeyError:
-            return 0
+        self.model = fasttext.load_model("resources/fasttext/conceptual-captions-fasttext.model")
 
     def most_similar_word(self, word: 'str') -> 'str':
         """
@@ -33,7 +24,11 @@ class WordEmbedding:
         """
         maximum = None
         for w in self.word_list:
-            score = max([self.get_similarity(w, v) for w, v in itertools.product(word.split(), w.split())])
+            score = cos_sim(self.model[w], self.model[word])
             if maximum is None or maximum["score"] < score:
                 maximum = {"word": w, "score": score}
         return maximum["word"]
+
+
+def cos_sim(a: 'np.ndarray', b: 'np.ndarray') -> 'float':
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))

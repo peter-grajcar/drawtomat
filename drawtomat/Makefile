@@ -1,14 +1,14 @@
-SOURCES = ./src
+SOURCES                     := ./src
+FASTTEXT_MODEL_URL_BASE     := https://www.ms.mff.cuni.cz/~grajcarp/drawtomat
+FASTTEXT_MODEL_FILENAME     := conceptual-captions-fasttext.model.tar.gz
 
 .PHONY: udpipe install run run-api apidocs
 
-install: venv udpipe conceptualcaptions
+install: venv udpipe fasttext
 
 udpipe: resources/udpipe
 
 fasttext: resources/fasttext
-
-conceptualcaptions: resources/conceptualcaptions
 
 venv: venv/bin/activate
 
@@ -32,15 +32,9 @@ resources/udpipe:
 
 resources/fasttext:
 	mkdir -p $@
-	wget https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip -O $@/wiki-news-300d-1M.vec.zip
-	unzip $@/wiki-news-300d-1M.vec.zip -d $@
-	rm -f $@/wiki-news-300d-1M.vec.zip
-
-resources/conceptualcaptions:
-	mkdir -p $@
-	wget https://www.ms.mff.cuni.cz/~grajcarp/drawtomat/train.wv.model.tar.gz -O $@/train.wv.model.tar.gz
-	tar -xzf $@/train.wv.model.tar.gz -C $@
-	rm -f $@/train.wv.model.tar.gz
+	wget $(FASTTEXT_MODEL_URL_BASE)/$(FASTTEXT_MODEL_FILENAME) -O $@/$(FASTTEXT_MODEL_FILENAME)
+	tar -xzf $@/$(FASTTEXT_MODEL_FILENAME) -C $@
+	rm -f $@/$(FASTTEXT_MODEL_FILENAME)
 
 venv/bin/activate: requirements.txt
 	test -d venv || virtualenv venv

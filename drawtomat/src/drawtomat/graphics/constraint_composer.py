@@ -72,7 +72,7 @@ class ConstraintComposer:
             if constraints_satisfied == num_of_constraints:
                 break
 
-        logging.getLogger(ConstraintComposer.__name__).debug(f"best: {best_point}")
+        # logging.getLogger(ConstraintComposer.__name__).debug(f"best: {best_point}")
 
         obj.set_position(best_point["point"][0], best_point["point"][1])
 
@@ -158,7 +158,7 @@ class ConstraintComposer:
                 physical_entity = physical_entities[entity]
                 self._place_object(physical_entity["obj"], physical_entity["constraints"])
 
-                logging.getLogger(ConstraintComposer.__name__).debug(f"\t{physical_entity}")
+                logging.getLogger(ConstraintComposer.__name__).debug(f"{physical_entity}")
 
         return [v["obj"] for v in physical_entities.values()]
 
