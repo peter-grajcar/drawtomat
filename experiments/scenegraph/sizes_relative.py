@@ -12,9 +12,14 @@ similar_words = {}
 
 sizes = defaultdict(lambda: { "count": 0, "sum_w": 0, "sum_h": 0 })
 
+threshold = 0.85
 counter = 0
 
 for line in sys.stdin:
+    counter += 1
+    if counter % 100 == 99:
+        print(counter + 1, file=sys.stderr, end="\r")
+    
     data = json.loads(line)
     pred = data["predicate"].upper().replace(" ", "_")
     
@@ -22,16 +27,24 @@ for line in sys.stdin:
     obj_name = data["object"]["name"]
 
     if sub_name in similar_words:
-        sub = similar_words[sub_name]
+        sub, sim = similar_words[sub_name]
+        if sim < threshold:
+            continue
     else:
-        sub = embedding.most_similar(sub_name)
-        similar_words[sub_name] = sub
+        sub, sim = embedding.most_similar(sub_name, include_similarity=True)
+        similar_words[sub_name] = (sub, sim)
+        if sim < threshold:
+            continue
 
     if obj_name in similar_words:
-        obj = similar_words[obj_name]
+        obj, sim = similar_words[obj_name]
+        if sim < threshold:
+            continue
     else:
-        obj = embedding.most_similar(obj_name)
-        similar_words[obj_name] = obj
+        obj, sim = embedding.most_similar(obj_name, include_similarity=True)
+        similar_words[obj_name] = (obj, sim)
+        if sim < threshold:
+            continue
         
     key = f"{sub},{obj}"
     sizes[key]["count"] += 1
@@ -39,9 +52,6 @@ for line in sys.stdin:
     sizes[key]["sum_h"] += data["subject"]["h"] / data["object"]["h"]
     # print(f"{pred}({sub},{obj})")
 
-    counter += 1
-    if counter % 100 == 99:
-        print(counter + 1, file=sys.stderr, end="\r")
 
 for key, value in sizes.items():
     # print(value["count"], file=sys.stderr)
