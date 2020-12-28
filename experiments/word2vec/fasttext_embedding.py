@@ -16,7 +16,7 @@ class Embedding:
     def most_similar(self, word, include_similarity=False):
         sim = [(w, cos_sim(vec, self.model[word])) for (w, vec) in self.categories]
         if include_similarity:
-            max(sim, key=lambda x: x[1])
+            return max(sim, key=lambda x: x[1])
         return max(sim, key=lambda x: x[1])[0]
 
 

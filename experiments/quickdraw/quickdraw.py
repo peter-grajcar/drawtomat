@@ -1,7 +1,22 @@
+import ndjson
 from PIL import ImageDraw
 
+
+def get_quickdraw_drawing(word, idx=0):
+    with open(f"../../quickdraw-dataset/saved/{word}.ndjson") as f:
+        return ndjson.loads(f.read())[idx]["drawing"]
+
+def get_obj_width(obj):
+    return obj["bounds"][1] - obj["bounds"][0]
+
+def get_obj_height(obj):
+    return obj["bounds"][3] - obj["bounds"][2]
+
+def get_obj_size(obj):
+    return get_obj_width(obj), get_obj_height(obj)
+
 def get_quickdraw_strokes(obj):
-    w, h = obj["bounds"][1] - obj["bounds"][0], obj["bounds"][3] - obj["bounds"][2]
+    w, h = get_obj_size(obj)
     off_x, off_y = obj["bounds"][0] + w / 2, obj["bounds"][2] + h / 2
     return [
         [
@@ -15,8 +30,9 @@ def get_quickdraw_strokes(obj):
     ]
 
 
-def draw_quickdraw_obj(draw, obj, colour="red", bounding_box=False):
+def draw_quickdraw_obj(draw, obj, colour="black", bounding_box=False):
     strokes = get_quickdraw_strokes(obj)
+    w, h = get_obj_size(obj)
 
     if bounding_box:
         draw.rectangle(
@@ -34,12 +50,7 @@ def draw_quickdraw_obj(draw, obj, colour="red", bounding_box=False):
         )
 
     for stroke in strokes:
-        draw.line(stroke, fill=colour, width=3)
-
-
-def get_obj_size(obj):
-    return (obj["bounds"][1] - obj["bounds"][0], obj["bounds"][3] - obj["bounds"][2])
-
+        draw.line(stroke, fill=colour, width=1)
 
 def get_quickdraw_obj_bounds(obj):
     min_x = None
