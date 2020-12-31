@@ -50,7 +50,7 @@ for data in relationships:
     dx = ((sub["x"] + sub["w"]/2) - (obj["x"] + obj["w"]/2)) / obj["w"]
     dy = ((sub["y"] + sub["h"]/2) - (obj["y"] + obj["h"]/2)) / obj["h"]
 
-    X.append([obj["name"], pred, dx, dy])
+    X.append([pred, dx, dy])
     t.append(1)
 
     wrong = None
@@ -61,7 +61,7 @@ for data in relationships:
         wrong_dx = ((wrong_sub["x"] + wrong_sub["w"]/2) - (wrong_obj["x"] + wrong_obj["w"]/2)) / obj["w"]
         wrong_dy = ((wrong_sub["y"] + wrong_sub["h"]/2) - (wrong_obj["y"] + wrong_obj["h"]/2)) / obj["h"]
 
-    X.append([obj["name"], pred, wrong_dx, wrong_dy])
+    X.append([pred, wrong_dx, wrong_dy])
     t.append(0)
 
 print()

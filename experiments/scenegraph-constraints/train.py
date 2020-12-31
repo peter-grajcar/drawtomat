@@ -10,6 +10,8 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import SGDClassifier
+from sklearn.utils import shuffle
 
 class WordEncoder(BaseEstimator, TransformerMixin):
     def __init__(self, filename):
@@ -28,25 +30,32 @@ class WordEncoder(BaseEstimator, TransformerMixin):
 
 column_transformer = ColumnTransformer(
     [
-        ("word_encoder", WordEncoder("../word2vec/conceptual-captions-fasttext.model"), [0]), 
-        ("predicate_encoder", OneHotEncoder(), [1])
+        # ("word_encoder", WordEncoder("../word2vec/conceptual-captions-fasttext.model"), [0]), 
+        ("predicate_encoder", OneHotEncoder(), [0])
     ],
     remainder=StandardScaler(),
     verbose=True
 )
 
+model = MLPClassifier(max_iter=100, tol=1e-6, hidden_layer_sizes=(100), verbose=True, warm_start=True)
+
 pipeline = Pipeline(steps=[
-    ("transformer", column_transformer),
-    ("classifier", MLPClassifier(hidden_layer_sizes=(300, 50), max_iter=500, verbose=True))
+        ("transformer", column_transformer),
+        ("classifier", model)
     ],
     verbose=True
 )
 
-
 with open("train.data", "rb") as f:
     X, t = pickle.load(f)
 
-pipeline.fit(X, t)
+column_transformer.fit(X)
+
+X, t = shuffle(X, t)
+size = 100000
+for i in range(0, len(X), size):
+    print(i)
+    model.partial_fit(column_transformer.transform(X[i:i+size]), t[i:i+size], classes=[0, 1])
 
 with open("scenegraph-constraints.model", "wb") as f:
     pickle.dump(pipeline, f)
