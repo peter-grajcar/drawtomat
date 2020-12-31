@@ -7,6 +7,6 @@ usage() {
 
 [ -z $1 -o -z $2 ] && usage
 
-cat $1 | ./json2ndjson | ./extract_relationships.py > "relationships.ndjson"
-cat $2 | ./json2ndjson | ./extract_objects.py > "objects.ndjson"
+cat $1 | ./json2ndjson.sh | ./extract_relationships.py > "relationships.ndjson"
+cat $2 | ./json2ndjson.sh | ./extract_objects.py > "objects.ndjson"
 
