@@ -16,7 +16,7 @@ run: install
 	PYTHONPATH=${SOURCES} venv/bin/python3 -m drawtomat
 
 run-api: install
-	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py venv/bin/flask run
+	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py venv/bin/flask run --host=0.0.0.0
 
 apidocs:
 	sphinx-apidoc -o docs/source src -f -e
