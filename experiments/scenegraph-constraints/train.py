@@ -1,79 +1,47 @@
 #!/usr/bin/env python3
 import sys
 import json
-import features
+import pickle
+import fasttext
 import numpy as np
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
-import pickle
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import StandardScaler
 
-with open("predicates.txt") as f:
-    predicates = {line.strip() for line in f}
+class WordEncoder(BaseEstimator, TransformerMixin):
+    def __init__(self, filename):
+        self.filename = filename
 
-spinner = ["-", "\\", "|", "/"]
-counter = 0
-relationships = []
-for line in sys.stdin:
-    counter += 1
-    if counter % 100 == 99:
-        print(spinner[(counter // 100) % 4], counter + 1, end="\r")
-    
-    relationships.append(json.loads(line))
+    def fit(self, X, y=None):
+        return self
 
-print()
+    def transform(self, X, y=None):
+        model = fasttext.load_model(self.filename)
+        return np.array([np.concatenate([model[w] for w in x]) for x in X])
 
-rel_count = len(relationships)
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
 
-def dist(x1, y1, x2, y2):
-    fst = not x1 and not y1
-    snd = not x2 and not y2
-    if fst and snd:
-        return 1
-    elif fst or snd:
-        return 0
-    return (x1*x2 + y1*y2) / (np.sqrt(x1*x1 + y1*y1) * np.sqrt(x2*x2 + y2*y2))
 
-X = []
-t = []
-
-counter = 0
-for data in relationships:
-    counter += 1
-    if counter % 100 == 99:
-        print(spinner[(counter // 100) % 4], counter + 1, end="\r")
-    
-    pred = data["predicate"].upper()
-
-    if not pred in predicates:
-        continue
-
-    sub = data["subject"]
-    obj = data["object"]
-    
-    dx = ((sub["x"] + sub["w"]/2) - (obj["x"] + obj["w"]/2)) / obj["w"]
-    dy = ((sub["y"] + sub["h"]/2) - (obj["y"] + obj["h"]/2)) / obj["h"]
-    
-    X.append([obj["name"], pred, dx, dy])
-    t.append(1)
-
-    wrong = None
-    while wrong is None or wrong["predicate"] == pred or dist(wrong_dx, wrong_dy, dx, dy) > 0.8:
-        wrong = relationships[np.random.randint(low=0, high=rel_count)]
-        wrong_sub = wrong["subject"]
-        wrong_obj = wrong["object"]
-        wrong_dx = ((wrong_sub["x"] + wrong_sub["w"]/2) - (wrong_obj["x"] + wrong_obj["w"]/2)) / obj["w"]
-        wrong_dy = ((wrong_sub["y"] + wrong_sub["h"]/2) - (wrong_obj["y"] + wrong_obj["h"]/2)) / obj["h"]
-
-    X.append([obj["name"], pred, wrong_dx, wrong_dy])
-    t.append(0)
-
-print()
+column_transformer = ColumnTransformer(
+    [
+        ("word_encoder", WordEncoder("../word2vec/conceptual-captions-fasttext.model"), [0]), 
+        ("predicate_encoder", OneHotEncoder(), [1])
+    ],
+    remainder=StandardScaler()
+)
 
 pipeline = Pipeline(steps=[
     ("transformer", features.column_transformer),
     ("classifier", MLPClassifier(hidden_layer_sizes=(300, 50), max_iter=500, verbose=True))
     ])
 
+
+with open("train.data", "rb") as f:
+    X, t = pickle.load(f)
 
 pipeline.fit(X, t)
 
