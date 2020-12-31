@@ -31,13 +31,16 @@ column_transformer = ColumnTransformer(
         ("word_encoder", WordEncoder("../word2vec/conceptual-captions-fasttext.model"), [0]), 
         ("predicate_encoder", OneHotEncoder(), [1])
     ],
-    remainder=StandardScaler()
+    remainder=StandardScaler(),
+    verbose=True
 )
 
 pipeline = Pipeline(steps=[
-    ("transformer", features.column_transformer),
+    ("transformer", column_transformer),
     ("classifier", MLPClassifier(hidden_layer_sizes=(300, 50), max_iter=500, verbose=True))
-    ])
+    ],
+    verbose=True
+)
 
 
 with open("train.data", "rb") as f:
