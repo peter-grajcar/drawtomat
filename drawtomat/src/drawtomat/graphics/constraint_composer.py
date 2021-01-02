@@ -3,9 +3,7 @@ from typing import List, Optional
 
 import numpy as np
 
-from drawtomat.constraints import Constraint
-from drawtomat.constraints import InsideConstraint, OnConstraint, SideConstraint, DisjunctionConstraint
-from drawtomat.constraints.box_constraint import BoxConstraint
+from drawtomat.constraints import Constraint, SklearnConstraint
 from drawtomat.language import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
 from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
@@ -49,35 +47,27 @@ class ConstraintComposer:
             obj.set_position(rand_point[0], rand_point[1])
             return
 
-        best_point = {"score": None, "point": None}
-        num_of_constraints = len(constraints)
         constraint_objs = [constraint.obj for constraint in constraints]
 
         for constraint in constraints:
             constraint.init()
 
-        for i in range(point_limit):
-            centre = np.random.choice(constraint_objs)
-            # TODO: compute scale
-            rand_point = np.random.normal(scale=100, size=2) + np.array(centre.get_position())
-            constraints_satisfied = 0
+        centres = np.array([centre.get_position() for centre in np.random.choice(constraint_objs, size=point_limit)])
+        xs = np.random.normal(scale=obj_size, size=point_limit) + centres[:, 0]
+        ys = np.random.normal(scale=obj_size, size=point_limit) + centres[:, 1]
 
-            for constraint in constraints:
-                constraints_satisfied += constraint(rand_point[0], rand_point[1])
+        constraints_satisfied = np.zeros(shape=point_limit)
 
-            percentage = constraints_satisfied / num_of_constraints
+        for constraint in constraints:
+            constraints_satisfied += constraint(xs, ys)
 
-            if best_point["score"] is None or best_point["score"] < percentage:
-                best_point = {"score": percentage, "point": rand_point}
-            if constraints_satisfied == num_of_constraints:
-                break
+        best_point = np.argmax(constraints_satisfied)
 
-        # logging.getLogger(ConstraintComposer.__name__).debug(f"best: {best_point}")
-
-        obj.set_position(best_point["point"][0], best_point["point"][1])
+        obj.set_position(xs[best_point], ys[best_point])
 
     @staticmethod
     def _get_constraints(adposition: 'Adposition', obj: 'PhysicalObject') -> 'Optional[Constraint]':
+        """
         if adposition is Adposition.IN:
             return InsideConstraint(obj)
         elif adposition is Adposition.INSIDE:
@@ -108,6 +98,8 @@ class ConstraintComposer:
                 SideConstraint(obj, direction=(0, 1), padding=10),
                 SideConstraint(obj, direction=(0, -1), padding=10),
             ])
+        """
+        return SklearnConstraint(obj, adposition.name.replace("_", " "))
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """

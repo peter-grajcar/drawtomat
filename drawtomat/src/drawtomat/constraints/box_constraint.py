@@ -20,6 +20,8 @@ class BoxConstraint(Constraint):
         self.obj = obj
         self.box_size = np.array(obj.get_size()) * scale
 
-    def __call__(self, x: 'float', y: 'float') -> bool:
-        return (self.obj.x - self.box_size[0] / 2 <= x <= self.obj.x + self.box_size[0] / 2
-                and self.obj.y - self.box_size[1] / 2 <= y <= self.obj.y + self.box_size[1] / 2)
+    def __call__(self, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':
+        return ((self.obj.x - self.box_size[0] / 2 <= xs)
+                & (xs <= self.obj.x + self.box_size[0] / 2)
+                & (self.obj.y - self.box_size[1] / 2 <= ys)
+                & (ys <= self.obj.y + self.box_size[1] / 2))

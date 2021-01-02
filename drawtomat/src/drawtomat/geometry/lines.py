@@ -3,13 +3,13 @@ from typing import Tuple, Union
 import numpy as np
 
 from drawtomat.geometry.constants import epsilon
-from drawtomat.geometry.side import Side
 
 
 class Line:
     """
     Class representing a line.
     """
+
     def __init__(self, point: 'np.ndarray', vector: 'np.ndarray'):
         self.point = point
         self.vector = vector
@@ -63,25 +63,25 @@ def line_line_intersection(line_a: 'Line', line_b: 'Line') -> np.ndarray:
     return line_line_intersection_with_t[0]
 
 
-def get_side_line(line: Line, point: 'np.ndarray'):
+def get_line_sides(line: Line, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':
     """
-    Returns a side of a point relative to a line.
+    Returns an array of side of points relative to a line.
 
     Parameters
     ----------
     line : Line
-    point : np.ndarray
+    xs : np.ndarray[float]
+    ys : np.ndarray[float]
 
     Returns
     -------
-    Side
-        side of the point
+    np.ndarray[int]
+        sides of the points
     """
-    u = line.vector
-    v = point - line.point
-    nv = np.array((-v[1], v[0]))
-    angle = u.dot(nv)
-    return Side.RIGHT if angle < 0 else Side.LEFT
+    b = line.vector
+    A = np.column_stack((-(ys - line.point[1]), xs - line.point[0]))
+    angle = A @ b
+    return angle < 0
 
 
 def perp_dist(p0: 'np.ndarray', p1: 'np.ndarray', p2: 'np.ndarray') -> float:
@@ -90,11 +90,11 @@ def perp_dist(p0: 'np.ndarray', p1: 'np.ndarray', p2: 'np.ndarray') -> float:
 
     Parameters
     ----------
-    p0
+    p0: np.ndarray
         Point
-    p1
+    p1: np.ndarray
         First point defining the line
-    p2
+    p2: np.ndarray
         Second point defining the line
 
     Returns
@@ -110,4 +110,3 @@ def perp_dist(p0: 'np.ndarray', p1: 'np.ndarray', p2: 'np.ndarray') -> float:
         - p2[1] * p1[0]
     )
     return num / denom
-

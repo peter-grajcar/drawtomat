@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
+import numpy as np
+
 from drawtomat.model.physical import PhysicalObject
 
 
@@ -20,22 +22,22 @@ class Constraint(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def __call__(self, x: 'float', y: 'float') -> bool:
+    def __call__(self, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':
         """
         Determines whether given coordinates meet the condition given
         by the constraint.
 
         Parameters
         ----------
-        x : float
-            x coordinate
-        y : float
-            y coordinate
+        xs : np.ndarray[float]
+            x coordinates
+        ys : np.ndarray[float]
+            y coordinates
 
         Returns
         -------
-        bool
-            True if (x,y) meet the condition
+        np.ndarray[int]
+            1 if (x,y) meets the condition otherwise 0
         """
         pass
 

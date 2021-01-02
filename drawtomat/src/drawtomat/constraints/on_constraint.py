@@ -1,3 +1,5 @@
+import numpy as np
+
 from drawtomat.constraints import Constraint
 from drawtomat.geometry import lines
 from drawtomat.geometry.rdp import rdp
@@ -37,8 +39,7 @@ class OnConstraint(Constraint):
             point for stroke in rdp_strokes for point in stroke if is_on_top(point)
         ]
 
-    def __call__(self, x: 'float', y: 'float') -> bool:
-        # TODO: case for single point
+    def _is_on(self, x: 'float', y: 'float') -> 'int':
         for i in range(len(self.top)):
             a = self.top[i - 1]
             b = self.top[i]
@@ -48,5 +49,8 @@ class OnConstraint(Constraint):
             dist_a = (x - a[0]) ** 2 + (y - a[1]) ** 2
             dist_b = (x - b[0]) ** 2 + (y - b[1]) ** 2
             if abs(lines.perp_dist((x, y), a, b)) < self.limit:
-                return True
-        return False
+                return 1
+        return 0
+
+    def __call__(self, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':
+        return np.array([self._is_on(x, y) for x, y in zip(xs, ys)])

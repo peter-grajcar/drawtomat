@@ -1,5 +1,7 @@
 from typing import List
 
+import numpy as np
+
 from drawtomat.constraints import Constraint
 from drawtomat.model.physical import PhysicalObject
 
@@ -14,6 +16,7 @@ class DisjunctionConstraint(Constraint):
     constraints : List[Constraint]
         object strokes reduced by RDP algorithm
     """
+
     def __init__(self, obj: 'PhysicalObject', constraints: 'List[Constraint]'):
         super().__init__()
         self.obj = obj
@@ -22,8 +25,8 @@ class DisjunctionConstraint(Constraint):
     def init(self):
         pass
 
-    def __call__(self, x: 'float', y: 'float') -> bool:
+    def __call__(self, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':
+        result = np.zeros(shape=xs.shape[0])
         for constraint in self.constraints:
-            if constraint(x, y):
-                return True
-        return False
+            result += constraint(xs, ys)
+        return result > 0

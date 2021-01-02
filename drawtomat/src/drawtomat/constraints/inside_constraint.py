@@ -23,11 +23,11 @@ class InsideConstraint(Constraint):
     --------
     drawtomat.geometry.rdp
     """
+
     def __init__(self, obj: 'PhysicalObject'):
         super().__init__()
         self.obj = obj
         self.init()
-
 
     def init(self):
         strokes = [
@@ -37,8 +37,11 @@ class InsideConstraint(Constraint):
         ]
         self.rdp_strokes = [rdp(stroke, 50) for stroke in strokes]
 
-    def __call__(self, x: 'float', y: 'float') -> bool:
+    def _is_inside(self, x: 'float', y: 'float') -> int:
         for stroke in self.rdp_strokes:
             if polygons.inside_polygon(stroke, np.array((x, y))):
-                return True
-        return False
+                return 1
+        return 0
+
+    def __call__(self, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':
+        return np.array([self._is_inside(x, y) for x, y in zip(xs, ys)])
