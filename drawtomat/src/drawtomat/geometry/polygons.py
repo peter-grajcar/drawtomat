@@ -8,15 +8,19 @@ from drawtomat.geometry.lines import Line
 
 def inside_polygon(polygon: 'List[np.ndarray]', point: 'np.ndarray') -> bool:
     """
+    Determines whether a point is inside a polygon.
 
     Parameters
     ----------
     polygon
+        a set of vertices of a polygon
     point
+        a point which is to be determined whether it lies within the polygon.
 
     Returns
     -------
-
+    bool
+        True if the point is inside the polygon.
     """
     intersections = 0
     for i in range(len(polygon)):
@@ -34,4 +38,3 @@ def inside_polygon(polygon: 'List[np.ndarray]', point: 'np.ndarray') -> bool:
         intersections += t is not None and 0 <= t <= 1 and 0 <= s
 
     return intersections % 2 == 1
-

@@ -3,7 +3,10 @@ from typing import List, Optional
 
 import numpy as np
 
-from drawtomat.constraints import Constraint, SklearnConstraint
+from drawtomat.constraints import Constraint
+from drawtomat.constraints import InsideConstraint, OnConstraint, DisjunctionConstraint, SideConstraint
+from drawtomat.constraints import SklearnConstraint
+from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.language import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
 from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
@@ -13,8 +16,9 @@ from drawtomat.model.relational.scene import Scene
 
 
 class ConstraintComposer:
-    def __init__(self, obj_factory: 'PhysicalObjectFactory'):
+    def __init__(self, obj_factory: 'PhysicalObjectFactory', use_ml: 'bool' = False):
         self.obj_factory = obj_factory
+        self.use_ml = use_ml
 
     """
     Composer which uses geometrical constraints from `drawtomat.constraints` to place objects.
@@ -65,9 +69,10 @@ class ConstraintComposer:
 
         obj.set_position(xs[best_point], ys[best_point])
 
-    @staticmethod
-    def _get_constraints(adposition: 'Adposition', obj: 'PhysicalObject') -> 'Optional[Constraint]':
-        """
+    def _get_constraints(self, adposition: 'Adposition', obj: 'PhysicalObject') -> 'Optional[Constraint]':
+        if self.use_ml:
+            return SklearnConstraint(obj, adposition.name.replace("_", " "))
+
         if adposition is Adposition.IN:
             return InsideConstraint(obj)
         elif adposition is Adposition.INSIDE:
@@ -93,13 +98,11 @@ class ConstraintComposer:
             ])
         # default
         return DisjunctionConstraint(obj, [
-                SideConstraint(obj, direction=(-1, 0), padding=10),
-                SideConstraint(obj, direction=(1, 0), padding=10),
-                SideConstraint(obj, direction=(0, 1), padding=10),
-                SideConstraint(obj, direction=(0, -1), padding=10),
-            ])
-        """
-        return SklearnConstraint(obj, adposition.name.replace("_", " "))
+            SideConstraint(obj, direction=(-1, 0), padding=10),
+            SideConstraint(obj, direction=(1, 0), padding=10),
+            SideConstraint(obj, direction=(0, 1), padding=10),
+            SideConstraint(obj, direction=(0, -1), padding=10),
+        ])
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
         """
@@ -124,6 +127,7 @@ class ConstraintComposer:
         # Create physical objects
         for entity in topological_order[::-1]:
             if type(entity) == Group:
+                # TODO:
                 pass
             elif type(entity) == Object:
                 physical_entity = self.obj_factory.get_physical_object(entity, default_size=default_size, unit=unit)

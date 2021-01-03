@@ -59,7 +59,7 @@ def is_numeric(word: 'str') -> 'bool':
     bool
 
     """
-    return word in bases or word in multiples
+    return word.lower() in bases or word.lower() in multiples
 
 
 def words2int(num_by_words: 'str') -> 'int':
@@ -81,7 +81,7 @@ def words2int(num_by_words: 'str') -> 'int':
     result = 0
 
     idx = 0
-    words = num_by_words.split()
+    words = num_by_words.lower().split()
     word_count = len(words)
     while idx < word_count:
         n = bases.get(words[idx])
@@ -133,7 +133,8 @@ def replace_with_numbers(text: 'str') -> 'str':
     word_count = len(words)
     result = []
 
-    def is_part_of_num(w): return is_numeric(w) or w in connectives
+    def is_part_of_num(w):
+        return is_numeric(w) or w.lower() in connectives
 
     number = False
     start = 0

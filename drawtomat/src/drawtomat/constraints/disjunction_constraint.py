@@ -13,6 +13,8 @@ class DisjunctionConstraint(Constraint):
 
     Attributes
     ----------
+    obj : PhysicalObject
+        an object to which the constraint relates
     constraints : List[Constraint]
         object strokes reduced by RDP algorithm
     """

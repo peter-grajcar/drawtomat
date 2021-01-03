@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    drawtomat.quickdraw.quickdraw_dataset
+   drawtomat.quickdraw.quickdraw_object_factory
 
 Module contents
 ---------------

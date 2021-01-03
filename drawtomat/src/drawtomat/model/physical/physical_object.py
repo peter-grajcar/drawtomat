@@ -33,7 +33,7 @@ class PhysicalObject(PhysicalEntity):
             [
                 [(x * q) for x in stroke[0]],  # x-axis
                 [(y * q) for y in stroke[1]],  # y-axis
-                stroke[2],                     # time
+                stroke[2],  # time
             ]
             for stroke in self.strokes
         ]
@@ -51,6 +51,7 @@ class PhysicalObject(PhysicalEntity):
 
     def get_relative_strokes(self) -> list:
         """
+        TODO
 
         Returns
         -------
@@ -87,4 +88,3 @@ class PhysicalObject(PhysicalEntity):
         x /= n
         y /= n
         return x, y
-

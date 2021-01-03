@@ -14,6 +14,14 @@ Subpackages
    drawtomat.model
    drawtomat.quickdraw
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   drawtomat.api
+
 Module contents
 ---------------
 

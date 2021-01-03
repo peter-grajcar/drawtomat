@@ -11,7 +11,6 @@ Submodules
    drawtomat.geometry.lines
    drawtomat.geometry.polygons
    drawtomat.geometry.rdp
-   drawtomat.geometry.side
    drawtomat.geometry.triangulation
 
 Module contents

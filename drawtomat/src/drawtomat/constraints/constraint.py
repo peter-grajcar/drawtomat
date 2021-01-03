@@ -19,6 +19,14 @@ class Constraint(metaclass=ABCMeta):
         self.obj = None
 
     def init(self):
+        """
+        Initialises necessary constraint attributes. This method needs to be
+        called before using the constraint.
+
+        Returns
+        -------
+        None
+        """
         pass
 
     @abstractmethod

@@ -13,7 +13,7 @@ logging.config.fileConfig(fname="resources/logging.conf", disable_existing_logge
 
 processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
 obj_factory = QuickDrawObjectFactory()
-composer = ConstraintComposer(obj_factory)
+composer = ConstraintComposer(obj_factory, use_ml=True)
 
 
 @app.route("/drawtomat", methods=["POST"])
@@ -23,7 +23,8 @@ def drawtomat():
 
     entities = composer.compose(scene)
     drawing = [entity.get_relative_strokes() for entity in entities]
-    extrema = [[min(stroke[0]), min(stroke[1]), max(stroke[0]), max(stroke[1])] for strokes in drawing for stroke in strokes]
+    extrema = [[min(stroke[0]), min(stroke[1]), max(stroke[0]), max(stroke[1])] for strokes in drawing for stroke in
+               strokes]
     minima = np.min(extrema, axis=0)
     maxima = np.max(extrema, axis=0)
     return {

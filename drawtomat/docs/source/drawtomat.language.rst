@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    drawtomat.language.adposition
+   drawtomat.language.text2num
    drawtomat.language.udpipe_processor
    drawtomat.language.word_embedding
 
