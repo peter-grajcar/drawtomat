@@ -35,8 +35,10 @@ for key, ratio_a in attrs_a.items():
             mse_h += (ratio_a[1] - ratio_b[1])**2
             n_h += 1
 
-mse_w /= n_w
-mse_h /= n_h
+if n_w:
+    mse_w /= n_w
+if n_h:
+    mse_h /= n_h
 
 print("width RMSE =", np.sqrt(mse_w))
 print("height RMSE =", np.sqrt(mse_h))
