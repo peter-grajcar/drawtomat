@@ -1,9 +1,17 @@
+## Results
 
-|                                                                          | Width ratio RMSE | Height ratio RMSE |
-|--------------------------------------------------------------------------|:----------------:|:-----------------:|
-| Absolute size exraction                                                  | 66.19            | 55.96             |
-| Relative size extraction                                                 | 12.04            | 17.53             |
-| Relative size extraction + word embeddings                               | 53.07            | 48.90             |
-| Relative size extraction + word embeddings + similarity threshold (0.7)  | 30.38            | 24.37             |
-| Relative size extraction + word embeddings + similarity threshold (0.85) | 22.94            | 24.05             |
+|                                                                          | Width ratio RMSE | Height ratio RMSE | Covered pairs |
+|--------------------------------------------------------------------------|:----------------:|:-----------------:|:-------------:|
+| Absolute size exraction                                                  | 51.93            | 43.17             | 91.49%        |
+| Relative size extraction                                                 | 12.97            | 16.46             | 7.49%         |
+| Relative size extraction + word embeddings                               | 43.93            | 42.46             | 63.60%        |
+| Relative size extraction + word embeddings + similarity threshold (0.85) | 19.77            | 24.87             | 10.34%        |
+
+## Transitive Closure Results
+
+|                                                                          | Width ratio RMSE | Height ratio RMSE | Covered pairs |
+|--------------------------------------------------------------------------|:----------------:|:-----------------:|:-------------:|
+| Relative size extraction                                                 | 43.65            | 41.04             | 79.70%        |
+| Relative size extraction + word embeddings                               | 55.53            | 47.92             | 100%          |
+| Relative size extraction + word embeddings + similarity threshold (0.85) | 53.35            | 45.65             | 86.70%        |
 
