@@ -7,7 +7,6 @@ from conllu import TokenList
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
 from drawtomat.language import text2num as t2n
-from drawtomat.language.adposition import Adposition
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
 from drawtomat.model.relational.scene import Scene
@@ -29,7 +28,7 @@ class UDPipeProcessor:
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
 
-    def _process_adposition(self, sentence: 'TokenList', node) -> 'Optional[Adposition]':
+    def _process_adposition(self, sentence: 'TokenList', node) -> 'Optional[str]':
         """
 
         Parameters
@@ -70,10 +69,10 @@ class UDPipeProcessor:
         # (a complex adposition is formed only if it is in a list of adpositions)
         if prev_token and (prev_token["upostag"] == "ADV" or prev_token["upostag"] == "ADJ"):
             complex_adp = prev_token["form"] + " " + token["form"]
-            if Adposition.for_name(complex_adp):
-                last = token
-            else:
-                complex_adp = None
+            # if complex_adp is an adposition
+            last = token
+            # else
+            # complex_adp = None
 
         if complex_adp:
             if not last["misc"]:
@@ -89,7 +88,7 @@ class UDPipeProcessor:
 
         self.logger.debug(f"\tnew Relation({full_adp})")
 
-        return Adposition.for_name(full_adp)
+        return full_adp.upper()
 
     def _process_noun(self, scene: 'Scene', sentence: 'TokenList', node) -> 'Optional[Object]':
         token = node.token

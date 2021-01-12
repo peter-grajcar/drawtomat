@@ -1,7 +1,6 @@
 import logging
 from typing import List
 
-from drawtomat.language.adposition import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject, PhysicalGroup
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
@@ -80,29 +79,29 @@ class SimpleComposer:
                     physical_entity.set_scale(dst_wrapper.get_scale())
 
                 # adjust position with respect to the adposition defining the relation
-                if rel.rel == Adposition.ON:
+                if rel.rel == "ON":
                     physical_entity.x = dst_wrapper.x
                     physical_entity.y = dst_wrapper.y - physical_entity.get_height() / 2 - dst_wrapper.get_height() / 2
-                elif rel.rel == Adposition.ABOVE:
+                elif rel.rel == "ABOVE":
                     physical_entity.x = dst_wrapper.x
                     physical_entity.y = dst_wrapper.y - physical_entity.get_height() / 2 - dst_wrapper.get_height()
-                elif rel.rel == Adposition.UNDER or rel.rel == Adposition.BELOW:
+                elif rel.rel == "UNDER" or rel.rel == "BELOW":
                     physical_entity.x = dst_wrapper.x
                     physical_entity.y = dst_wrapper.y + physical_entity.get_height() / 2 + dst_wrapper.get_height() / 2
-                elif rel.rel == Adposition.NEXT_TO:
+                elif rel.rel == "NEXT TO":
                     physical_entity.x = dst_wrapper.x + physical_entity.get_width() / 2 + dst_wrapper.get_width() / 2
                     physical_entity.y = dst_wrapper.y
-                elif rel.rel == Adposition.BEHIND or rel.rel == Adposition.IN:
+                elif rel.rel == "BEHIND" or rel.rel == "IN":
 
-                    if rel.rel == Adposition.IN and (
+                    if rel.rel == "IN" and (
                             physical_entity.get_width() > dst_wrapper.get_width() or
                             physical_entity.get_height() > dst_wrapper.get_height()
                     ):
                         padding = 2
                         q = min(dst_wrapper.get_width(), dst_wrapper.get_height()) / (
-                                    max(physical_entity.get_width(), physical_entity.get_height()) * padding)
+                                max(physical_entity.get_width(), physical_entity.get_height()) * padding)
                         physical_entity.set_scale(q * physical_entity.get_scale())
-                    if rel.rel == Adposition.BEHIND:
+                    if rel.rel == "BEHIND":
                         # make the object look smaller
                         physical_entity.set_scale(0.75)
 

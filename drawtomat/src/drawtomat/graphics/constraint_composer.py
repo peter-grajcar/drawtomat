@@ -7,7 +7,6 @@ from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, DisjunctionConstraint, SideConstraint
 from drawtomat.constraints import SklearnConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
-from drawtomat.language import Adposition
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
 from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
 from drawtomat.model.relational.group import Group
@@ -69,29 +68,29 @@ class ConstraintComposer:
 
         obj.set_position(xs[best_point], ys[best_point])
 
-    def _get_constraints(self, adposition: 'Adposition', obj: 'PhysicalObject') -> 'Optional[Constraint]':
+    def _get_constraints(self, adposition: 'str', obj: 'PhysicalObject') -> 'Optional[Constraint]':
         if self.use_ml:
-            return SklearnConstraint(obj, adposition.name.replace("_", " "))
+            return SklearnConstraint(obj, adposition)
 
-        if adposition is Adposition.IN:
+        if adposition == "IN":
             return InsideConstraint(obj)
-        elif adposition is Adposition.INSIDE:
+        elif adposition == "INSIDE":
             return InsideConstraint(obj)
-        elif adposition is Adposition.INSIDE_OF:
+        elif adposition == "INSIDE OF":
             return InsideConstraint(obj)
-        elif adposition is Adposition.ON:
+        elif adposition == "ON":
             return OnConstraint(obj)
-        elif adposition is Adposition.UNDER:
+        elif adposition == "UNDER":
             return SideConstraint(obj, direction=(0, 1))
-        elif adposition is Adposition.BELOW:
+        elif adposition == "BELOW":
             return SideConstraint(obj, direction=(0, 1))
-        elif adposition is Adposition.ABOVE:
+        elif adposition == "ABOVE":
             return SideConstraint(obj, direction=(0, -1))
-        elif adposition is Adposition.BEHIND:
+        elif adposition == "BEHIND":
             return BoxConstraint(obj, scale=0.75)
-        elif adposition is Adposition.IN_FRONT_OF:
+        elif adposition == "IN FRONT OF":
             return BoxConstraint(obj, scale=1.5)
-        elif adposition is Adposition.NEXT_TO:
+        elif adposition == "NEXT TO":
             return DisjunctionConstraint(obj, [
                 SideConstraint(obj, direction=(-1, 0), padding=10),
                 SideConstraint(obj, direction=(1, 0), padding=10)

@@ -2,7 +2,6 @@ import uuid
 from abc import ABC
 from typing import List
 
-from drawtomat.language.adposition import Adposition
 from .relation import Relation
 
 
@@ -52,4 +51,3 @@ class Entity(ABC):
 
     def __hash__(self) -> int:
         return self.id.__hash__()
-
