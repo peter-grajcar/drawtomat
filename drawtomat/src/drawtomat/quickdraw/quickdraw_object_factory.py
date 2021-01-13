@@ -9,8 +9,11 @@ from drawtomat.quickdraw import QuickDrawDataset
 
 
 class QuickDrawObjectFactory(PhysicalObjectFactory):
-    def __init__(self):
-        self.word_embedding = WordEmbedding(QuickDrawDataset.words())
+    def __init__(self, word_embedding: 'WordEmbedding' = None):
+        if not word_embedding:
+            self.word_embedding = WordEmbedding(QuickDrawDataset.words())
+        else:
+            self.word_embedding = word_embedding
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def get_physical_object(self, obj: 'Object', default_size: int = 100, unit: float = 1) -> 'PhysicalObject':
@@ -34,7 +37,6 @@ class QuickDrawObjectFactory(PhysicalObjectFactory):
 
         data = QuickDrawDataset.images(word)
         drawing = random.choice(data)["drawing"]
-        attrs = QuickDrawDataset.attributes(word)
 
         min_x = min([min(stroke[0]) for stroke in drawing])
         max_x = max([max(stroke[0]) for stroke in drawing])
@@ -44,17 +46,7 @@ class QuickDrawObjectFactory(PhysicalObjectFactory):
         width = max_x - min_x
         height = max_y - min_y
 
-        if attrs["default_width"] and attrs["default_height"]:
-            if attrs["default_width"] > attrs["default_height"]:
-                q = unit * attrs["default_width"] / width
-            else:
-                q = unit * attrs["default_height"] / height
-        elif attrs["default_width"]:
-            q = unit * attrs["default_width"] / width
-        elif attrs["default_height"]:
-            q = unit * attrs["default_height"] / height
-        else:
-            q = unit * default_size / max(width, height)
+        q = unit * default_size / max(width, height)
 
         phys_obj.strokes = [
             [

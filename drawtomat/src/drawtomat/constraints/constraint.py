@@ -13,10 +13,13 @@ class Constraint(metaclass=ABCMeta):
     ----------
     obj : PhysicalObject
         an object to which the constraint relates
+    pred: str
+        predicate which defines the constraint
     """
 
     def __init__(self):
         self.obj = None
+        self.pred = None
 
     def init(self):
         """

@@ -107,7 +107,7 @@ function drawPicture(data) {
 
     let cx = canvas.width / 2;
     let cy = canvas.height / 2;
-    let scale = Math.min(cx / (width + padding), cy / (height + padding));
+    let scale = 2 * Math.min(cx / (width + padding), cy / (height + padding));
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 

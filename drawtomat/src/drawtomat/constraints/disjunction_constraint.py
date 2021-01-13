@@ -15,13 +15,16 @@ class DisjunctionConstraint(Constraint):
     ----------
     obj : PhysicalObject
         an object to which the constraint relates
+    pred: str
+        predicate which defines the constraint
     constraints : List[Constraint]
         object strokes reduced by RDP algorithm
     """
 
-    def __init__(self, obj: 'PhysicalObject', constraints: 'List[Constraint]'):
+    def __init__(self, obj: 'PhysicalObject', pred: 'str', constraints: 'List[Constraint]'):
         super().__init__()
         self.obj = obj
+        self.pred = pred
         self.constraints = constraints
 
     def init(self):

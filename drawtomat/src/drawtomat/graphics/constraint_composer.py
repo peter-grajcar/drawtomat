@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -9,14 +9,17 @@ from drawtomat.constraints import SklearnConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.model.physical import PhysicalEntity, PhysicalObject
 from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
+from drawtomat.model.physical.physical_object_scaler import PhysicalObjectScaler
 from drawtomat.model.relational.group import Group
 from drawtomat.model.relational.object import Object
 from drawtomat.model.relational.scene import Scene
 
 
 class ConstraintComposer:
-    def __init__(self, obj_factory: 'PhysicalObjectFactory', use_ml: 'bool' = False):
+    def __init__(self, obj_factory: 'PhysicalObjectFactory', obj_scaler: 'PhysicalObjectScaler',
+                 use_ml: 'bool' = False):
         self.obj_factory = obj_factory
+        self.obj_scaler = obj_scaler
         self.use_ml = use_ml
 
     """
@@ -68,39 +71,54 @@ class ConstraintComposer:
 
         obj.set_position(xs[best_point], ys[best_point])
 
+    def _scale_object(self, sub: 'PhysicalObject', obj_pred: 'List[Tuple[PhysicalObject, str]]') -> None:
+        if not obj_pred:
+            return
+
+        logging.getLogger(ConstraintComposer.__name__).debug(f"scaling {sub.entity.word} wrt: {obj_pred}")
+
+        scale = 0
+        for obj, pred in obj_pred:
+            scale += self.obj_scaler.scale(sub, obj, pred)
+        scale /= len(obj_pred)
+
+        logging.getLogger(ConstraintComposer.__name__).debug(f"scale = {scale}")
+
+        sub.set_scale(scale)
+
     def _get_constraints(self, adposition: 'str', obj: 'PhysicalObject') -> 'Optional[Constraint]':
         if self.use_ml:
             return SklearnConstraint(obj, adposition)
 
         if adposition == "IN":
-            return InsideConstraint(obj)
+            return InsideConstraint(obj, adposition)
         elif adposition == "INSIDE":
-            return InsideConstraint(obj)
+            return InsideConstraint(obj, adposition)
         elif adposition == "INSIDE OF":
-            return InsideConstraint(obj)
+            return InsideConstraint(obj, adposition)
         elif adposition == "ON":
-            return OnConstraint(obj)
+            return OnConstraint(obj, adposition)
         elif adposition == "UNDER":
-            return SideConstraint(obj, direction=(0, 1))
+            return SideConstraint(obj, adposition, direction=(0, 1))
         elif adposition == "BELOW":
-            return SideConstraint(obj, direction=(0, 1))
+            return SideConstraint(obj, adposition, direction=(0, 1))
         elif adposition == "ABOVE":
-            return SideConstraint(obj, direction=(0, -1))
+            return SideConstraint(obj, adposition, direction=(0, -1))
         elif adposition == "BEHIND":
-            return BoxConstraint(obj, scale=0.75)
+            return BoxConstraint(obj, adposition, scale=0.75)
         elif adposition == "IN FRONT OF":
-            return BoxConstraint(obj, scale=1.5)
+            return BoxConstraint(obj, adposition, scale=1.5)
         elif adposition == "NEXT TO":
-            return DisjunctionConstraint(obj, [
-                SideConstraint(obj, direction=(-1, 0), padding=10),
-                SideConstraint(obj, direction=(1, 0), padding=10)
+            return DisjunctionConstraint(obj, adposition, [
+                SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
+                SideConstraint(obj, adposition, direction=(1, 0), padding=10)
             ])
         # default
-        return DisjunctionConstraint(obj, [
-            SideConstraint(obj, direction=(-1, 0), padding=10),
-            SideConstraint(obj, direction=(1, 0), padding=10),
-            SideConstraint(obj, direction=(0, 1), padding=10),
-            SideConstraint(obj, direction=(0, -1), padding=10),
+        return DisjunctionConstraint(obj, adposition, [
+            SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
+            SideConstraint(obj, adposition, direction=(1, 0), padding=10),
+            SideConstraint(obj, adposition, direction=(0, 1), padding=10),
+            SideConstraint(obj, adposition, direction=(0, -1), padding=10),
         ])
 
     def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
@@ -136,6 +154,7 @@ class ConstraintComposer:
                     constraints.append(self._get_constraints(rel.rel, dst_obj))
                 physical_entities[entity] = {"obj": physical_entity, "constraints": constraints}
 
+        last_sub = None
         for entity in topological_order[::-1]:
             # all objects contained in a group will inherit all
             # group's constraint
@@ -150,10 +169,19 @@ class ConstraintComposer:
                     if type(e) == Object:
                         physical_entities[e]["constraints"].extend(constraints)
             elif type(entity) == Object:
-                physical_entity = physical_entities[entity]
-                self._place_object(physical_entity["obj"], physical_entity["constraints"])
+                sub = physical_entities[entity]
 
-                logging.getLogger(ConstraintComposer.__name__).debug(f"{physical_entity}")
+                # object predicate pairs
+                obj_pred = [(constraint.obj, constraint.pred) for constraint in sub["constraints"]]
+                if not obj_pred and last_sub:
+                    obj_pred = [(last_sub["obj"], None)]
+
+                self._scale_object(sub["obj"], obj_pred)
+                self._place_object(sub["obj"], sub["constraints"])
+
+                last_sub = sub
+
+                logging.getLogger(ConstraintComposer.__name__).debug(f"{sub}")
 
         return [v["obj"] for v in physical_entities.values()]
 

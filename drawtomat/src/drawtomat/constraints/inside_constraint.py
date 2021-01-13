@@ -16,6 +16,8 @@ class InsideConstraint(Constraint):
     ----------
     obj : PhysicalObject
         an object to which the constraint relates
+    pred: str
+        predicate which defines the constraint
     rdp_strokes : List[np.ndarray]
         object strokes reduced by RDP algorithm
 
@@ -24,9 +26,10 @@ class InsideConstraint(Constraint):
     drawtomat.geometry.rdp
     """
 
-    def __init__(self, obj: 'PhysicalObject'):
+    def __init__(self, obj: 'PhysicalObject', pred: 'str'):
         super().__init__()
         self.obj = obj
+        self.pred = pred
         self.init()
 
     def init(self):

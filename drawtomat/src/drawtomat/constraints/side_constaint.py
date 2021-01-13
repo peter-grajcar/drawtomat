@@ -14,6 +14,8 @@ class SideConstraint(Constraint):
     ----------
     obj : PhysicalObject
         an object to which the constraint relates
+    pred: str
+        predicate which defines the constraint
     direction : np.ndarray
         direction in which the points relative to the object
         will meet the constraint criteria
@@ -21,9 +23,10 @@ class SideConstraint(Constraint):
         size of the object to which the constraint relates.
     """
 
-    def __init__(self, obj: 'PhysicalObject', direction=(1, 0), padding=0):
+    def __init__(self, obj: 'PhysicalObject', pred: str, direction=(1, 0), padding=0):
         super().__init__()
         self.obj = obj
+        self.pred = pred
         self.direction = np.array(direction)
         self.padding = padding
         self.init()

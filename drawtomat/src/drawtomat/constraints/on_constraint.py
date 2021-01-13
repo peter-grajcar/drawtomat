@@ -14,13 +14,16 @@ class OnConstraint(Constraint):
     ----------
     obj : PhysicalObject
         an object to which the constraint relates
+    pred: str
+        predicate which defines the constraint
     limit : float
         maximal distance from the lines on the top
     """
 
-    def __init__(self, obj: 'PhysicalObject', limit: 'float' = 10):
+    def __init__(self, obj: 'PhysicalObject', pred: 'str', limit: 'float' = 10):
         super().__init__()
         self.obj = obj
+        self.pred = pred
         self.limit = limit
         self.init()
 

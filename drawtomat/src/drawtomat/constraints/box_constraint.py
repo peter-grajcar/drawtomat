@@ -12,13 +12,16 @@ class BoxConstraint(Constraint):
     ----------
     obj : PhysicalObject
         an object to which the constraint relates
+    pred: str
+        predicate which defines the constraint
     box_size : np.ndarray
         scaled size of the box (width, height)
     """
 
-    def __init__(self, obj: 'PhysicalObject', scale: float = 1.0):
+    def __init__(self, obj: 'PhysicalObject', pred: 'str', scale: float = 1.0):
         super().__init__()
         self.obj = obj
+        self.pred = pred
         self.box_size = np.array(obj.get_size()) * scale
 
     def __call__(self, xs: 'np.ndarray[float]', ys: 'np.ndarray[float]') -> 'np.ndarray[int]':

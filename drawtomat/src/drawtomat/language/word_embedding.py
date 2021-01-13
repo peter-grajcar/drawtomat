@@ -1,11 +1,15 @@
+from typing import Iterable
+
 import fasttext
 import numpy as np
+
 
 class WordEmbedding:
     """
 
     """
-    def __init__(self, word_list: 'list'):
+
+    def __init__(self, word_list: 'Iterable'):
         self.word_list = word_list
         self.model = fasttext.load_model("resources/fasttext/conceptual-captions-fasttext.model")
 
