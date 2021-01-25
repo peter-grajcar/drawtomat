@@ -28,7 +28,7 @@ def dist(x1, y1, x2, y2):
         return 1
     elif fst or snd:
         return 0
-    return (x1*x2 + y1*y2) / (np.sqrt(x1*x1 + y1*y1) * np.sqrt(x2*x2 + y2*y2))
+    return np.abs((x1*x2 + y1*y2) / (np.sqrt(x1*x1 + y1*y1) * np.sqrt(x2*x2 + y2*y2)))
 
 X = []
 t = []
@@ -50,22 +50,22 @@ for data in relationships:
     dx = ((sub["x"] + sub["w"]/2) - (obj["x"] + obj["w"]/2)) / obj["w"]
     dy = ((sub["y"] + sub["h"]/2) - (obj["y"] + obj["h"]/2)) / obj["h"]
 
-    X.append([pred, dx, dy])
+    X.append([obj["name"], pred, dx, dy])
     t.append(1)
 
     wrong = None
-    while wrong is None or wrong["predicate"] == pred or dist(wrong_dx, wrong_dy, dx, dy) > 0.8:
+    while wrong is None or wrong["predicate"] == pred or dist(wrong_dx, wrong_dy, dx, dy) > 0.7:
         wrong = relationships[np.random.randint(low=0, high=rel_count)]
         wrong_sub = wrong["subject"]
         wrong_obj = wrong["object"]
         wrong_dx = ((wrong_sub["x"] + wrong_sub["w"]/2) - (wrong_obj["x"] + wrong_obj["w"]/2)) / obj["w"]
         wrong_dy = ((wrong_sub["y"] + wrong_sub["h"]/2) - (wrong_obj["y"] + wrong_obj["h"]/2)) / obj["h"]
 
-    X.append([pred, wrong_dx, wrong_dy])
+    X.append([obj["name"], pred, wrong_dx, wrong_dy])
     t.append(0)
 
 print()
 
-with open("train.data" ,"wb") as f:
+with open("data/train.data" ,"wb") as f:
     pickle.dump((X, t), f)
 
