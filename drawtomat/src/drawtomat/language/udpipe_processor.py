@@ -208,8 +208,7 @@ class UDPipeProcessor:
                     if token["upostag"] == "ADP":
                         adp = self._process_adposition(sentence, node)
 
-                        if adp:
-                            # TODO: check stack size
+                        if adp and len(entity_stack) >= 2:
                             src = entity_stack[-2]
                             dst = entity_stack[-1]
                             if entity_position[src] > entity_position[dst]:
