@@ -75,6 +75,7 @@ class ConstraintComposer:
         if not obj_pred:
             return
 
+        logging.getLogger(ConstraintComposer.__name__).debug(f"scaling using {self.obj_scaler.__class__.__name__}")
         logging.getLogger(ConstraintComposer.__name__).debug(f"scaling {sub.entity.word} wrt: {obj_pred}")
 
         scale = 0

@@ -8,7 +8,7 @@ from drawtomat.language import UDPipeProcessor
 from drawtomat.language.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset
 from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
-from drawtomat.quickdraw.quickdraw_scaler import QuickDrawRelativeObjectScaler
+from drawtomat.quickdraw.quickdraw_scaler import QuickDrawRelativeObjectScaler, QuickDrawAbsoluteObjectScaler
 
 app = Flask(__name__)
 
@@ -17,15 +17,18 @@ logging.config.fileConfig(fname="resources/logging.conf", disable_existing_logge
 processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
 word_embedding = WordEmbedding(QuickDrawDataset.words())
 obj_factory = QuickDrawObjectFactory(word_embedding)
-# obj_scaler = QuickDrawAbsoluteObjectScaler(word_embedding)
-obj_scaler = QuickDrawRelativeObjectScaler(word_embedding)
-composer = ConstraintComposer(obj_factory, obj_scaler, use_ml=True)
+obj_scaler_abs = QuickDrawAbsoluteObjectScaler(word_embedding)
+obj_scaler_rel = QuickDrawRelativeObjectScaler(word_embedding)
+composer = ConstraintComposer(obj_factory, obj_scaler_rel, use_ml=True)
 
 
 @app.route("/drawtomat", methods=["POST"])
 def drawtomat():
     desc = request.json["description"]
     scene = processor.process(desc)
+
+    composer.use_ml = request.json["options"]["use_machine_learning"]
+    composer.obj_scaler = obj_scaler_rel if request.json["options"]["use_relative_sizes"] else obj_scaler_abs
 
     entities = composer.compose(scene)
     drawing = [entity.get_relative_strokes() for entity in entities]

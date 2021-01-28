@@ -12,6 +12,8 @@ const caret = document.getElementById("caret");
 const speed = document.getElementById("drawing-speed");
 const clear = document.getElementById("clear");
 const download = document.getElementById("download");
+const useML = document.getElementById("use-ml");
+const useRelSizes = document.getElementById("use-rel-sizes");
 
 var textureImg = new Image();
 textureImg.src = 'resources/texture32.png'
@@ -84,6 +86,10 @@ function apiCall() {
     axios
         .post("http://127.0.0.1:5000/drawtomat", {
             description: desc,
+            options: {
+                use_machine_learning: useML.checked,
+                use_relative_sizes: useRelSizes.checked,
+            },
         })
         .then(function (res) {
             spinner.setAttribute("aria-hidden", true);
