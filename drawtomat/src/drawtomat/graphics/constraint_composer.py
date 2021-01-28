@@ -145,12 +145,12 @@ class ConstraintComposer:
         # Create physical objects
         for entity in topological_order[::-1]:
             if type(entity) == Group:
-                # TODO:
                 pass
             elif type(entity) == Object:
                 physical_entity = self.obj_factory.get_physical_object(entity, default_size=default_size, unit=unit)
                 constraints = []
                 for rel in entity.relations_out:
+                    # TODO: case where dst_obj is a group
                     dst_obj = physical_entities[rel.dst]["obj"]
                     constraints.append(self._get_constraints(rel.rel, dst_obj))
                 physical_entities[entity] = {"obj": physical_entity, "constraints": constraints}

@@ -106,7 +106,8 @@ class Scene:
 
         def object_dot_repr(g: 'Digraph', obj: 'Object'):
             if obj.attributes:
-                label = f"{obj.word}<font point-size='9'><br align='left'/>attributes:<br align='left'/>" + "<br align='left'/>".join(f" - {attr}" for attr in obj.attributes) + "</font>"
+                label = f"{obj.word}<font point-size='9'><br align='left'/>attributes:<br align='left'/>" + "<br align='left'/>".join(
+                    f" - {attr}" for attr in obj.attributes) + "</font>"
                 g.node(f"entity_{entity_ids[obj]}", label="<" + label + ">")
             else:
                 g.node(f"entity_{entity_ids[obj]}", label=obj.word)
@@ -133,7 +134,7 @@ class Scene:
                     attrs["ltail"] = f"cluster_{entity_ids[rel.src]}"
                 if type(rel.dst) == Group:
                     attrs["rtail"] = f"cluster_{entity_ids[rel.dst]}"
-                graph.edge(f"entity_{entity_ids[rel.src]}", f"entity_{entity_ids[rel.dst]}", label=rel.rel.name, **attrs)
+                graph.edge(f"entity_{entity_ids[rel.src]}", f"entity_{entity_ids[rel.dst]}", label=rel.rel, **attrs)
 
         for entity in self.group.entities:
             entity_dot_repr(graph, entity)

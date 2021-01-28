@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas
+from PIL import Image, ImageDraw
 
 import drawtomat.model.relational
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
@@ -36,11 +36,9 @@ class SimpleRenderer:
 
         composition = self.composer.compose(scene)
 
-        # ======== for debugging only ========
-        root = Tk()
-        root.title("Drawtomat")
-        canvas = Canvas(root, width=600, height=600, borderwidth=2, relief="solid")
-        canvas.pack()
+        im_w, im_h = 600, 600
+        im = Image.new("RGB", (im_w, im_h), "white")
+        draw = ImageDraw.Draw(im)
 
         min_x = None
         max_x = None
@@ -65,26 +63,21 @@ class SimpleRenderer:
 
         width = max_x - min_x + 50
         height = max_y - min_y + 50
-        q = min(300 / width, 200 / height)
+        q = min(im_w / width / 2, im_h / height / 2)
 
         for obj in composition:
-            px, py = (obj.x - min_x + width/2) * q, (obj.y - min_y + height / 2) * q
+            px, py = (obj.x - min_x + width / 2) * q, (obj.y - min_y + height / 2) * q
 
             for stroke in obj.strokes:
                 if len(stroke[2]) < 2:
                     continue
-                points = [(px + x*q, py + y*q) for (x, y) in zip(stroke[0], stroke[1])]
-                canvas.create_line(*points)
+                points = [(px + x * q, py + y * q) for (x, y) in zip(stroke[0], stroke[1])]
+                draw.line(points, fill="black")
 
             if self.show_bounds:
-                canvas.create_rectangle(px, py, px + obj.get_width() * q, py + obj.get_height() * q, outline="#ff00ff")
-                canvas.create_text(px + 4, py + 4, text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
-                canvas.create_line(px - 4, py, px + 4, py, fill="#ff00ff")
-                canvas.create_line(px, py - 4, px, py + 4, fill="#ff00ff")
+                draw.rectangle([px, py, px + obj.get_width() * q, py + obj.get_height() * q], outline="#ff00ff")
+                draw.text([px + 4, py + 4], text=obj.entity.word, anchor="nw", fill="#ff00ff", font=("Courier", 10))
+                draw.line([px - 4, py, px + 4, py], fill="#ff00ff")
+                draw.line([px, py - 4, px, py + 4], fill="#ff00ff")
 
-        canvas.update()
-        canvas.postscript(file="output/image.ps", colormode='color')
-
-        root.mainloop()
-        # =====================================
-
+        im.show()
