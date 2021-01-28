@@ -1,5 +1,5 @@
 import uuid
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import List
 
 from .relation import Relation
@@ -30,6 +30,7 @@ class Entity(ABC):
 
         scene.register(self)
 
+    @abstractmethod
     def make_relation(self, entity: 'Entity', adp: 'Adposition') -> None:
         """
         Creates a new Relation from the entity.
@@ -45,9 +46,7 @@ class Entity(ABC):
         -------
         None
         """
-        rel = Relation(self, entity, adp)
-        self.relations_out.append(rel)
-        entity.relations_in.append(rel)
+        pass
 
     def __hash__(self) -> int:
         return self.id.__hash__()

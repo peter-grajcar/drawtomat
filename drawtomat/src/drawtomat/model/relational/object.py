@@ -1,4 +1,6 @@
 from .entity import Entity
+from .group import Group
+from .relation import Relation
 
 
 class Object(Entity):
@@ -27,8 +29,16 @@ class Object(Entity):
         else:
             self.attributes = list()
 
+    def make_relation(self, entity: 'Entity', adp: 'Adposition') -> None:
+        if type(entity) == Object:
+            rel = Relation(self, entity, adp)
+            self.relations_out.append(rel)
+            entity.relations_in.append(rel)
+        elif type(entity) == Group:
+            for e in entity.entities:
+                rel = Relation(self, e, adp)
+                self.relations_out.append(rel)
+                e.relations_in.append(rel)
+
     def __repr__(self) -> str:
         return f"ObjectEntity({self.word})"
-
-
-

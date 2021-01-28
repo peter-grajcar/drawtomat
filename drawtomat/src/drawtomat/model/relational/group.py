@@ -57,5 +57,9 @@ class Group(Entity):
             self.entities.append(entity)
             entity.container = self
 
+    def make_relation(self, entity: 'Entity', adp: 'Adposition') -> None:
+        for e in self.entities:
+            e.make_relation(entity, adp)
+
     def __repr__(self) -> str:
         return f"GroupEntity({len(self.entities)})"

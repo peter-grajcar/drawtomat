@@ -142,6 +142,8 @@ class ConstraintComposer:
         default_size = 100  # default size of the object (in cm)
         unit = 1.5  # ?px = 1cm
 
+        logging.getLogger(ConstraintComposer.__name__).debug(topological_order)
+
         # Create physical objects
         for entity in topological_order[::-1]:
             if type(entity) == Group:
@@ -151,8 +153,9 @@ class ConstraintComposer:
                 constraints = []
                 for rel in entity.relations_out:
                     # TODO: case where dst_obj is a group
-                    dst_obj = physical_entities[rel.dst]["obj"]
-                    constraints.append(self._get_constraints(rel.rel, dst_obj))
+                    if type(rel.dst) == Object:
+                        dst_obj = physical_entities[rel.dst]["obj"]
+                        constraints.append(self._get_constraints(rel.rel, dst_obj))
                 physical_entities[entity] = {"obj": physical_entity, "constraints": constraints}
 
         last_sub = None
