@@ -54,12 +54,12 @@ for data in relationships:
     t.append(1)
 
     wrong = None
-    while wrong is None or wrong["predicate"] == pred or dist(wrong_dx, wrong_dy, dx, dy) > 0.7:
+    while wrong is None or wrong["predicate"] == pred:
         wrong = relationships[np.random.randint(low=0, high=rel_count)]
         wrong_sub = wrong["subject"]
-        wrong_obj = wrong["object"]
-        wrong_dx = ((wrong_sub["x"] + wrong_sub["w"]/2) - (wrong_obj["x"] + wrong_obj["w"]/2)) / obj["w"]
-        wrong_dy = ((wrong_sub["y"] + wrong_sub["h"]/2) - (wrong_obj["y"] + wrong_obj["h"]/2)) / obj["h"]
+        wrong_obj = obj
+        wrong_dx = ((wrong_sub["x"] + wrong_sub["w"]/2) - (obj["x"] + obj["w"]/2)) / obj["w"]
+        wrong_dy = ((wrong_sub["y"] + wrong_sub["h"]/2) - (obj["y"] + obj["h"]/2)) / obj["h"]
 
     X.append([obj["name"], pred, wrong_dx, wrong_dy])
     t.append(0)

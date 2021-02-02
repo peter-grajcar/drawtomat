@@ -38,10 +38,11 @@ class SklearnConstraint(Constraint):
         pass
 
     def __call__(self, x: 'np.ndarray', y: 'np.ndarray') -> 'np.ndarray[int]':
+        objs = np.full(shape=(x.shape[0]), fill_value=self.obj.entity.word)
         preds = np.full(shape=(x.shape[0]), fill_value=self.pred)
         dx = (x - self.obj.get_position()[0]) / self.obj.get_width()
         dy = (y - self.obj.get_position()[1]) / self.obj.get_height()
-        data = np.column_stack((preds, dx, dy))
+        data = np.column_stack((objs, preds, dx, dy))
         return self._get_model().predict(data)
 
     def __repr__(self):

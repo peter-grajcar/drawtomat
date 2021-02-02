@@ -1,14 +1,18 @@
 SOURCES                     := ./src
 FASTTEXT_MODEL_URL_BASE     := https://www.ms.mff.cuni.cz/~grajcarp/drawtomat
 FASTTEXT_MODEL_FILENAME     := conceptual-captions-fasttext.model.tar.gz
+SKLEARN_MODEL_URL_BASE		:= https://www.ms.mff.cuni.cz/~grajcarp/drawtomat
+SKLEARN_MODEL_FILENAME		:= constraints.model.tar.gz
 
-.PHONY: udpipe install run run-api apidocs
+.PHONY: udpipe fasttext sklearn install run run-api apidocs
 
 install: venv udpipe fasttext
 
 udpipe: resources/udpipe
 
 fasttext: resources/fasttext
+
+sklearn: resources/sklearn
 
 venv: venv/bin/activate
 
@@ -35,6 +39,12 @@ resources/fasttext:
 	wget $(FASTTEXT_MODEL_URL_BASE)/$(FASTTEXT_MODEL_FILENAME) -O $@/$(FASTTEXT_MODEL_FILENAME)
 	tar -xzf $@/$(FASTTEXT_MODEL_FILENAME) -C $@
 	rm -f $@/$(FASTTEXT_MODEL_FILENAME)
+
+resources/sklearn:
+	mkdir -p $@
+	wget $(SKLEARN_MODEL_URL_BASE)/$(SKLEARN_MODEL_FILENAME) -O $@/$(SKLEARN_MODEL_FILENAME)
+	tar -xzf $@/$(SKLEARN_MODEL_FILENAME) -C $@
+	rm -f $@/$(SKLEARN_MODEL_FILENAME)
 
 venv/bin/activate: requirements.txt
 	test -d venv || virtualenv venv
