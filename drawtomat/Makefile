@@ -6,7 +6,7 @@ SKLEARN_MODEL_FILENAME		:= constraints.model.tar.gz
 
 .PHONY: udpipe fasttext sklearn install run run-api apidocs
 
-install: venv udpipe fasttext
+install: venv udpipe fasttext sklearn
 
 udpipe: resources/udpipe
 
