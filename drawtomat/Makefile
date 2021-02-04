@@ -47,7 +47,7 @@ resources/sklearn:
 	rm -f $@/$(SKLEARN_MODEL_FILENAME)
 
 venv/bin/activate: requirements.txt
-	test -d venv || virtualenv venv
+	test -d venv || virtualenv -p python3 venv
 	. venv/bin/activate; venv/bin/pip3 install -Ur requirements.txt
 	@touch venv/bin/activate
 
