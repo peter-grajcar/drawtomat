@@ -30,10 +30,6 @@ advanced.addEventListener("click", function () {
     settings.setAttribute("aria-hidden", settings.getAttribute("aria-hidden") !== "true");
 });
 
-clear.addEventListener("click", function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
 function downloadImage(data, filename) {
     var a = document.createElement("a");
     a.href = data;
@@ -63,7 +59,6 @@ function resizeTextarea() {
     window.setTimeout(() => {
         description.style.height = "auto";
         description.style.height = description.scrollHeight - 10 + "px";
-        console.log(description.scrollHeight)
     }, 0);
 }
 description.addEventListener("keydown", resizeTextarea);
@@ -89,16 +84,28 @@ function apiCall() {
         .then(function (res) {
             spinner.setAttribute("aria-hidden", true);
             shadow.setAttribute("aria-hidden", true);
-            console.log(res.data);
             drawPicture(res.data);
         })
         .catch(function (err) {
             spinner.setAttribute("aria-hidden", true);
             error.setAttribute("aria-hidden", false);
+            console.error(err.response)
         });
 }
 
+
+clear.addEventListener("click", clearCanvas); 
+
+var intervalId = null;
+
+function clearCanvas() {
+    clearInterval(intervalId)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function drawPicture(data) {
+    clearCanvas();
+
     let width = data.bounds.right - data.bounds.left;
     let height = data.bounds.top - data.bounds.bottom;
     let padding = 20;
@@ -126,7 +133,7 @@ function drawPicture(data) {
     let t = 0;
     let timeScale = duration < t1 - t0 ? duration / (t1 - t0) : 1;
     let step = 10;
-    let id = setInterval(function () {
+    intervalId = setInterval(function () {
         t += step;
 
         if (t > duration) {
@@ -138,7 +145,7 @@ function drawPicture(data) {
                 stkIdx = 0;
             }
             if (objIdx >= data.drawing.length) {
-                clearInterval(id);
+                clearInterval(intervalId);
                 return;
             }
 
