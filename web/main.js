@@ -11,7 +11,6 @@ const settings = document.getElementById("settings");
 const caret = document.getElementById("caret");
 const speed = document.getElementById("drawing-speed");
 const clear = document.getElementById("clear");
-const download = document.getElementById("download");
 const useML = document.getElementById("use-ml");
 const useRelSizes = document.getElementById("use-rel-sizes");
 
@@ -33,11 +32,6 @@ advanced.addEventListener("click", function () {
 
 clear.addEventListener("click", function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
-download.addEventListener("click", function () {
-    let dataURL = canvas.toDataURL("image/png");
-    downloadImage(dataURL, "picture.png");
 });
 
 function downloadImage(data, filename) {
@@ -69,6 +63,7 @@ function resizeTextarea() {
     window.setTimeout(() => {
         description.style.height = "auto";
         description.style.height = description.scrollHeight - 10 + "px";
+        console.log(description.scrollHeight)
     }, 0);
 }
 description.addEventListener("keydown", resizeTextarea);
