@@ -1,7 +1,7 @@
-drawtomat.model.relational.object module
+drawtomat.model.scenegraph.entity module
 ========================================
 
-.. automodule:: drawtomat.model.relational.object
+.. automodule:: drawtomat.model.scenegraph.entity
    :members:
    :undoc-members:
    :show-inheritance:

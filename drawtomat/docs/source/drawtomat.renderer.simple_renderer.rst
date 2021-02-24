@@ -1,7 +1,7 @@
-drawtomat.model.relational.relation module
+drawtomat.renderer.simple\_renderer module
 ==========================================
 
-.. automodule:: drawtomat.model.relational.relation
+.. automodule:: drawtomat.renderer.simple_renderer
    :members:
    :undoc-members:
    :show-inheritance:

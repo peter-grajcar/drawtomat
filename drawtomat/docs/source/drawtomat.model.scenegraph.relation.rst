@@ -1,7 +1,7 @@
-drawtomat.graphics.simple\_renderer module
+drawtomat.model.scenegraph.relation module
 ==========================================
 
-.. automodule:: drawtomat.graphics.simple_renderer
+.. automodule:: drawtomat.model.scenegraph.relation
    :members:
    :undoc-members:
    :show-inheritance:

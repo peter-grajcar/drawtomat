@@ -9,6 +9,7 @@ Submodules
 
    drawtomat.quickdraw.quickdraw_dataset
    drawtomat.quickdraw.quickdraw_object_factory
+   drawtomat.quickdraw.quickdraw_scaler
 
 Module contents
 ---------------

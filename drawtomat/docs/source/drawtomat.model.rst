@@ -7,8 +7,8 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   drawtomat.model.physical
-   drawtomat.model.relational
+   drawtomat.model.composition
+   drawtomat.model.scenegraph
 
 Module contents
 ---------------

@@ -1,7 +1,7 @@
-drawtomat.graphics.simple\_composer module
+drawtomat.processor.word\_embedding module
 ==========================================
 
-.. automodule:: drawtomat.graphics.simple_composer
+.. automodule:: drawtomat.processor.word_embedding
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,7 @@
-drawtomat.graphics.constraint\_composer module
+drawtomat.composer.constraint\_composer module
 ==============================================
 
-.. automodule:: drawtomat.graphics.constraint_composer
+.. automodule:: drawtomat.composer.constraint_composer
    :members:
    :undoc-members:
    :show-inheritance:

@@ -16,12 +16,6 @@ from drawtomat.model.scenegraph.scene import Scene
 
 
 class ConstraintComposer:
-    def __init__(self, obj_factory: 'PhysicalObjectFactory', obj_scaler: 'PhysicalObjectScaler',
-                 use_ml: 'bool' = False):
-        self.obj_factory = obj_factory
-        self.obj_scaler = obj_scaler
-        self.use_ml = use_ml
-
     """
     Composer which uses geometrical constraints from `drawtomat.constraints` to place objects.
 
@@ -29,6 +23,12 @@ class ConstraintComposer:
     --------
     drawtomat.constraints
     """
+
+    def __init__(self, obj_factory: 'PhysicalObjectFactory', obj_scaler: 'PhysicalObjectScaler',
+                 use_ml: 'bool' = False):
+        self.obj_factory = obj_factory
+        self.obj_scaler = obj_scaler
+        self.use_ml = use_ml
 
     @staticmethod
     def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 5000) -> None:
@@ -72,6 +72,17 @@ class ConstraintComposer:
         obj.set_position(xs[best_point], ys[best_point])
 
     def _scale_object(self, sub: 'PhysicalObject', obj_pred: 'List[Tuple[PhysicalObject, str]]') -> None:
+        """
+
+        Parameters
+        ----------
+        sub
+        obj_pred
+
+        Returns
+        -------
+
+        """
         if not obj_pred:
             return
 
@@ -88,6 +99,17 @@ class ConstraintComposer:
         sub.set_scale(scale)
 
     def _get_constraints(self, adposition: 'str', obj: 'PhysicalObject') -> 'Optional[Constraint]':
+        """
+
+        Parameters
+        ----------
+        adposition
+        obj
+
+        Returns
+        -------
+
+        """
         if self.use_ml:
             return SklearnConstraint(obj, adposition)
 

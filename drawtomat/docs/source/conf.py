@@ -22,13 +22,11 @@ sys.path.append(os.path.abspath("../.."))
 sys.path.append(os.path.abspath("../../src"))
 sys.setrecursionlimit(1000)
 
-
 # -- Project information -----------------------------------------------------
 
 project = 'Drawtomat'
-copyright = '2020, Peter Grajcar'
+copyright = '2020-2021, Peter Grajcar'
 author = 'Peter Grajcar'
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -52,7 +50,6 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -72,8 +69,8 @@ body_max_width = "80px"
 
 def setup(app):
     app.add_config_value('recommonmark_config', {
-            'auto_toc_tree_section': 'Contents',
-            }, True)
+        'auto_toc_tree_section': 'Contents',
+    }, True)
     app.add_transform(AutoStructify)
 
     app.add_config_value('no_underscore_emphasis', False, 'env')

@@ -34,13 +34,14 @@ class UDPipeProcessor:
         Parameters
         ----------
         sentence : TokenList
-            sentence as a list of tokens
-        token
+            sentence as a list of tokens.
+        node
+            a node in the syntax tree with an adposition.
 
         Returns
         -------
         bool
-            true if adposition should be skipped
+            true if adposition should be skipped.
         """
         token = node.token
         token_idx = token["id"] - 1
@@ -91,6 +92,23 @@ class UDPipeProcessor:
         return full_adp.upper()
 
     def _process_noun(self, scene: 'Scene', sentence: 'TokenList', node) -> 'Optional[Object]':
+        """
+
+        Parameters
+        ----------
+        scene
+            current scene.
+        sentence
+            sentence as a list of tokens.
+        node
+            a node in the syntax tree with a noun.
+
+        Returns
+        -------
+        Optional[Object]
+            a new object if the noun is not skipped. Noun part of PNP
+            adposition and parts of compound nouns are skipped.
+        """
         token = node.token
         children = node.children
         token_idx = token["id"] - 1
@@ -267,7 +285,7 @@ class UDPipeProcessor:
         Returns
         -------
         Scene
-            The scene described by the text
+            The scene described by the text.
         """
         text_preprocessed = self._preprocess(text)
 
