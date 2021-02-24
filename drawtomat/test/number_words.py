@@ -1,4 +1,4 @@
-import drawtomat.language.text2num as t2n
+import drawtomat.processor.text2num as t2n
 
 numbers = [
     "two",
@@ -19,5 +19,3 @@ sentences = [
 
 for sentence in sentences:
     print(sentence, "->", t2n.replace_with_numbers(sentence))
-
-

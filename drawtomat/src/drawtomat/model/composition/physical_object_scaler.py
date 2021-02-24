@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from drawtomat.model.physical import PhysicalObject
+from drawtomat.model.composition import PhysicalObject
 
 
 class PhysicalObjectScaler(metaclass=ABCMeta):

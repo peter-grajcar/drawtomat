@@ -75,7 +75,7 @@ class Scene:
 
     def export_dot(self, filename: str) -> Digraph:
         """
-        Exports the scene as a graph represented in the dot language.
+        Exports the scene as a graph represented in the dot processor.
 
         Parameters
         ----------

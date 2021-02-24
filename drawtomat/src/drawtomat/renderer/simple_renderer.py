@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-import drawtomat.model.relational
+import drawtomat.model.scenegraph
 from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 
@@ -20,7 +20,7 @@ class SimpleRenderer:
         self.composer = composer
         self.show_bounds = show_bounds
 
-    def render(self, scene: 'drawtomat.model.relational.Scene') -> None:
+    def render(self, scene: 'drawtomat.model.scenegraph.Scene') -> None:
         """
         Renders a scene into an image.
 

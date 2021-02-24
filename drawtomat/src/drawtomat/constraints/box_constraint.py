@@ -1,7 +1,7 @@
 import numpy as np
 
 from drawtomat.constraints import Constraint
-from drawtomat.model.physical import PhysicalObject
+from drawtomat.model.composition import PhysicalObject
 
 
 class BoxConstraint(Constraint):

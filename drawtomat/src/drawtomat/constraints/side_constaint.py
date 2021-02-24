@@ -3,7 +3,7 @@ import numpy as np
 from drawtomat.constraints import Constraint
 from drawtomat.geometry import lines
 from drawtomat.geometry.lines import Line
-from drawtomat.model.physical import PhysicalObject
+from drawtomat.model.composition import PhysicalObject
 
 
 class SideConstraint(Constraint):

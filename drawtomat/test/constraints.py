@@ -1,47 +1,31 @@
-import colorsys
-
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image, ImageDraw
+from matplotlib import rc
+from matplotlib.path import Path
 
-from drawtomat.constraints import OnConstraint
-from drawtomat.model.physical import PhysicalObject
-from drawtomat.model.relational.group import Group
-from drawtomat.model.relational.object import Object
-from drawtomat.model.relational.scene import Scene
-
-
-def draw_obj(draw, obj, colour="black"):
-    strokes = [
-        [
-            (x + obj.x, y + obj.y) for x, y in zip(stroke[0], stroke[1])
-        ] for stroke in obj.strokes
-    ]
-    for stroke in strokes:
-        draw.line(stroke, fill=colour, width=3)
-
+from drawtomat.constraints import InsideConstraint
+from drawtomat.model.scenegraph.group import Group
+from drawtomat.model.scenegraph.object import Object
+from drawtomat.model.scenegraph.scene import Scene
+from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
 
 if __name__ == "__main__":
-
-    dimensions = np.array((500, 500))
-    img = Image.new("RGBA", tuple(dimensions), "white")
-    overlay = Image.new("RGBA", tuple(dimensions), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
 
     scene = Scene()
     group = Group(scene)
 
+    factory = QuickDrawObjectFactory()
+
     house_rel = Object(scene, "house", group)
-    house = PhysicalObject(house_rel)
-    house.set_position(250, 250)
-    house.set_scale(0.5)
+    house = factory.get_physical_object(house_rel, default_size=1)
+    house.set_position(0, 0)
+    house.set_scale(1)
 
     couch_rel = Object(scene, "couch", group)
-    couch = PhysicalObject(couch_rel)
+    couch = factory.get_physical_object(couch_rel)
     couch.set_position(200, 300)
     couch.set_scale(1)
-
-    #draw_obj(draw, house)
-    draw_obj(draw, couch)
 
     """
     place_object(
@@ -62,26 +46,54 @@ if __name__ == "__main__":
 
     central_obj = house
     constraints = [
-        # SideConstraint(house, direction=(-1, 0)),
-        # SideConstraint(house, direction=(1, 0)),
-        # InsideConstraint(house),
-        OnConstraint(couch),
-        # BoxConstraint(house, scale=1.5),
+        # DisjunctionConstraint(house, "NEXT TO", [
+        #    SideConstraint(house, "NEXT TO", direction=(-1, 0)),
+        #    SideConstraint(house, "NEXT TO", direction=(1, 0)),
+        # ])
+        InsideConstraint(house, "INSIDE"),
+        # OnConstraint(couch, "ON"),
+        # BoxConstraint(house, "IN FRONT OF", scale=1.5),
     ]
+
     num_of_constraints = len(constraints)
-    for i in range(1000):
-        rand_point = np.random.normal(scale=100, size=2) + np.array(central_obj.get_position())
-        constraints_satisfied = 0
+    constraints_satisfied = np.zeros(shape=(1000,))
 
-        for constraint in constraints:
-            constraints_satisfied += constraint(rand_point[0], rand_point[1])
+    centre = central_obj.get_position()
+    xs = np.random.normal(scale=1, size=1000)
+    ys = np.random.normal(scale=1, size=1000)
 
-        percentage = constraints_satisfied / num_of_constraints
-        colour = colorsys.hsv_to_rgb((4 + 2 * percentage) / 6, 1, 1)
-        hex_colour = rgb_to_hex(colour)
-        if constraints_satisfied > 0:
-            draw.ellipse([tuple(rand_point - np.ones(2)), tuple(rand_point + np.ones(2))], fill=hex_colour)
+    for constraint in constraints:
+        constraint.init()
+        constraints_satisfied += constraint(xs, ys)
+
+    rc("text", usetex=True)
+    fig, ax = plt.subplots()
+
+    strokes = [
+        [
+            (x + house.x, y + house.y) for x, y in zip(stroke[0], stroke[1])
+        ] for stroke in house.strokes
+    ]
+
+    for stroke in strokes:
+        verts = []
+        codes = []
+        for (x, y) in stroke:
+            verts.append((x, -y))
+            if not codes:
+                codes.append(Path.MOVETO)
+            else:
+                codes.append(Path.LINETO)
+
+        path = Path(verts, codes)
+        patch = patches.PathPatch(path, facecolor='none', lw=0.25, joinstyle="round")
+        ax.add_patch(patch)
+
+    plt.xlim(-2.5, 2.5)
+    plt.ylim(-2.5, 2.5)
+    plt.scatter([x for i, x in enumerate(xs) if constraints_satisfied[i] > 0],
+                [-y for i, y in enumerate(ys) if constraints_satisfied[i] > 0],
+                marker="+")
     ############################################################################
 
-    img.show()
-
+    plt.show()

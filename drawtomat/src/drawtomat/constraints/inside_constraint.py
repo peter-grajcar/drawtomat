@@ -5,7 +5,7 @@ import numpy as np
 from drawtomat.constraints import Constraint
 from drawtomat.geometry import polygons
 from drawtomat.geometry.rdp import rdp
-from drawtomat.model.physical import PhysicalObject
+from drawtomat.model.composition import PhysicalObject
 
 
 class InsideConstraint(Constraint):
@@ -30,6 +30,7 @@ class InsideConstraint(Constraint):
         super().__init__()
         self.obj = obj
         self.pred = pred
+        self.rdp_strokes = []
         self.init()
 
     def init(self):
@@ -38,7 +39,7 @@ class InsideConstraint(Constraint):
                 (x + self.obj.x, y + self.obj.y) for x, y in zip(stroke[0], stroke[1])
             ] for stroke in self.obj.strokes
         ]
-        self.rdp_strokes = [rdp(stroke, 50) for stroke in strokes]
+        self.rdp_strokes = [rdp(stroke, max(self.obj.get_size()) / 4) for stroke in strokes]
 
     def _is_inside(self, x: 'float', y: 'float') -> int:
         for stroke in self.rdp_strokes:

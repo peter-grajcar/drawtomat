@@ -1,10 +1,10 @@
 import logging
 import random
 
-from drawtomat.language.word_embedding import WordEmbedding
-from drawtomat.model.physical import PhysicalObject
-from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
-from drawtomat.model.relational.object import Object
+from drawtomat.model.composition import PhysicalObject
+from drawtomat.model.composition.physical_object_factory import PhysicalObjectFactory
+from drawtomat.model.scenegraph.object import Object
+from drawtomat.processor.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset
 
 
@@ -19,7 +19,7 @@ class QuickDrawObjectFactory(PhysicalObjectFactory):
     def get_physical_object(self, obj: 'Object', default_size: int = 100, unit: float = 1) -> 'PhysicalObject':
         """
         Loads a drawing from the Quick, Draw! dataset, crops the drawing and sets the strokes and
-        the boundary attributes of the physical object (width, height) and adjusted strokes
+        the boundary attributes of the composition object (width, height) and adjusted strokes
         (in Quick, Draw! format).
 
         Returns

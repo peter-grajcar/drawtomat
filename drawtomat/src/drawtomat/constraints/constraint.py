@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
-from drawtomat.model.physical import PhysicalObject
+from drawtomat.model.composition import PhysicalObject
 
 
 class Constraint(metaclass=ABCMeta):

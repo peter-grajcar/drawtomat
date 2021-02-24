@@ -6,10 +6,10 @@ import conllu
 from conllu import TokenList
 from ufal.udpipe import Model, Pipeline, ProcessingError
 
-from drawtomat.language import text2num as t2n
-from drawtomat.model.relational.group import Group
-from drawtomat.model.relational.object import Object
-from drawtomat.model.relational.scene import Scene
+from drawtomat.model.scenegraph.group import Group
+from drawtomat.model.scenegraph.object import Object
+from drawtomat.model.scenegraph.scene import Scene
+from drawtomat.processor import text2num as t2n
 
 
 class UDPipeProcessor:

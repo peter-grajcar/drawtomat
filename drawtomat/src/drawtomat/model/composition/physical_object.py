@@ -1,4 +1,4 @@
-from drawtomat.model.physical.physical_entity import PhysicalEntity
+from drawtomat.model.composition.physical_entity import PhysicalEntity
 
 
 class PhysicalObject(PhysicalEntity):

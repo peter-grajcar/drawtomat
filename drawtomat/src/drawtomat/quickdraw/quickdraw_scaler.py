@@ -2,9 +2,9 @@ import csv
 
 import numpy as np
 
-from drawtomat.language.word_embedding import WordEmbedding
-from drawtomat.model.physical import PhysicalObject
-from drawtomat.model.physical.physical_object_scaler import PhysicalObjectScaler
+from drawtomat.model.composition import PhysicalObject
+from drawtomat.model.composition.physical_object_scaler import PhysicalObjectScaler
+from drawtomat.processor.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset
 
 

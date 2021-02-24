@@ -1,14 +1,14 @@
 import argparse
 import logging.config
 
-from drawtomat.graphics import ConstraintComposer
-from drawtomat.graphics.simple_renderer import SimpleRenderer
-from drawtomat.language.udpipe_processor import UDPipeProcessor
+from drawtomat.composer import ConstraintComposer
+from drawtomat.processor.udpipe_processor import UDPipeProcessor
 # A dog and a chair are inside a house. The dog is sitting on the chair.
-from drawtomat.language.word_embedding import WordEmbedding
+from drawtomat.processor.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset
 from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
 from drawtomat.quickdraw.quickdraw_scaler import QuickDrawAbsoluteObjectScaler
+from drawtomat.renderer.simple_renderer import SimpleRenderer
 
 if __name__ == "__main__":
     logging.config.fileConfig(fname="resources/logging.conf", disable_existing_loggers=False)

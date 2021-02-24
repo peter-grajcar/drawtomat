@@ -7,12 +7,12 @@ from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, DisjunctionConstraint, SideConstraint
 from drawtomat.constraints import SklearnConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
-from drawtomat.model.physical import PhysicalEntity, PhysicalObject
-from drawtomat.model.physical.physical_object_factory import PhysicalObjectFactory
-from drawtomat.model.physical.physical_object_scaler import PhysicalObjectScaler
-from drawtomat.model.relational.group import Group
-from drawtomat.model.relational.object import Object
-from drawtomat.model.relational.scene import Scene
+from drawtomat.model.composition import PhysicalEntity, PhysicalObject
+from drawtomat.model.composition.physical_object_factory import PhysicalObjectFactory
+from drawtomat.model.composition.physical_object_scaler import PhysicalObjectScaler
+from drawtomat.model.scenegraph.group import Group
+from drawtomat.model.scenegraph.object import Object
+from drawtomat.model.scenegraph.scene import Scene
 
 
 class ConstraintComposer:
@@ -144,7 +144,7 @@ class ConstraintComposer:
 
         logging.getLogger(ConstraintComposer.__name__).debug(topological_order)
 
-        # Create physical objects
+        # Create composition objects
         for entity in topological_order[::-1]:
             if type(entity) == Group:
                 pass

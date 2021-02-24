@@ -3,9 +3,9 @@ import logging.config
 import numpy as np
 from flask import Flask, request
 
-from drawtomat.graphics import ConstraintComposer
-from drawtomat.language import UDPipeProcessor
-from drawtomat.language.word_embedding import WordEmbedding
+from drawtomat.composer import ConstraintComposer
+from drawtomat.processor import UDPipeProcessor
+from drawtomat.processor.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset
 from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
 from drawtomat.quickdraw.quickdraw_scaler import QuickDrawRelativeObjectScaler, QuickDrawAbsoluteObjectScaler
