@@ -6,13 +6,14 @@ from drawtomat.quickdraw.quickdraw_dataset import QuickDrawDataset
 
 class SimpleRenderer:
     """
-    A simple image renderer.
+    A simple image renderer. Renders the scene using Pillow.
 
     Attributes
     ----------
-    dataset
     composer
+        composer which will be used during the rendering.
     show_bounds : bool
+        if true, a bounding box will be rendered around each object.
     """
 
     def __init__(self, composer, show_bounds: bool = False):

@@ -4,6 +4,10 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 
 class WordEncoder(BaseEstimator, TransformerMixin):
+    """
+    Encode words as word vectors using fasttext model.
+    """
+
     def __init__(self, filename):
         self.filename = filename
         self.model = fasttext.load_model(self.filename)

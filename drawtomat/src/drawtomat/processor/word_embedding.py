@@ -6,7 +6,7 @@ import numpy as np
 
 class WordEmbedding:
     """
-
+    Word embedding tools.
     """
 
     def __init__(self, word_list: 'Iterable'):

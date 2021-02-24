@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import numpy as np
 
@@ -33,14 +33,18 @@ class ConstraintComposer:
     @staticmethod
     def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 5000) -> None:
         """
+        Places object using monte carlo algorithm.
 
         Parameters
         ----------
         obj : PhysicalObject
+            object to place.
 
         constraints : List[Constraint]
+            list of object's constraints.
 
         point_limit : int
+            number of randomly generated points.
 
         Returns
         -------
@@ -73,15 +77,19 @@ class ConstraintComposer:
 
     def _scale_object(self, sub: 'PhysicalObject', obj_pred: 'List[Tuple[PhysicalObject, str]]') -> None:
         """
+        Scales given object using the composer's scaler.
 
         Parameters
         ----------
         sub
+            an object to scale.
+
         obj_pred
+            list of (object, predicate) pairs which represent relations with other objects in the scene.
 
         Returns
         -------
-
+        None
         """
         if not obj_pred:
             return
@@ -98,16 +106,19 @@ class ConstraintComposer:
 
         sub.set_scale(scale)
 
-    def _get_constraints(self, adposition: 'str', obj: 'PhysicalObject') -> 'Optional[Constraint]':
+    def _get_constraints(self, adposition: 'str', obj: 'PhysicalObject') -> 'Constraint':
         """
+        Returns a constraint object for given adposition.
 
         Parameters
         ----------
         adposition
+
         obj
 
         Returns
         -------
+        Constraint
 
         """
         if self.use_ml:
