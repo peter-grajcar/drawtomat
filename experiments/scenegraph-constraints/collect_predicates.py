@@ -13,9 +13,11 @@ predicates = defaultdict(int)
 for line in sys.stdin:
     data = json.loads(line)
     pred = data["predicate"].upper()
+    if pred.endswith(" A"):
+        pred = pred[:-2]
     predicates[pred] += 1
 
 sorted_predicates = sorted([(pred, count) for pred, count in predicates.items() if count > limit], key=lambda x: -x[1])
-for pred, count in sorted_predicates[:50]:
+for pred, count in sorted_predicates[:limit]:
     print(pred)
 

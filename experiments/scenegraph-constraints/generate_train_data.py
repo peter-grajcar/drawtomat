@@ -40,6 +40,8 @@ for data in relationships:
         print(spinner[(counter // 100) % 4], counter + 1, end="\r")
 
     pred = data["predicate"].upper()
+    if pred.endswith(" A"):
+        pred = pred[:-2]
 
     if not pred in predicates:
         continue
@@ -54,10 +56,13 @@ for data in relationships:
     t.append(1)
 
     wrong = None
-    while wrong is None or wrong["predicate"] == pred:
+    while wrong is None or wrong_pred == pred:
         wrong = relationships[np.random.randint(low=0, high=rel_count)]
         wrong_sub = wrong["subject"]
         wrong_obj = obj
+        wrong_pred = wrong["predicate"].upper()
+        if wrong_pred.endswith(" A"):
+            wrong_pred = wrong_pred[:-2]
         wrong_dx = ((wrong_sub["x"] + wrong_sub["w"]/2) - (obj["x"] + obj["w"]/2)) / obj["w"]
         wrong_dy = ((wrong_sub["y"] + wrong_sub["h"]/2) - (obj["y"] + obj["h"]/2)) / obj["h"]
 
