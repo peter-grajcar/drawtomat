@@ -7,12 +7,12 @@ import json
 from collections import defaultdict
 from fasttext_embedding import Embedding
 
-use_word_embedding = False
+use_word_embedding = True
 
 # load word embedding model
 embedding = Embedding("../word2vec/conceptual-captions-fasttext.model")
 similar_words = {} # cache for the most similar words
-threshold = 0.85
+threshold = 0.95
 
 # list of quickdraw categories
 quickdraw = [category[0] for category in embedding.categories]
