@@ -25,7 +25,7 @@ class QuickDrawObjectFactory(PhysicalObjectFactory):
         Returns
         -------
         PhysicalObject
-            newly created object
+            newly created object.
         """
         phys_obj = PhysicalObject(obj)
 

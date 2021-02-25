@@ -70,12 +70,12 @@ def words2int(num_by_words: 'str') -> 'int':
     Parameters
     ----------
     num_by_words: str
-        Number represented by words
+        Number represented by words.
 
     Returns
     -------
     int
-        Integer value of a given number
+        Integer value of a given number.
     """
 
     result = 0
@@ -119,15 +119,17 @@ def tokenize(text: 'str') -> 'List[str]':
 
 def replace_with_numbers(text: 'str') -> 'str':
     """
+    Replaces numbers written as text with corresponding numeral representation.
 
     Parameters
     ----------
     text : str
+        A text tot process.
 
     Returns
     -------
     str
-
+        A text with replaced numbers.
     """
     words = tokenize(text)
     word_count = len(words)

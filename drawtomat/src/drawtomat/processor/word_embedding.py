@@ -24,7 +24,7 @@ class WordEmbedding:
         Returns
         -------
         str
-            most similar word
+            The most similar word.
         """
         maximum = None
         for w in self.word_list:

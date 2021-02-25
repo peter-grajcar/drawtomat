@@ -15,11 +15,11 @@ class InsideConstraint(Constraint):
     Attributes
     ----------
     obj : PhysicalObject
-        an object to which the constraint relates
+        An object to which the constraint relates.
     pred: str
-        predicate which defines the constraint
+        Predicate which defines the constraint.
     rdp_strokes : List[np.ndarray]
-        object strokes reduced by RDP algorithm
+        Object strokes reduced by RDP algorithm.
 
     See Also
     --------

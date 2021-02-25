@@ -11,11 +11,11 @@ class BoxConstraint(Constraint):
     Attributes
     ----------
     obj : PhysicalObject
-        an object to which the constraint relates
+        An object to which the constraint relates.
     pred: str
-        predicate which defines the constraint
+        Predicate which defines the constraint.
     box_size : np.ndarray
-        scaled size of the box (width, height)
+        Scaled size of the box (width, height).
     """
 
     def __init__(self, obj: 'PhysicalObject', pred: 'str', scale: float = 1.0):

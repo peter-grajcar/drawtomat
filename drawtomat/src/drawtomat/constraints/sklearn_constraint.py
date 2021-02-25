@@ -14,9 +14,9 @@ class SklearnConstraint(Constraint):
     Attributes
     ----------
     obj : PhysicalObject
-        an object to which the constraint relates
+        An object to which the constraint relates.
     pred: str
-        predicate which defines the constraint
+        Predicate which defines the constraint.
     """
 
     _model = None

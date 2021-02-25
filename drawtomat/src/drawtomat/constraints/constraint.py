@@ -12,9 +12,9 @@ class Constraint(metaclass=ABCMeta):
     Attributes
     ----------
     obj : PhysicalObject
-        an object to which the constraint relates
+        An object to which the constraint relates
     pred: str
-        predicate which defines the constraint
+        Predicate which defines the constraint
     """
 
     def __init__(self):
@@ -41,9 +41,9 @@ class Constraint(metaclass=ABCMeta):
         Parameters
         ----------
         xs : np.ndarray[float]
-            x coordinates
+            X coordinates.
         ys : np.ndarray[float]
-            y coordinates
+            Y coordinates.
 
         Returns
         -------

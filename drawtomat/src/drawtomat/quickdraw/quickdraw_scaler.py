@@ -9,6 +9,9 @@ from drawtomat.quickdraw import QuickDrawDataset
 
 
 class QuickDrawAbsoluteObjectScaler(PhysicalObjectScaler):
+    """
+    A scaler which uses absolute size data.
+    """
 
     def __init__(self, word_embedding: 'WordEmbedding' = None):
         if not word_embedding:
@@ -45,6 +48,9 @@ class QuickDrawAbsoluteObjectScaler(PhysicalObjectScaler):
 
 
 class QuickDrawRelativeObjectScaler(PhysicalObjectScaler):
+    """
+    A scaler which sets the size relative to other object.
+    """
 
     def __init__(self, word_embedding: 'WordEmbedding' = None):
         if not word_embedding:

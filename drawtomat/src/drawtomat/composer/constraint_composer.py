@@ -82,10 +82,11 @@ class ConstraintComposer:
         Parameters
         ----------
         sub
-            an object to scale.
+            An object to scale.
 
         obj_pred
-            list of (object, predicate) pairs which represent relations with other objects in the scene.
+            List of (object, predicate) pairs which represent relations with
+            other objects in the scene.
 
         Returns
         -------
@@ -162,12 +163,12 @@ class ConstraintComposer:
         Parameters
         ----------
         scene : Scene
-            the scene to compose
+            The scene to compose
 
         Returns
         -------
         List[PhysicalEntity]
-            composition
+            A composition.
         """
         topological_order = _topological_order(scene.entity_register)
 
