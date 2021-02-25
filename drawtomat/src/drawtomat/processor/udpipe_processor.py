@@ -20,6 +20,8 @@ class UDPipeProcessor:
     ----------
     model : Model
         UDPipe model.
+    preedicates : set[str]
+        A set of valid predicates.
     """
 
     def __init__(self, model_filename: str) -> None:
@@ -27,6 +29,8 @@ class UDPipeProcessor:
         self.logger = logging.getLogger(self.__class__.__name__)
         if not self.model:
             raise Exception(f"Cannot load model from file \"{model_filename}\".")
+        with open("resources/predicates.txt") as f:
+            self.predicates = {pred.strip().lower() for pred in f}
 
     def _process_adposition(self, sentence: 'TokenList', node) -> 'Optional[str]':
         """
@@ -34,14 +38,14 @@ class UDPipeProcessor:
         Parameters
         ----------
         sentence : TokenList
-            sentence as a list of tokens.
+            Sentence as a list of tokens.
         node
-            a node in the syntax tree with an adposition.
+            A node in the syntax tree with an adposition.
 
         Returns
         -------
         bool
-            true if adposition should be skipped.
+            True if adposition should be skipped.
         """
         token = node.token
         token_idx = token["id"] - 1
@@ -70,10 +74,10 @@ class UDPipeProcessor:
         # (a complex adposition is formed only if it is in a list of adpositions)
         if prev_token and (prev_token["upostag"] == "ADV" or prev_token["upostag"] == "ADJ"):
             complex_adp = prev_token["form"] + " " + token["form"]
-            # if complex_adp is an adposition
-            last = token
-            # else
-            # complex_adp = None
+            if complex_adp in self.predicates:
+                last = token
+            else:
+                complex_adp = None
 
         if complex_adp:
             if not last["misc"]:
@@ -97,16 +101,16 @@ class UDPipeProcessor:
         Parameters
         ----------
         scene
-            current scene.
+            Current scene.
         sentence
-            sentence as a list of tokens.
+            Sentence as a list of tokens.
         node
-            a node in the syntax tree with a noun.
+            A node in the syntax tree with a noun.
 
         Returns
         -------
         Optional[Object]
-            a new object if the noun is not skipped. Noun part of PNP
+            A new object if the noun is not skipped. Noun part of PNP
             adposition and parts of compound nouns are skipped.
         """
         token = node.token
