@@ -100,8 +100,12 @@ var intervalId = null;
 
 function clearCanvas() {
     clearInterval(intervalId)
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
+
+const colours = ["red", "green", "blue", "magenta", "cyan"];
 
 function drawPicture(data) {
     clearCanvas();
@@ -116,8 +120,6 @@ function drawPicture(data) {
     let cx = canvas.width / 2;
     let cy = canvas.height / 2;
     let scale = 2 * Math.min(cx / (width + padding), cy / (height + padding));
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	ctx.strokeStyle = texture;
 	ctx.lineWidth = 2;
@@ -135,6 +137,7 @@ function drawPicture(data) {
     let step = 10;
     intervalId = setInterval(function () {
         t += step;
+        ctx.strokeStyle = colours[objIdx];
 
         if (t > duration) {
             ++stkIdx;
