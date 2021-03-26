@@ -4,11 +4,11 @@ import numpy as np
 from matplotlib import rc
 from matplotlib.path import Path
 
+from drawtomat.composer.factory.quickdraw_object_factory import QuickDrawObjectFactory
 from drawtomat.constraints import DisjunctionConstraint, SideConstraint
 from drawtomat.model.scenegraph.group import Group
 from drawtomat.model.scenegraph.object import Object
 from drawtomat.model.scenegraph.scene import Scene
-from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
 
 if __name__ == "__main__":
 

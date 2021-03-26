@@ -1,8 +1,8 @@
 import logging
 import random
 
+from drawtomat.composer.factory.physical_object_factory import PhysicalObjectFactory
 from drawtomat.model.composition import PhysicalObject
-from drawtomat.model.composition.physical_object_factory import PhysicalObjectFactory
 from drawtomat.model.scenegraph.object import Object
 from drawtomat.processor.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset

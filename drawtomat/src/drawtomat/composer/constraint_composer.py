@@ -3,13 +3,13 @@ from typing import List, Tuple
 
 import numpy as np
 
+from drawtomat.composer.factory.physical_object_factory import PhysicalObjectFactory
+from drawtomat.composer.scaler.physical_object_scaler import PhysicalObjectScaler
 from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, DisjunctionConstraint, SideConstraint
 from drawtomat.constraints import SklearnConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.model.composition import PhysicalObject
-from drawtomat.model.composition.physical_object_factory import PhysicalObjectFactory
-from drawtomat.model.composition.physical_object_scaler import PhysicalObjectScaler
 from drawtomat.model.scenegraph.group import Group
 from drawtomat.model.scenegraph.object import Object
 from drawtomat.model.scenegraph.scene import Scene

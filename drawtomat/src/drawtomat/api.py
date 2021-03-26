@@ -4,11 +4,11 @@ import numpy as np
 from flask import Flask, request
 
 from drawtomat.composer import ConstraintComposer
+from drawtomat.composer.factory import QuickDrawObjectFactory
+from drawtomat.composer.scaler import AbsoluteObjectScaler, RelativeObjectScaler
 from drawtomat.processor import UDPipeProcessor
 from drawtomat.processor.word_embedding import WordEmbedding
 from drawtomat.quickdraw import QuickDrawDataset
-from drawtomat.quickdraw.quickdraw_object_factory import QuickDrawObjectFactory
-from drawtomat.quickdraw.quickdraw_scaler import QuickDrawRelativeObjectScaler, QuickDrawAbsoluteObjectScaler
 
 app = Flask(__name__)
 
@@ -17,8 +17,8 @@ logging.config.fileConfig(fname="resources/logging.conf", disable_existing_logge
 processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
 word_embedding = WordEmbedding(QuickDrawDataset.words())
 obj_factory = QuickDrawObjectFactory(word_embedding)
-obj_scaler_abs = QuickDrawAbsoluteObjectScaler(word_embedding)
-obj_scaler_rel = QuickDrawRelativeObjectScaler(word_embedding)
+obj_scaler_abs = AbsoluteObjectScaler(word_embedding)
+obj_scaler_rel = RelativeObjectScaler(word_embedding)
 composer = ConstraintComposer(obj_factory, obj_scaler_rel, use_ml=True)
 
 
