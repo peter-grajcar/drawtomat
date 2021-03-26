@@ -7,7 +7,7 @@ from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, DisjunctionConstraint, SideConstraint
 from drawtomat.constraints import SklearnConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
-from drawtomat.model.composition import PhysicalEntity, PhysicalObject
+from drawtomat.model.composition import PhysicalObject
 from drawtomat.model.composition.physical_object_factory import PhysicalObjectFactory
 from drawtomat.model.composition.physical_object_scaler import PhysicalObjectScaler
 from drawtomat.model.scenegraph.group import Group
@@ -156,7 +156,7 @@ class ConstraintComposer:
             SideConstraint(obj, adposition, direction=(0, -1), padding=10),
         ])
 
-    def compose(self, scene: 'Scene') -> List[PhysicalEntity]:
+    def compose(self, scene: 'Scene') -> List[PhysicalObject]:
         """
         Creates a composition of objects in a scene.
 
@@ -167,7 +167,7 @@ class ConstraintComposer:
 
         Returns
         -------
-        List[PhysicalEntity]
+        List[PhysicalObject]
             A composition.
         """
         topological_order = _topological_order(scene.entity_register)
