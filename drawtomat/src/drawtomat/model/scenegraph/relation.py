@@ -5,7 +5,7 @@ class Relation:
      Attributes
      ----------
      src : Entity
-        The docs entity.
+        The source entity.
      dst : Entity
         The destination entity.
      rel : str
@@ -14,13 +14,13 @@ class Relation:
 
     def __init__(self, src: 'Entity', dst: 'Entity', rel: 'str') -> None:
         """
-        Initialises a new relation given docs and destination entity, and an adposition describing
+        Initialises a new relation given source and destination entity, and an adposition describing
         the relation.
 
         Parameters
         ----------
         src : Entity
-            The docs entity.
+            The source entity.
         dst : Entity
             The destination entity.
         rel : str

@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import rc
 from matplotlib.path import Path
 
-from drawtomat.constraints import InsideConstraint
+from drawtomat.constraints import DisjunctionConstraint, SideConstraint
 from drawtomat.model.scenegraph.group import Group
 from drawtomat.model.scenegraph.object import Object
 from drawtomat.model.scenegraph.scene import Scene
@@ -46,11 +46,11 @@ if __name__ == "__main__":
 
     central_obj = house
     constraints = [
-        # DisjunctionConstraint(house, "NEXT TO", [
-        #    SideConstraint(house, "NEXT TO", direction=(-1, 0)),
-        #    SideConstraint(house, "NEXT TO", direction=(1, 0)),
-        # ])
-        InsideConstraint(house, "INSIDE"),
+        DisjunctionConstraint(house, "NEXT TO", [
+            SideConstraint(house, "NEXT TO", direction=(-1, 0)),
+            SideConstraint(house, "NEXT TO", direction=(1, 0)),
+        ])
+        # InsideConstraint(house, "INSIDE"),
         # OnConstraint(couch, "ON"),
         # BoxConstraint(house, "IN FRONT OF", scale=1.5),
     ]
@@ -89,8 +89,8 @@ if __name__ == "__main__":
         patch = patches.PathPatch(path, facecolor='none', lw=0.25, joinstyle="round")
         ax.add_patch(patch)
 
-    plt.xlim(-2.5, 2.5)
-    plt.ylim(-2.5, 2.5)
+    plt.xlim(-1.5, 1.5)
+    plt.ylim(-1.5, 1.5)
     plt.scatter([x for i, x in enumerate(xs) if constraints_satisfied[i] > 0],
                 [-y for i, y in enumerate(ys) if constraints_satisfied[i] > 0],
                 marker="+")

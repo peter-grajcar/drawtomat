@@ -4,7 +4,7 @@ FASTTEXT_MODEL_FILENAME     := conceptual-captions-fasttext.model.tar.gz
 SKLEARN_MODEL_URL_BASE		:= https://www.ms.mff.cuni.cz/~grajcarp/drawtomat
 SKLEARN_MODEL_FILENAME		:= constraints.model.tar.gz
 
-.PHONY: udpipe fasttext sklearn install run run-api apidocs
+.PHONY: udpipe fasttext sklearn install run run-api docs
 
 install: venv udpipe fasttext sklearn
 
@@ -22,7 +22,7 @@ run: install
 run-api: install
 	PYTHONPATH=${SOURCES} FLASK_APP=drawtomat.api.py venv/bin/flask run --host=0.0.0.0
 
-apidocs:
+docs: install
 	sphinx-apidoc -o docs/source src -f -e
 	$(MAKE) -C docs html
 

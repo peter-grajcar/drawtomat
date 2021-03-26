@@ -341,7 +341,7 @@ Code is documented using *[Sphinx][5]*. Documentation can be generated using
 following command:
 
 ```console
-$ make apidocs
+$ make docs
 ```
 
 &copy; 2020 Peter Grajcar
