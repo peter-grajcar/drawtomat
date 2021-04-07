@@ -21,7 +21,7 @@ class SimpleRenderer:
         self.composer = composer
         self.show_bounds = show_bounds
 
-    def render(self, scene: 'drawtomat.model.scenegraph.Scene') -> None:
+    def render(self, scene: 'drawtomat.model.scenegraph.Scene', show: bool = False, output: str = "drawing.png") -> None:
         """
         Renders a scene into an image.
 
@@ -81,4 +81,6 @@ class SimpleRenderer:
                 draw.line([px - 4, py, px + 4, py], fill="#ff00ff")
                 draw.line([px, py - 4, px, py + 4], fill="#ff00ff")
 
-        im.show()
+        im.save(output)
+        if show:
+            im.show()

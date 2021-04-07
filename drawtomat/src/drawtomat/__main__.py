@@ -15,7 +15,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--description", type=str)
-    parser.add_argument("--model_output", default="output/model.dot", type=str)
+    parser.add_argument("--graph_output", type=str)
+    parser.add_argument("--image_output", default="drawing.png", type=str)
+    parser.add_argument("--show", action="store_true")
     args = parser.parse_args()
 
     if not args.description:
@@ -24,10 +26,11 @@ if __name__ == "__main__":
     processor = UDPipeProcessor("resources/udpipe/english-ewt-ud-2.5-191206.udpipe")
     scene = processor.process(args.description)
 
-    graph = scene.export_dot(args.model_output)
-    graph.graph_attr["label"] = f"\"{args.description}\""
-    graph.graph_attr["labelloc"] = "t"
-    graph.render(filename=args.model_output, format="png")
+    if args.graph_output:
+        graph = scene.export_dot(args.graph_output)
+        graph.graph_attr["label"] = f"\"{args.description}\""
+        graph.graph_attr["labelloc"] = "t"
+        graph.render(filename=args.graph_output, format="png")
 
     word_embedding = WordEmbedding(QuickDrawDataset.words())
     obj_factory = QuickDrawObjectFactory(word_embedding)
@@ -36,4 +39,4 @@ if __name__ == "__main__":
     entities = composer.compose(scene)
 
     renderer = SimpleRenderer(composer=composer, show_bounds=False)
-    renderer.render(scene)
+    renderer.render(scene, show=args.show, output=args.image_output)
