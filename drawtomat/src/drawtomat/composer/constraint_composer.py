@@ -1,5 +1,5 @@
 import logging
-from typing import List, Tuple
+from typing import List, Tuple, Literal
 
 import numpy as np
 
@@ -31,10 +31,10 @@ class ConstraintComposer:
     """
 
     def __init__(self, obj_factory: 'PhysicalObjectFactory', obj_scaler: 'PhysicalObjectScaler',
-                 use_ml: 'bool' = False):
+                 constraints: 'Literal["rule", "classifier"]' = "rule"):
         self.obj_factory = obj_factory
         self.obj_scaler = obj_scaler
-        self.use_ml = use_ml
+        self.constraints_strategy = constraints
 
     @staticmethod
     def _place_object(obj: 'PhysicalObject', constraints: 'List[Constraint]', point_limit: int = 5000) -> None:
@@ -128,39 +128,41 @@ class ConstraintComposer:
         Constraint
 
         """
-        if self.use_ml:
+        if self.constraints_strategy == "classifier":
             return ClassifierConstraint(obj, adposition)
-
-        if adposition == "IN":
-            return InsideConstraint(obj, adposition)
-        elif adposition == "INSIDE":
-            return InsideConstraint(obj, adposition)
-        elif adposition == "INSIDE OF":
-            return InsideConstraint(obj, adposition)
-        elif adposition == "ON":
-            return OnConstraint(obj, adposition)
-        elif adposition == "UNDER":
-            return SideConstraint(obj, adposition, direction=(0, 1))
-        elif adposition == "BELOW":
-            return SideConstraint(obj, adposition, direction=(0, 1))
-        elif adposition == "ABOVE":
-            return SideConstraint(obj, adposition, direction=(0, -1))
-        elif adposition == "BEHIND":
-            return BoxConstraint(obj, adposition, scale=0.75)
-        elif adposition == "IN FRONT OF":
-            return BoxConstraint(obj, adposition, scale=1.5)
-        elif adposition == "NEXT TO":
+        elif self.constraints_strategy == "rule":
+            if adposition == "IN":
+                return InsideConstraint(obj, adposition)
+            elif adposition == "INSIDE":
+                return InsideConstraint(obj, adposition)
+            elif adposition == "INSIDE OF":
+                return InsideConstraint(obj, adposition)
+            elif adposition == "ON":
+                return OnConstraint(obj, adposition)
+            elif adposition == "UNDER":
+                return SideConstraint(obj, adposition, direction=(0, 1))
+            elif adposition == "BELOW":
+                return SideConstraint(obj, adposition, direction=(0, 1))
+            elif adposition == "ABOVE":
+                return SideConstraint(obj, adposition, direction=(0, -1))
+            elif adposition == "BEHIND":
+                return BoxConstraint(obj, adposition, scale=0.75)
+            elif adposition == "IN FRONT OF":
+                return BoxConstraint(obj, adposition, scale=1.5)
+            elif adposition == "NEXT TO":
+                return DisjunctionConstraint(obj, adposition, [
+                    SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
+                    SideConstraint(obj, adposition, direction=(1, 0), padding=10)
+                ])
+            # default
             return DisjunctionConstraint(obj, adposition, [
                 SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
-                SideConstraint(obj, adposition, direction=(1, 0), padding=10)
+                SideConstraint(obj, adposition, direction=(1, 0), padding=10),
+                SideConstraint(obj, adposition, direction=(0, 1), padding=10),
+                SideConstraint(obj, adposition, direction=(0, -1), padding=10),
             ])
-        # default
-        return DisjunctionConstraint(obj, adposition, [
-            SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
-            SideConstraint(obj, adposition, direction=(1, 0), padding=10),
-            SideConstraint(obj, adposition, direction=(0, 1), padding=10),
-            SideConstraint(obj, adposition, direction=(0, -1), padding=10),
-        ])
+        else:
+            raise ValueError(f"Invalid constraints approach '{self.constraints_strategy}'.")
 
     def compose(self, scene: 'Scene') -> List[PhysicalObject]:
         """

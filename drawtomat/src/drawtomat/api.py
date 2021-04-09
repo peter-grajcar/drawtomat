@@ -19,7 +19,7 @@ word_embedding = WordEmbedding(QuickDrawDataset.words())
 obj_factory = QuickDrawObjectFactory(word_embedding)
 obj_scaler_abs = AbsoluteObjectScaler(word_embedding)
 obj_scaler_rel = RelativeObjectScaler(word_embedding)
-composer = ConstraintComposer(obj_factory, obj_scaler_rel, use_ml=True)
+composer = ConstraintComposer(obj_factory, obj_scaler_rel, constraints="rule")
 
 
 @app.route("/drawtomat", methods=["POST"])
@@ -27,8 +27,15 @@ def drawtomat():
     desc = request.json["description"]
     scene = processor.process(desc)
 
-    composer.use_ml = request.json["options"]["use_machine_learning"]
-    composer.obj_scaler = obj_scaler_rel if request.json["options"]["use_relative_sizes"] else obj_scaler_abs
+    composer.constraints_strategy = request.json["options"]["constraints"]
+
+    size_strategy = request.json["options"]["sizes"]
+    if size_strategy == "relative":
+        composer.obj_scaler = obj_scaler_rel
+    elif size_strategy == "absolute":
+        composer.obj_scaler = obj_scaler_abs
+    else:
+        raise ValueError(f"Invalid size strategy {size_strategy}")
 
     entities = composer.compose(scene)
     drawing = [entity.get_relative_strokes() for entity in entities]
