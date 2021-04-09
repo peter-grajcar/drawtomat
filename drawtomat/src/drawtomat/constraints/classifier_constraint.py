@@ -6,7 +6,7 @@ from drawtomat.constraints import Constraint
 from drawtomat.model.composition import PhysicalObject
 
 
-class SklearnConstraint(Constraint):
+class ClassifierConstraint(Constraint):
     """
     Constraint which uses Multi Layered Perceptron (MLP) binary classifier to
     determine whether a set of points match given predicate.
@@ -23,10 +23,10 @@ class SklearnConstraint(Constraint):
 
     @staticmethod
     def _get_model():
-        if SklearnConstraint._model is None:
+        if ClassifierConstraint._model is None:
             with open("resources/sklearn/constraints.model", "rb") as f:
-                SklearnConstraint._model = pickle.load(f)
-        return SklearnConstraint._model
+                ClassifierConstraint._model = pickle.load(f)
+        return ClassifierConstraint._model
 
     def __init__(self, obj: 'PhysicalObject', pred: 'str'):
         super().__init__()

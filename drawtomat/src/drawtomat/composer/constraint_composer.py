@@ -5,9 +5,9 @@ import numpy as np
 
 from drawtomat.composer.factory.physical_object_factory import PhysicalObjectFactory
 from drawtomat.composer.scaler.physical_object_scaler import PhysicalObjectScaler
+from drawtomat.constraints import ClassifierConstraint
 from drawtomat.constraints import Constraint
 from drawtomat.constraints import InsideConstraint, OnConstraint, DisjunctionConstraint, SideConstraint
-from drawtomat.constraints import SklearnConstraint
 from drawtomat.constraints.box_constraint import BoxConstraint
 from drawtomat.model.composition import PhysicalObject
 from drawtomat.model.scenegraph.group import Group
@@ -123,7 +123,7 @@ class ConstraintComposer:
 
         """
         if self.use_ml:
-            return SklearnConstraint(obj, adposition)
+            return ClassifierConstraint(obj, adposition)
 
         if adposition == "IN":
             return InsideConstraint(obj, adposition)
