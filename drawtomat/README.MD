@@ -23,6 +23,16 @@ Then the programme can be executed with following command:
 $ make run
 ```
 
+Or alternatively
+```console
+$ export PYTHONPATH=src
+$ python3 -m drawtomat [-h] [--help]
+                       [--description DRAWING_DESCRIPTION]
+                       [--graph_output GRAPH_OUTPUT_PATH]
+                       [--image_output IMAGE_OUTPUT_PATH]
+                       [--show]
+```
+
 Or start a HTTP API server:
 
 ```console
@@ -166,9 +176,9 @@ closing:  house
 <i>Example sentence tree traversal log</i>
 </p>
 
-### Relation Graph
+### Scene Graphs
 
-Relation graph is a directed graph where entities (objects and groups) are the 
+A scene graph is a directed graph where entities (objects and groups) are the 
 nodes and mutual relations between objects are the edges. An example can be
 found in the picture below. 
 
@@ -185,155 +195,6 @@ Drawtomat allows relation graph export in [dot language][6].
 <p align="center">
 <i>Example of a relation graph</i>
 </p>
-
-## Picture Composition and Generation
-
-Before the final picture is produced all objects in the relation graph have to
-be placed within the scene. The phase of placing the object will be called 
-_composition_. Composed scene is then rendered into an image.
-
-### Drawings Dataset 
-
-Drawtomat uses Google's *[Quick, Draw!][4]* dataset which consists of 345 
-drawing categories. The dataset contains more than 50 million drawings, 
-however, only a selected portion of drawings is used in Drawtomat as the 
-dataset also contains irrelevant and inappropriate content.
-
-The categories and selected drawings can be found in 
-[`resources/quickdraw`](resources/quickdraw) directory.
-
-The *Quick, Draw!* data are extended with attributes, which at the moment 
-contain default object sizes (in centimetres). These data are used for scaling
-the objects to preserve natural proportions. Attribute data can be found in 
-[`resources/quickdraw/attributes.csv`](resources/quickdraw/attributes.csv). 
-If one of the default dimensions is  omitted then only the defined dimension
-is used for scaling. If both default dimensions are defined then the drawing is 
-scaled by the major dimension.
-
-### Scene Composing
-
-Objects from the relation graph are transformed into physical objects which
-have attributes such as scale and position. These physical objects are then
-placed in the order given by a topological of a relation graph objects. This
-method assumes that the relation graph is acyclic (DAG) hence a topological 
-ordering exists.
-
-#### Constraints
-
-Relations in the relation graph (i.e. edges of the graph) define constraints
-which a position of an object must meet. These constraints are defined by
-binary functions (or callable objects) *R<sup>2</sup> &rarr; {T, F}* which for 
-given coordinates return whether the constraint is satisfied.
-
-When placing an object a set of randomly generated points is produced. These
-points are tested and if a points meets all the constraints then it is used as
-a position of the object. If none of the generated points meets all the 
-constraints then a point with the most of constraints satisfied is used as a
-position.
-
-If a relation involves a group, corresponding constraint is applied to all of
-the group members.
-
-Gaussian distribution is used for generating the points. It is centered around
-the average position of objects to which the object to be placed relates.
-
-#### Inside Constraint
-
-This constraint is implemented using point-inside-polygon algorithm where each
-stroke is considered a separate polygon (a closed loop). If a point lies in at
-least one of these polygons the constraint is satisfied. 
-
-Before running point-inside-polygon algorithm, Ramer–Douglas–Peucker algorithm
-is used to simplify (reduce number of vertices) the strokes.
-
-<p align="center">
-<img height="350" alt="Inside constraint example" src="resources/images/inside-constraint.png" />
-</p>
-<p align="center">
-<i>Example of an "inside constraint"</i>
-</p>
-
-#### On Constraint
-
-This constraint takes all line segments in the top 25% of a drawing. If the
-square distance of a point is within a specified limit the constraint is 
-satisfied.
-
-<p align="center">
-<img height="350" alt="On constraint example" src="resources/images/on-constraint.png" />
-</p>
-<p align="center">
-<i>Example of an "on constraint"</i>
-</p>
-
-#### Side Constraint
-
-This constraint is satisfied if a point lies on the correct side of a
-half-plane. The half-plane is defined by a point which lies on a boundary of
-a drawing and by a normal vector (perpendicular to the half-plane boundary). 
-
-For example, this constraint is used by *next to* relation.
-
-<p align="center">
-<img height="350" alt="Side constraint example" src="resources/images/side-constraint.png" />
-</p>
-<p align="center">
-<i>Example of a "side constraint"</i>
-</p>
-
-#### Box Constraint
-
-Box constraint is satisfied if a point lies in a bounding box of a drawing. The
-bounding box can also be scaled.
-
-For example, this constraint is used by *in front of* and *behind* relations 
-with different scales.
-
-<p align="center">
-<img height="350" alt="Side constraint example" src="resources/images/box-constraint.png" />
-</p>
-<p align="center">
-<i>Example of a "box constraint"</i>
-</p>
-
-#### Combination of Multiple Constraints
-
-Following picture shows combination of two constraints. The example uses 
-_inside_ constraint which relates to the house and _on_ constraint which 
-relates to the couch in the house. Red points satisfy both constraints.
-
-```
-[InsideConstraint(house), OnConstraint(couch)]
-```
-
-<p align="center">
-<img height="350" alt="Multiple constraints example" src="resources/images/inside-on-constraint.png" />
-</p>
-<p align="center">
-<i>
-Example of a combination of two constraints (inside and on), the magenta 
-points meet only one constraint whereas the red points meet both constraints
-</i>
-</p>
-
-#### Adpositions with Corresponding Constraints
-
-|  Adpositon  |      Constraint Definition        |
-| :---------: | :-------------------------------: |
-| IN          | InsideConstraint                  |
-| INSIDE      | InsideConstraint                  |
-| INSIDE_OF   | InsideConstraint                  |
-| ON          | OnConstraint                      |
-| UNDER       | SideConstraint(direction=(0, 1))  |
-| BELOW       | SideConstraint(direction=(0, 1))  |
-| ABOVE       | SideConstraint(direction=(0, -1)) |
-| BEHIND      | BoxConstraint(scale=0.75)         |
-| IN_FRONT_OF | BoxConstraint(scale=1.5)          |
-| NEXT_TO     | SideConstraint(direction=(-1, 0)), SideConstraint(direction=(1, 0)) |
-
-### Generating Picture from a Composition
-
-Current implementation uses *[Tkinter][7]* canvas to render the scene. 
 
 ## Code Documentation
 

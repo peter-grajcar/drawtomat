@@ -3,7 +3,21 @@ import ndjson
 
 class QuickDrawDataset:
     """
-    Tris class provides data from the Google's "Quick, Draw!" dataset.
+    This class provides data from the Google's "Quick, Draw!" dataset.
+    Drawtomat uses Google's Quick, Draw! dataset which consists of 345 drawing
+    categories. The dataset contains more than 50 million drawings, however,
+    only a selected portion of drawings is used in Drawtomat as the dataset
+    also contains irrelevant and inappropriate content.
+
+    The categories and selected drawings can be found in `resources/quickdraw`
+    directory.The Quick, Draw! data are extended with attributes, which at the
+    moment contain default object sizes (in centimetres). These data are used
+    for scaling the objects to preserve natural proportions. Attribute data can
+    be found in `resources/quickdraw/attributes.csv` and
+    `resources/quickdraw/attributes_relative.csv`. If one of the default
+    dimensions is omitted then only the defined dimension is used for scaling.
+    If both default dimensions are defined then the drawing is scaled by the
+    major dimension.
     """
     _words = None
     _images = None

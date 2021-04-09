@@ -8,7 +8,9 @@ from drawtomat.model.composition import PhysicalObject
 
 class OnConstraint(Constraint):
     """
-    On constraint.
+    This constraint takes all line segments in the top 25% of a drawing. If the
+    square distance of a point is within a specified limit the constraint is
+    satisfied.
 
     Attributes
     ----------

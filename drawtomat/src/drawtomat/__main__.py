@@ -14,10 +14,12 @@ if __name__ == "__main__":
     logging.config.fileConfig(fname="resources/logging.conf", disable_existing_loggers=False)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--description", type=str)
-    parser.add_argument("--graph_output", type=str)
-    parser.add_argument("--image_output", default="drawing.png", type=str)
-    parser.add_argument("--show", action="store_true")
+    parser.add_argument("--description", type=str, help="Specifies the image description. If not set the description "
+                                                        "is taken from the standard input.")
+    parser.add_argument("--graph_output", type=str, help="Scene graph output path.")
+    parser.add_argument("--image_output", default="drawing.png", type=str, help="Image output path. Default is "
+                                                                                "drawing.png")
+    parser.add_argument("--show", action="store_true", default="Show the image after it is generated.")
     args = parser.parse_args()
 
     if not args.description:

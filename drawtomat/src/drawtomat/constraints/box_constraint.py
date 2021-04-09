@@ -6,7 +6,8 @@ from drawtomat.model.composition import PhysicalObject
 
 class BoxConstraint(Constraint):
     """
-    Box constraint.
+    Box constraint is satisfied if a point lies in a bounding box of a drawing.
+    The bounding box can also be scaled.
 
     Attributes
     ----------

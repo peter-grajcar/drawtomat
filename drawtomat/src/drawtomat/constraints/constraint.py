@@ -7,7 +7,21 @@ from drawtomat.model.composition import PhysicalObject
 
 class Constraint(metaclass=ABCMeta):
     """
-    Abstract constraint class used for typing.
+    Abstract constraint class used for typing. Relations in the relation graph
+    (i.e. edges of the graph) define constraints which a position of an object
+    must meet. These constraints are defined by binary functions (or callable
+    objects) R^2 → {T, F} which for given coordinates return whether the
+    constraint is satisfied.
+
+    When placing an object a set of randomly generated points is produced. These
+    points are tested and if a points meets all the constraints then it is used
+    as a position of the object. If none of the generated points meets all the
+    constraints then a point with the most of constraints satisfied is used as
+    a position.
+
+    See Also
+    --------
+    drawtomat.composer.ConstraintComposer
 
     Attributes
     ----------

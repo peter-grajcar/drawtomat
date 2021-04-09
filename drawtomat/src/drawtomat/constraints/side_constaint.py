@@ -8,7 +8,10 @@ from drawtomat.model.composition import PhysicalObject
 
 class SideConstraint(Constraint):
     """
-    A side constraint.
+    This constraint is satisfied if a point lies on the correct side of a
+    half-plane. The half-plane is defined by a point which lies on a boundary
+    of a drawing and by a normal vector (perpendicular to the half-plane
+    boundary).
 
     Attributes
     ----------

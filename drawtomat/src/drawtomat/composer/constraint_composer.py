@@ -17,7 +17,13 @@ from drawtomat.model.scenegraph.scene import Scene
 
 class ConstraintComposer:
     """
-    Composer which uses geometrical constraints from `drawtomat.constraints` to place objects.
+    Composer which uses geometrical constraints from `drawtomat.constraints` to
+    place objects. Objects from the scene graph are transformed into
+    physical objects which have attributes such as scale and position. These
+    physical objects are then placed in the order given by a topological of a
+    relation graph objects. This method assumes that the relation graph is
+    acyclic (DAG) hence a topological ordering exists.
+
 
     See Also
     --------

@@ -10,7 +10,12 @@ from drawtomat.model.composition import PhysicalObject
 
 class InsideConstraint(Constraint):
     """
-    Inside constraint.
+    This constraint is implemented using point-inside-polygon algorithm where
+    each stroke is considered a separate polygon (a closed loop). If a point
+    lies in at least one of these polygons the constraint is satisfied.
+
+    Before running point-inside-polygon algorithm, Ramer–Douglas–Peucker
+    algorithm is used to simplify (reduce number of vertices) the strokes.
 
     Attributes
     ----------
