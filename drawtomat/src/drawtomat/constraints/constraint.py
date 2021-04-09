@@ -21,7 +21,7 @@ class Constraint(metaclass=ABCMeta):
 
     See Also
     --------
-    drawtomat.composer.ConstraintComposer
+    drawtomat.composer.constraint_composer.ConstraintComposer
 
     Attributes
     ----------
