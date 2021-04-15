@@ -151,15 +151,15 @@ class ConstraintComposer:
                 return BoxConstraint(obj, adposition, scale=1.5)
             elif adposition == "NEXT TO":
                 return DisjunctionConstraint(obj, adposition, [
-                    SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
-                    SideConstraint(obj, adposition, direction=(1, 0), padding=10)
+                    SideConstraint(obj, adposition, direction=(-1, 0), offset=10),
+                    SideConstraint(obj, adposition, direction=(1, 0), offset=10)
                 ])
             # default
             return DisjunctionConstraint(obj, adposition, [
-                SideConstraint(obj, adposition, direction=(-1, 0), padding=10),
-                SideConstraint(obj, adposition, direction=(1, 0), padding=10),
-                SideConstraint(obj, adposition, direction=(0, 1), padding=10),
-                SideConstraint(obj, adposition, direction=(0, -1), padding=10),
+                SideConstraint(obj, adposition, direction=(-1, 0), offset=10),
+                SideConstraint(obj, adposition, direction=(1, 0), offset=10),
+                SideConstraint(obj, adposition, direction=(0, 1), offset=10),
+                SideConstraint(obj, adposition, direction=(0, -1), offset=10),
             ])
         else:
             raise ValueError(f"Invalid constraints approach '{self.constraints_strategy}'.")

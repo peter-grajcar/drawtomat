@@ -26,12 +26,12 @@ class SideConstraint(Constraint):
         Size of the object to which the constraint relates.
     """
 
-    def __init__(self, obj: 'PhysicalObject', pred: str, direction=(1, 0), padding=0):
+    def __init__(self, obj: 'PhysicalObject', pred: str, direction=(1, 0), offset=0):
         super().__init__()
         self.obj = obj
         self.pred = pred
         self.direction = np.array(direction)
-        self.padding = padding
+        self.padding = offset
         self.init()
 
     def init(self):
