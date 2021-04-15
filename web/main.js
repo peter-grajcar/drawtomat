@@ -77,8 +77,8 @@ function apiCall() {
         .post("http://127.0.0.1:5000/drawtomat", {
             description: desc,
             options: {
-                use_machine_learning: useML.checked,
-                use_relative_sizes: useRelSizes.checked,
+                constraints: useML.checked ? "classifier" : "rule",
+                sizes: useRelSizes.checked ? "relative" : "absolute",
             },
         })
         .then(function (res) {
