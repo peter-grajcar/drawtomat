@@ -74,7 +74,7 @@ function apiCall() {
     desc = description.value;
 
     axios
-        .post("http://127.0.0.1:5000/drawtomat", {
+        .post(server + "/drawtomat", {
             description: desc,
             options: {
                 constraints: useML.checked ? "classifier" : "rule",
