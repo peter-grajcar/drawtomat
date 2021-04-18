@@ -39,6 +39,17 @@ Or start a HTTP API server:
 $ make run-api
 ```
 
+## Code Documentation
+
+Code is documented using *[Sphinx][5]*. Documentation can be generated using
+following command:
+
+```console
+$ make docs
+```
+
+The documentation is also available [here](http://www.ms.mff.cuni.cz/~grajcarp/drawtomat/docs/).
+
 ## Overview
 
 The picture is generated in two phases. These phases are discussed in more 
@@ -101,15 +112,6 @@ Drawtomat allows relation graph export in [dot language][6].
 <p align="center">
 <i>Example of a relation graph</i>
 </p>
-
-## Code Documentation
-
-Code is documented using *[Sphinx][5]*. Documentation can be generated using
-following command:
-
-```console
-$ make docs
-```
 
 &copy; 2020 Peter Grajcar
 
