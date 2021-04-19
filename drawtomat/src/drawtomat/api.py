@@ -21,10 +21,19 @@ obj_scaler_abs = AbsoluteObjectScaler(word_embedding)
 obj_scaler_rel = RelativeObjectScaler(word_embedding)
 composer = ConstraintComposer(obj_factory, obj_scaler_rel, constraints="rule")
 
+def error(msg, code):
+    return {
+        "message": msg,
+        "code": code
+    }, code
 
 @app.route("/drawtomat", methods=["POST"])
 def drawtomat():
     desc = request.json["description"]
+
+    if len(desc) > 1000:
+        return error("Description is too long.", 400)
+
     scene = processor.process(desc)
 
     composer.constraints_strategy = request.json["options"]["constraints"]
@@ -35,7 +44,7 @@ def drawtomat():
     elif size_strategy == "absolute":
         composer.obj_scaler = obj_scaler_abs
     else:
-        raise ValueError(f"Invalid size strategy {size_strategy}")
+        return error(f"Invalid size strategy {size_strategy}", 400)
 
     entities = composer.compose(scene)
     drawing = [entity.get_relative_strokes() for entity in entities]

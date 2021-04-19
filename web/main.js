@@ -89,7 +89,7 @@ function apiCall() {
         .catch(function (err) {
             spinner.setAttribute("aria-hidden", true);
             error.setAttribute("aria-hidden", false);
-            console.error(err.response)
+            console.error(err.response.data)
         });
 }
 
