@@ -26,7 +26,7 @@ column_transformer = ColumnTransformer(
     verbose=True
 )
 
-model = MLPClassifier(max_iter=100, hidden_layer_sizes=(300, 200, 100), verbose=True, warm_start=True)
+model = MLPClassifier(max_iter=100, solver="sgd", batch_size=500, hidden_layer_sizes=(300, 200, 100), verbose=True, warm_start=True)
 
 pipeline = Pipeline(steps=[
         ("transformer", column_transformer),
@@ -42,14 +42,15 @@ X = column_transformer.fit_transform(X)
 
 size = 250000
 
-# model.fit(X, t)
+model.fit(X, t)
 
+"""
 for j in range(2):
     X, t = shuffle(X, t)
     for i in range(0, X.shape[0], size):
         print(i)
         model.partial_fit(X[i:i+size], t[i:i+size], classes=[0, 1])
-
+"""
 
 with open(sys.argv[2], "wb") as f:
     pickle.dump(pipeline, f)

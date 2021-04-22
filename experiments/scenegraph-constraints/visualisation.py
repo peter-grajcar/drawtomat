@@ -17,26 +17,49 @@ with open(sys.argv[1], "rb") as f:
 predicate = sys.argv[2]
 subject = sys.argv[3]
 
-step = 0.05
-xs, ys = np.arange(-2.5, 2.5, step), np.arange(-2.5, 2.5, step)
-X = [[subject.lower(), predicate.upper(), x, y] for y in ys for x in xs] 
+if subject:
+    X = [[subject.lower(), predicate.upper(), x, y] for y in ys for x in xs]
+else:
+    X = [[predicate.upper(), x, y] for y in ys for x in xs]
+
 y = model.predict(X)
 
+step = 0.05
+xs, ys = np.arange(-2.5, 2.5, step), np.arange(-2.5, 2.5, step)
 grid = np.reshape(y, (xs.shape[0], ys.shape[0]))
-        
-obj = {}
-obj["drawing"] = quickdraw.get_quickdraw_drawing(subject.lower(), 2)
-obj["bounds"] = quickdraw.get_quickdraw_obj_bounds(obj)
-obj["position"] = (0, 0)
-obj["scale"] = 1 / quickdraw.get_obj_width(obj)
 
 rc("font",**{"family": "serif", "serif": ["Computer Modern"], "size": 20})
 rc("text", usetex=True)
 fig, ax = plt.subplots()
-for stroke in quickdraw.get_quickdraw_strokes(obj):
+
+if subject:
+    # Draw the quickdraw drawing
+    obj = {}
+    obj["drawing"] = quickdraw.get_quickdraw_drawing(subject.lower(), 2)
+    obj["bounds"] = quickdraw.get_quickdraw_obj_bounds(obj)
+    obj["position"] = (0, 0)
+    obj["scale"] = 1 / quickdraw.get_obj_width(obj)
+
+    for stroke in quickdraw.get_quickdraw_strokes(obj):
+        verts = []
+        codes = []
+        for (x, y) in stroke:
+            verts.append((x, -y))
+            if not codes:
+                codes.append(Path.MOVETO)
+            else:
+                codes.append(Path.LINETO)
+
+        path = Path(verts, codes)
+        patch = patches.PathPatch(path, facecolor='none', lw=0.25, joinstyle="round")
+        ax.add_patch(patch)
+
+    ax.set_title(predicate + " " + subject)
+else:
+
     verts = []
     codes = []
-    for (x, y) in stroke:
+    for (x, y) in [(-.5, -.5), (.5, -.5), (.5, .5), (-.5, .5), (-.5, -.5)]:
         verts.append((x, -y))
         if not codes:
             codes.append(Path.MOVETO)
@@ -47,8 +70,9 @@ for stroke in quickdraw.get_quickdraw_strokes(obj):
     patch = patches.PathPatch(path, facecolor='none', lw=0.25, joinstyle="round")
     ax.add_patch(patch)
 
-ax.set_title(predicate + " " + subject)
+    ax.set_title(predicate)
 
+# Draw the decision boundary
 xs, ys = np.meshgrid(xs, -ys)
 plt.contourf(xs, ys, grid, levels=[-1, 0, 1], cmap=plt.cm.bwr_r)
 plt.show()
