@@ -5,3 +5,4 @@ papers
 description.txt
 media
 __pycache__
+*.pyc
