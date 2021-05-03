@@ -30,6 +30,8 @@ $ python3 -m drawtomat [-h] [--help]
                        [--description DRAWING_DESCRIPTION]
                        [--graph_output GRAPH_OUTPUT_PATH]
                        [--image_output IMAGE_OUTPUT_PATH]
+                       [--sizes {absolute,relative}]
+                       [--constraints {rule,classifier}]
                        [--show]
 ```
 
