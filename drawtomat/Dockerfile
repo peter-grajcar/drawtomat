@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN apt-get update && apt-get install -y build-essential curl
+RUN apt-get update && apt-get install -y build-essential curl wget
 RUN make udpipe
 RUN make sklearn
 RUN make fasttext
