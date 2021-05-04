@@ -17,7 +17,9 @@ Following command will set up Python virtual environment:
 $ make install
 ```
 
-Then the programme can be executed with following command:
+## Command-Line Interface
+
+The command-line program can be executed with following command:
 
 ```console
 $ make run
@@ -35,10 +37,19 @@ $ python3 -m drawtomat [-h] [--help]
                        [--show]
 ```
 
-Or start a HTTP API server:
+## HTTP Server
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/peterg13/drawtomat)](https://hub.docker.com/repository/docker/peterg13/drawtomat)
+
+For development purposes, the HTTP API server can be started by:
 
 ```console
 $ make run-api
+```
+
+For production use Docker using the included Dockerfile or pull the image from DockerHub:
+
+```console
+$ docker pull peterg13/drawtomat:latest
 ```
 
 ## Code Documentation
