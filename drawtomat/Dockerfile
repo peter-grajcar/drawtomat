@@ -18,4 +18,4 @@ COPY --from=build /app /app
 
 ENV PYTHONPATH=/app/src
 EXPOSE 5000
-CMD /venv/bin/gunicorn -b :5000 drawtomat.api:app
+CMD venv/bin/gunicorn -b :5000 drawtomat.api:app
