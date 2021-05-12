@@ -13,6 +13,7 @@ from drawtomat.model.composition import PhysicalObject
 from drawtomat.model.scenegraph.group import Group
 from drawtomat.model.scenegraph.object import Object
 from drawtomat.model.scenegraph.scene import Scene
+from drawtomat.composer.scaler import AbsoluteObjectScaler, RelativeObjectScaler
 
 
 class ConstraintComposer:
@@ -98,20 +99,25 @@ class ConstraintComposer:
         -------
         None
         """
-        if not obj_pred:
-            return
+        if isinstance(self.obj_scaler, AbsoluteObjectScaler):
+            scale = self.obj_scaler.scale(sub, None, None)
+            sub.set_scale(scale)
+        elif isinstance(self.obj_scaler, RelativeObjectScaler):
+            if not obj_pred:
+                return
 
-        logging.getLogger(ConstraintComposer.__name__).debug(f"scaling using {self.obj_scaler.__class__.__name__}")
-        logging.getLogger(ConstraintComposer.__name__).debug(f"scaling {sub.entity.word} wrt: {obj_pred}")
+            logging.getLogger(ConstraintComposer.__name__).debug(f"scaling using {self.obj_scaler.__class__.__name__}")
+            logging.getLogger(ConstraintComposer.__name__).debug(f"scaling {sub.entity.word} wrt: {obj_pred}")
 
-        scale = 0
-        for obj, pred in obj_pred:
-            scale += self.obj_scaler.scale(sub, obj, pred)
-        scale /= len(obj_pred)
+            scale = 0
+            for obj, pred in obj_pred:
+                scale += self.obj_scaler.scale(sub, obj, pred)
+            scale /= len(obj_pred)
 
-        logging.getLogger(ConstraintComposer.__name__).debug(f"scale = {scale}")
-
-        sub.set_scale(scale)
+            logging.getLogger(ConstraintComposer.__name__).debug(f"scale = {scale}")
+            sub.set_scale(scale)
+        else:
+            raise ValueError("Invalid object scaler")
 
     def _get_constraints(self, adposition: 'str', obj: 'PhysicalObject') -> 'Constraint':
         """
