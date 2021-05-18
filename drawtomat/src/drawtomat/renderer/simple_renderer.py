@@ -21,7 +21,8 @@ class SimpleRenderer:
         self.composer = composer
         self.show_bounds = show_bounds
 
-    def render(self, scene: 'drawtomat.model.scenegraph.Scene', show: bool = False, output: str = "drawing.png") -> None:
+    def render(self, scene: 'drawtomat.model.scenegraph.Scene', show: bool = False,
+               output: str = "drawing.png") -> None:
         """
         Renders a scene into an image.
 
@@ -46,7 +47,6 @@ class SimpleRenderer:
         min_y = None
         max_y = None
         for obj in composition:
-            # TODO: use width, height instead
             for stroke in obj.strokes:
                 mx = min(stroke[0]) + obj.x
                 my = min(stroke[1]) + obj.y

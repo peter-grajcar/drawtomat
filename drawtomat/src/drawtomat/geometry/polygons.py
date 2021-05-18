@@ -31,7 +31,6 @@ def inside_polygon(polygon: 'List[np.ndarray]', point: 'np.ndarray') -> bool:
         (intersection, t) = lines.line_line_intersection_with_t(
             Line(a, u), Line(point, np.array((0, 1)))
         )
-        # not ideal, TODO:
         (intersection, s) = lines.line_line_intersection_with_t(
             Line(point, np.array((0, 1))), Line(a, u)
         )

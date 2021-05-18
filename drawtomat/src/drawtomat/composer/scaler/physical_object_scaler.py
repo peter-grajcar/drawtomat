@@ -5,13 +5,13 @@ from drawtomat.model.composition import PhysicalObject
 
 class PhysicalObjectScaler(metaclass=ABCMeta):
     """
-    TODO:
+    Base object scaler class.
     """
 
     @abstractmethod
     def scale(self, sub: 'PhysicalObject', obj: 'PhysicalObject', pred: 'str') -> 'float':
         """
-        TODO:
+        Scales the subject according to the object and predicate.
 
         Parameters
         ----------
