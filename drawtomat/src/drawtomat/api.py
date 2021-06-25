@@ -50,8 +50,8 @@ def drawtomat():
     drawing = [entity.get_relative_strokes() for entity in entities]
     extrema = [[min(stroke[0]), min(stroke[1]), max(stroke[0]), max(stroke[1])] for strokes in drawing for stroke in
                strokes]
-    minima = np.min(extrema, axis=0)
-    maxima = np.max(extrema, axis=0)
+    minima = np.min(extrema, axis=0) if extrema else 0, 0, 0, 0
+    maxima = np.max(extrema, axis=0) if extrema else 0, 0, 0, 0
     return {
         "description": desc,
         "bounds": {
