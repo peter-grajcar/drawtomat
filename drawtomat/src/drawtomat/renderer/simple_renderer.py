@@ -62,9 +62,10 @@ class SimpleRenderer:
                 if max_y is None or min_y < my:
                     max_y = my
 
-        width = max_x - min_x + 50
-        height = max_y - min_y + 50
-        q = min(im_w / width / 2, im_h / height / 2)
+        if composition:
+            width = max_x - min_x + 50
+            height = max_y - min_y + 50
+            q = min(im_w / width / 2, im_h / height / 2)
 
         for obj in composition:
             px, py = (obj.x - min_x + width / 2) * q, (obj.y - min_y + height / 2) * q
