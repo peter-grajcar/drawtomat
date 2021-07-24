@@ -1,0 +1,51 @@
+\begin{table}[ht]
+    \small
+    \centering
+    \begin{threeparttable}
+        \begin{tabular}{p{0.2\linewidth}|p{0.7\linewidth}}
+            \textbf{Adposition} & \textbf{Elementary constraint} \\
+            \hline \hline
+            \emph{in}        &  \verb|InsideConstraint()| \\
+            \hline
+            \emph{inside}    & \verb|InsideConstraint()| \\
+            \hline
+            \emph{inside of} & \verb|InsideConstraint()| \\
+            \hline
+            \emph{on}        & \verb|OnConstraint()| \\
+            \hline
+            \emph{under}    & \verb|SideConstraint(direction=(0, 1))| \\
+            \hline
+            \emph{below}    & \verb|SideConstraint(direction=(0, 1))| \\
+            \hline
+            \emph{above}     & \verb|SideConstraint(direction=(0, -1))| \\
+            \hline
+            \emph{behind}    & \verb|BoxConstraint()| \\
+            \hline
+            \emph{in front of} & \verb|BoxConstraint()| \\
+            \hline
+            \emph{next to} & \begin{minipage}[t]{\linewidth}
+            \begin{verbatim}
+DisjunctionConstraint([
+    SideConstraint(direction=(-1, 0)),
+    SideConstraint(direction=(1, 0))
+])\end{verbatim}
+            \end{minipage}\vspace{4pt} \\
+            \hline
+            unknown & \begin{minipage}[t]{\linewidth}
+            \begin{verbatim}
+DisjunctionConstraint([
+    SideConstraint(direction=(-1, 0)),
+    SideConstraint(direction=(1, 0)),
+    SideConstraint(direction=(0, 1)),
+    SideConstraint(direction=(0, -1)),
+])\end{verbatim}
+            \end{minipage}\vspace{4pt}
+        \end{tabular}
+        \begin{tablenotes}
+            \small
+            \item Some constructor arguments are omitted for brevity.
+        \end{tablenotes}
+    \end{threeparttable}
+    \caption[Rule-based constraints implementation]{Rule-based constraints implementation.}
+    \label{tab:rule_based_constraints_impl}
+\end{table}

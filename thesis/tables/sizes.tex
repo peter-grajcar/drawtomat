@@ -1,0 +1,16 @@
+\begin{table}[!ht]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{c|c|c|c}
+            \textbf{Method} & \textbf{Width RMSE} & \textbf{Height RMSE} & \textbf{Pairs Covered} \\
+            \hline \hline
+            Absolute                            & $51.93$           & $43.17$           & $\textbf{91.49\%}$    \\ 
+            Relative                            & $\textbf{12.97}$  & $16.46$           & $7.50\%$              \\
+            Relative + word embedding           & $43.93$           & $42.46$           & $63.60\%$             \\
+            Relative + word embedding (0.85)    & $19.78$           & $24.87$           & $10.34\%$             \\
+            Relative + word embedding (0.95)    & $13.13$           & $\textbf{16.12}$  & $7.92\%$              \\
+        \end{tabular}
+    }
+    \caption[Comparison of the size extraction methods]{Comparison of the size extraction methods.}
+    \label{tab:sizeextraction:1}
+\end{table}

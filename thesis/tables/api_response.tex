@@ -1,0 +1,23 @@
+\begin{table}[ht]
+    \small
+    \centering
+    \begin{tabular}{p{0.2\linewidth}|p{0.1\linewidth}|p{0.6\linewidth}}
+        \textbf{Key} & \textbf{Type} & \textbf{Description} \\
+        \hline \hline
+        \verb|description| & \verb|string| & A description of a drawing. \\
+        \hline
+        \verb|bounds| & \verb|object| & Defines a bounding box of the drawing. \\
+        \hline
+        \verb|bounds.top| & \verb|number| & The maximum of all $y$ coordinates. \\
+        \hline
+        \verb|bounds.bottom| & \verb|number| & The mininum of all $y$ coordinates.  \\
+        \hline
+        \verb|bounds.right| & \verb|number| & The maximum of all $x$ coordinates. \\
+        \hline
+        \verb|bounds.left| & \verb|number| & The minimum of all $x$ coordinates. \\
+        \hline
+        \verb|drawing| & \verb|array| & Drawing representation similar to \emph{Quick, Draw!} format. The drawing is represented as an array of objects in the scene. Objects are arrays of strokes. Each stroke is an array itself containing three sequences - $x$ coordinates, $y$ coordinates and time in milliseconds. \\
+    \end{tabular}
+    \caption[Response JSON format]{Response JSON format.}
+    \label{tab:api_response}
+\end{table}

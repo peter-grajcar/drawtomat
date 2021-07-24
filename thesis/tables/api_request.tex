@@ -1,0 +1,17 @@
+\begin{table}[ht]
+    \small
+    \centering
+    \begin{tabular}{p{0.3\linewidth}|p{0.1\linewidth}|p{0.5\linewidth}}
+        \textbf{Key} & \textbf{Type} & \textbf{Description} \\
+        \hline \hline
+        \verb|description| & \verb|string| & A description of a drawing (limited to $1000$ characters). \\
+        \hline
+        \verb|options| & \verb|object| & Drawing generation options. \\
+        \hline
+        \verb|options.constraints| & \verb|string| & Allowed values are \verb|absolute| or \verb|relative|. If the value is equal to \verb|"classifier"|, positions of objects in the scene will be determined using the classifier-based approach. \\
+        \hline
+        \verb|options.sizes| & \verb|string| & Allowed values are \verb|"rule"| or \verb|"classifier"|. If the value is equal to \verb|"relative"|, sizes of objects in the scene will be determined based on size ratios extracted from \emph{Scene Graph} dataset. \\
+    \end{tabular}
+    \caption[Request JSON format]{Request JSON format.}
+    \label{tab:api_request}
+\end{table}

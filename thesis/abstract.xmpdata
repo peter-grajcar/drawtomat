@@ -1,0 +1,5 @@
+% Metadata to be stored in PDF, see documentation of the pdfx package for more details.
+
+\Author{Peter Grajcar}
+\Title{Generating a drawing according to a textual description}
+\Publisher{Charles University}

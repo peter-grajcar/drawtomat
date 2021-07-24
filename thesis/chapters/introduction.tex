@@ -1,0 +1,20 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+This thesis aims to implement a drawing generator capable of generating complex scenes for given textual descriptions of the scenes. Generating drawings is substantially less ambitious than generating photorealistic images. However, the problem still poses multiple challenges whose solutions may also be useful in photorealistic image generation. 
+
+\medskip
+
+Despite the significant progress in the field of text-to-image generation, these generators still struggle with more complex scenes. Many approaches only work on limited domains \citep{zhang2017stackgan}. While promising achievement in a zero-shot text-to-image generation has recently been made \citep{ramesh2021zeroshot}, generating complex images remains a challenge. One fairly recent approach \citep{johnson2018image} uses a scene graph representation of the scene in an attempt to address the challenges of complex image generation with many objects and relations. The scene graph is a structure that represents the relations and objects in the form of a directed graph. The scene graph is used as an intermediate structure. However, generating a scene graph from a natural language and generating images from the scene graphs are still complex tasks. 
+
+\medskip
+
+Our work focuses on determining the spatial properties (the position and the size) of the objects within the scene. We propose multiple approaches and compare them. Our approaches may serve as an alternative to box regression methods used in existing scene graph based text-to-image generation \citep{johnson2018image,tripathi2019using}. Limiting ourselves to generating drawings allows us to use an existing dataset of hand-drawn images of common objects such as \emph{Quick, Draw!} \citep{quickdraw}. We also implement a rule-based description processing that converts text to a scene graph based on the syntactic analysis.
+
+\medskip
+
+While we are limited to drawings in this thesis, the proposed approaches for determining the positions and sizes could be used for layout generation. The layout is a bounding box corresponding to an object in the scene, which may also be used for image generation \citep{zhao2019image}. 
+
+\medskip
+
+This thesis is structured into six chapters. The first chapter provides an overview of recent text-to-image generators, work related to scene graphs, and drawing datasets. The second chapter introduces our approach for drawing generation. In the third chapter, we provide details of the implementation of our approach presented in the second chapter. The next chapter contains brief instructions for users of our implementation. The fifth chapter presents the results of our approaches for determining spatial properties of objects. The chapter is followed by a discussion of the results and a general conclusion.

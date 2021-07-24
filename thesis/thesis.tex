@@ -1,0 +1,190 @@
+%%% The main file. It contains definitions of basic parameters and includes all other parts.
+
+%% Settings for single-side (simplex) printing
+% Margins: left 40mm, right 25mm, top and bottom 25mm
+% (but beware, LaTeX adds 1in implicitly)
+\documentclass[12pt,a4paper]{report}
+\setlength\textwidth{145mm}
+\setlength\textheight{247mm}
+\setlength\oddsidemargin{15mm}
+\setlength\evensidemargin{15mm}
+\setlength\topmargin{0mm}
+\setlength\headsep{0mm}
+\setlength\headheight{0mm}
+% \openright makes the following text appear on a right-hand page
+\let\openright=\clearpage
+
+%% Settings for two-sided (duplex) printing
+% \documentclass[12pt,a4paper,twoside,openright]{report}
+% \setlength\textwidth{145mm}
+% \setlength\textheight{247mm}
+% \setlength\oddsidemargin{14.2mm}
+% \setlength\evensidemargin{0mm}
+% \setlength\topmargin{0mm}
+% \setlength\headsep{0mm}
+% \setlength\headheight{0mm}
+% \let\openright=\cleardoublepage
+
+%% Generate PDF/A-2u
+\usepackage[a-2u]{pdfx}
+
+%% Character encoding: usually latin2, cp1250 or utf8:
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+
+%% Prefer Latin Modern fonts
+\usepackage{lmodern}
+
+%% Further useful packages (included in most LaTeX distributions)
+\usepackage{amsmath}        % extensions for typesetting of math
+\usepackage{amsfonts}       % math fonts
+\usepackage{amsthm}         % theorems, definitions, etc.
+\usepackage{bbding}         % various symbols (squares, asterisks, scissors, ...)
+\usepackage{bm}             % boldface symbols (\bm)
+\usepackage{graphicx}       % embedding of pictures
+\usepackage{fancyvrb}       % improved verbatim environment
+\usepackage{natbib}         % citation style AUTHOR (YEAR), or AUTHOR [NUMBER]
+\usepackage[nottoc]{tocbibind} % makes sure that bibliography and the lists
+			    % of figures/tables are included in the table
+			    % of contents
+\usepackage{dcolumn}        % improved alignment of table columns
+\usepackage{booktabs}       % improved horizontal lines in tables
+\usepackage{paralist}       % improved enumerate and itemize
+\usepackage{xcolor}         % typesetting in color
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows}
+
+\usepackage{dirtytalk}
+
+\usepackage{threeparttable}
+
+\usepackage{fancyvrb}
+
+\usepackage{cleveref}
+\Crefname{appendix}{Attachment}{Attachments}
+
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=0mm}
+\setlist[itemize]{itemsep=0mm}
+
+\usepackage{footmisc}
+
+%%% Basic information on the thesis
+
+% Thesis title in English (exactly as in the formal assignment)
+\def\ThesisTitle{Generating a drawing according to a textual description}
+
+% Author of the thesis
+\def\ThesisAuthor{Peter Grajcar}
+
+% Year when the thesis is submitted
+\def\YearSubmitted{2021}
+
+% Name of the department or institute, where the work was officially assigned
+% (according to the Organizational Structure of MFF UK in English,
+% or a full name of a department outside MFF)
+\def\Department{Institute of Formal and Applied Linguistics}
+
+% Is it a department (katedra), or an institute (ústav)?
+\def\DeptType{Institute}
+
+% Thesis supervisor: name, surname and titles
+\def\Supervisor{Mgr. Rudolf Rosa, Ph.D.}
+
+% Supervisor's department (again according to Organizational structure of MFF)
+\def\SupervisorsDepartment{Institute of Formal and Applied Linguistics}
+
+% Study programme and specialization
+\def\StudyProgramme{Computer Science}
+\def\StudyBranch{Programming and Software Systems}
+
+% An optional dedication: you can thank whomever you wish (your supervisor,
+% consultant, a person who lent the software, etc.)
+\def\Dedication{
+I would like to thank my supervisor Mgr. Rudolf Rosa, Ph.D., for his advice and help. Furthermore, I would like to thank my colleagues and friends Katarína Dan\v{c}ejová and Jakub \v{C}atlo\v{s} for reviewing the text of this thesis and others who helped me throughout the course of my studies.
+}
+
+% Abstract (recommended length around 80-200 words; this is not a copy of your thesis assignment!)
+\def\Abstract{%
+Text-to-image generators have improved significantly with the recent development of deep neural networks. However, generating complex scenes with multiple objects and relations still remains a difficult problem. In this thesis, we implement a text-to-drawing generator using scene graphs as an intermediate structure. We focus on determining object size and position given a scene graph. We propose a rule-based and classifier-based approach to determine the object position and multiple approaches for size extraction from the scene graph dataset. We provide details of our implementation. We compare and evaluate our approaches and present the results. Finally, we propose potential future use in photorealistic text-to-image generation.
+}
+
+% 3 to 5 keywords (recommended), each enclosed in curly braces
+\def\Keywords{%
+{natural language processing} {image generation} {scene graphs}
+}
+
+%% The hyperref package for clickable links in PDF and also for storing
+%% metadata to PDF (including the table of contents).
+%% Most settings are pre-set by the pdfx package.
+\hypersetup{unicode}
+\hypersetup{breaklinks=true}
+
+% Definitions of macros (see description inside)
+\include{macros}
+
+% Title page and various mandatory informational pages
+\begin{document}
+\include{title}
+
+%%% A page with automatically generated table of contents of the bachelor thesis
+
+\tableofcontents
+
+%%% Each chapter is kept in a separate file
+\include{chapters/introduction}
+\include{chapters/related_work}
+\include{chapters/our_approach}
+\include{chapters/implementation_details}
+\include{chapters/user_manual}
+\include{chapters/results}
+\include{chapters/discussion}
+\include{chapters/conclusion}
+
+
+%%% Bibliography
+\include{bibliography}
+
+%%% Figures used in the thesis (consider if this is needed)
+\listoffigures
+
+%%% Tables used in the thesis (consider if this is needed)
+%%% In mathematical theses, it could be better to move the list of tables to the beginning of the thesis.
+\listoftables
+
+%%% Abbreviations used in the thesis, if any, including their explanation
+%%% In mathematical theses, it could be better to move the list of abbreviations to the beginning of the thesis.
+%\chapwithtoc{List of Abbreviations}
+
+%%% Attachments to the bachelor thesis, if any. Each attachment must be
+%%% referred to at least once from the text of the thesis. Attachments
+%%% are numbered.
+%%%
+%%% The printed version should preferably contain attachments, which can be
+%%% read (additional tables and charts, supplementary text, examples of
+%%% program output, etc.). The electronic version is more suited for attachments
+%%% which will likely be used in an electronic form rather than read (program
+%%% source code, data files, interactive charts, etc.). Electronic attachments
+%%% should be uploaded to SIS and optionally also included in the thesis on a~CD/DVD.
+%%% Allowed file formats are specified in provision of the rector no. 72/2017.
+\appendix
+\chapter{Attachments}
+
+\section{Source Code}
+\label{attachment:sources}
+
+Zipped source code that contains:
+\begin{itemize}
+\item implementation of the command-line interface, web server in the \verb|drawtomat| directory; 
+\item implementation of the web client in the \verb|web| directory;
+\item various experiments and scripts used for training the used models in the \verb|experiments| directory. 
+\end{itemize}
+The source code is also available as a GitHub repository \url{https://github.com/peter-grajcar/ drawtomat}.
+
+\openright
+\end{document}

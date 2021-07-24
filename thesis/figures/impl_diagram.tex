@@ -1,0 +1,25 @@
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[node distance=3cm]
+        \tikzstyle{box} = [draw, thick, rectangle, minimum height=1.25cm, minimum width=4.5cm];
+        \tikzstyle{smallerbox} = [draw, thick, rectangle, minimum height=1cm, minimum width=3.5cm];
+    
+        \clip (-3cm,-1cm) rectangle + (12cm,-9cm);
+
+        \node(empty){};
+        \node(descproc)[box, below of=empty]{Description Processor};
+        \node(scenecomp)[box, below of=descproc]{Scene Composer};
+        \node(renderer)[box, below of=scenecomp]{Renderer};
+
+        \node(objfactory)[smallerbox, right of=scenecomp, yshift=0.5cm, xshift=3cm]{Object Factory};
+        \node(objscaler)[smallerbox, right of=scenecomp, yshift=-0.5cm, xshift=3cm]{Object Scaler};
+
+        \draw [->, thick] ++(0, -1cm) -- node[draw, fill=white, draw=none]{\small Description} (descproc);
+        \draw [->, thick] (descproc) -- node[draw, fill=white, draw=none]{\small Scene Graph} (scenecomp);
+        \draw [->, thick] (scenecomp) -- node[draw, fill=white, draw=none]{\small Drawing Representation} (renderer);
+        \draw [<->, thick] (scenecomp.east) -- ++(1cm, 0) |- (objfactory);
+        \draw [<->, thick] (scenecomp.east) -- ++(1cm, 0) |- (objscaler);
+    \end{tikzpicture}
+    \caption[Implementation diagram]{Implementation diagram.}
+    \label{fig:impl_diagram}
+\end{figure}

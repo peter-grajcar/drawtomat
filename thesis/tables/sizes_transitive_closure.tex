@@ -1,0 +1,22 @@
+\begin{table}[!ht]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{threeparttable}
+            \begin{tabular}{c|c|c|c}
+                \textbf{Method} & \textbf{Width RMSE} & \textbf{Height RMSE} & \textbf{Pairs Covered} \\
+                \hline \hline
+                Absolute$^*$                        & $51.93$           & $43.17$           & $91.49\%$         \\ 
+                Relative                            & $\textbf{43.65}$  & $\textbf{41.04}$  & $79.70\%$         \\
+                Relative + word embedding           & $55.53$           & $47.92$           & $\textbf{100\%}$  \\
+                Relative + word embedding (0.85)    & $53.35$           & $45.65$           & $86.57\%$         \\
+                Relative + word embedding (0.95)    & $49.39$           & $42.03$           & $82.30\%$         \\
+            \end{tabular}
+            \begin{tablenotes}
+            \small
+            \item $^*$ Transitive closure cannot be applied to the absolute sizes. The results are the same as in \Cref{tab:sizeextraction:2}. For the sake of comparison, they are also included in this table.
+            \end{tablenotes}
+        \end{threeparttable}
+    }
+    \caption[Comparison of the size extraction methods with transitive closure]{Comparison of the size extraction methods with transitive closure.}
+    \label{tab:sizeextraction:2}
+\end{table}
